@@ -20,7 +20,7 @@
 # Get standard environment variables
 # if JAVA_HOME is not set we're not happy
 if [ -z "$JAVA_HOME" ]; then
-  echo "You must set the JAVA_HOME variable before running metcat-listener scripts."
+  echo "You must set the JAVA_HOME variable before running datacat-listener scripts."
   exit 1
 fi
 
@@ -47,19 +47,19 @@ done
 
 PRGDIR=`dirname "$PRG"`
 
-# Only set METCAT_LISTENER_HOME if not already set
-[ -z "$METCAT_LISTENER_HOME" ] && METCAT_LISTENER_HOME=`cd "$PRGDIR/.." ; pwd`
+# Only set datacat_LISTENER_HOME if not already set
+[ -z "$datacat_LISTENER_HOME" ] && datacat_LISTENER_HOME=`cd "$PRGDIR/.." ; pwd`
 
-METCAT_LISTENER_CLASSPATH=""
+datacat_LISTENER_CLASSPATH=""
 
 
 
-for f in "METCAT_LISTENER_HOME"/lib/*.jar
+for f in "datacat_LISTENER_HOME"/lib/*.jar
 do
-  METCAT_LISTENER_CLASSPATH="$METCAT_LISTENER_CLASSPATH":$f
+  datacat_LISTENER_CLASSPATH="$datacat_LISTENER_CLASSPATH":$f
 done
 
-METCAT_LISTENER_CLASSPATH="$METCAT_LISTENER_CLASSPATH":"$METCAT_LISTENER_HOME"/conf/log4j.properties
+datacat_LISTENER_CLASSPATH="$datacat_LISTENER_CLASSPATH":"$datacat_LISTENER_HOME"/conf/log4j.properties
 
-export METCAT_LISTENER_HOME
-export METCAT_LISTENER_CLASSPATH
+export datacat_LISTENER_HOME
+export datacat_LISTENER_CLASSPATH

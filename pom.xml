@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.apache.airavata</groupId>
-    <artifactId>metcat</artifactId>
+    <artifactId>datacat</artifactId>
     <packaging>pom</packaging>
     <version>0.1-SNAPSHOT</version>
 

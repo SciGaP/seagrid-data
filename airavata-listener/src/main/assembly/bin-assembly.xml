@@ -22,7 +22,7 @@
           http://maven.apache.org/xsd/assembly-1.1.2.xsd">
     <id>bin</id>
     <includeBaseDirectory>true</includeBaseDirectory>
-    <baseDirectory>metcat-listener</baseDirectory>
+    <baseDirectory>airavata-listener</baseDirectory>
     <formats>
         <format>tar.gz</format>
         <format>zip</format>
