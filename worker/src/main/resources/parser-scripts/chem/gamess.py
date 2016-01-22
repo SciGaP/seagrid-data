@@ -23,21 +23,21 @@ elif data.application == 'GAMESS':
         data.inchiKey = gamess_mol.write('inchikey').strip()
         data.smiles = gamess_mol.write('smiles').split('\t')[0]
         data.canoSmiles = gamess_mol.write('can').split('\t')[0]
-        gamess_mol.draw(show=False, file_name=molecule_image_file)
+        gamess_mol.draw(show=False, filename=molecule_image_file)
 elif data.application == 'NWChem':
         nwchem_mol = pybel.readfile('nwo',file_name).next()
         data.inchi = nwchem_mol.write('inchi').strip()
         data.inchiKey = nwchem_mol.write('inchikey').strip()
         data.smiles = nwchem_mol.write('smiles').split('\t')[0]
         data.canoSmiles = nwchem_mol.write('can').split('\t')[0]
-        nwchem_mol.draw(show=False, file_name=molecule_image_file)
+        nwchem_mol.draw(show=False, filename=molecule_image_file)
 elif data.application == 'Molpro':
         molpro_mol = pybel.readfile('mpo',file_name).next()
         data.inchi = molpro_mol.write('inchi').strip()
         data.inchiKey = molpro_mol.write('inchikey').strip()
         data.smiles = molpro_mol.write('smiles').split('\t')[0]
         data.canoSmiles = molpro_mol.write('can').split('\t')[0]
-        molpro_mol.draw(show=False, file_name=molecule_image_file)
+        molpro_mol.draw(show=False, filename=molecule_image_file)
 
 data.listify()
 result = json.dumps(data.__dict__, separators=(',', ':'), sort_keys=True, indent=4)

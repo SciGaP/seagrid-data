@@ -47,19 +47,19 @@ done
 
 PRGDIR=`dirname "$PRG"`
 
-# Only set datacat_LISTENER_HOME if not already set
-[ -z "$datacat_LISTENER_HOME" ] && datacat_LISTENER_HOME=`cd "$PRGDIR/.." ; pwd`
+# Only set DATACAT_LISTENER_HOME if not already set
+[ -z "$DATACAT_LISTENER_HOME" ] && DATACAT_LISTENER_HOME=`cd "$PRGDIR/.." ; pwd`
 
-datacat_LISTENER_CLASSPATH=""
+DATACAT_LISTENER_CLASSPATH=""
 
 
 
-for f in "datacat_LISTENER_HOME"/lib/*.jar
+for f in "DATACAT_LISTENER_HOME"/lib/*.jar
 do
-  datacat_LISTENER_CLASSPATH="$datacat_LISTENER_CLASSPATH":$f
+  DATACAT_LISTENER_CLASSPATH="$DATACAT_LISTENER_CLASSPATH":$f
 done
 
-datacat_LISTENER_CLASSPATH="$datacat_LISTENER_CLASSPATH":"$datacat_LISTENER_HOME"/conf/log4j.properties
+DATACAT_LISTENER_CLASSPATH="$DATACAT_LISTENER_CLASSPATH":"$DATACAT_LISTENER_HOME"/conf/log4j.properties
 
-export datacat_LISTENER_HOME
-export datacat_LISTENER_CLASSPATH
+export DATACAT_LISTENER_HOME
+export DATACAT_LISTENER_CLASSPATH

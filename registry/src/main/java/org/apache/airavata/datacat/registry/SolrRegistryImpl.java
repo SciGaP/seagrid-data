@@ -70,7 +70,7 @@ public class SolrRegistryImpl implements IRegistry {
                 throw new Exception("Failed to publish data to solr. Response Text is " + responseText);
             }
         } catch (Exception e) {
-            new RegistryException(e);
+            throw new RegistryException(e);
         }finally {
             if(httpClient != null){
                 try {

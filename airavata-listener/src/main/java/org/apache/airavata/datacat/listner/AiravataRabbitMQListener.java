@@ -104,6 +104,35 @@ public class AiravataRabbitMQListener {
 
                                     //TODO RabbitMQ Queue
                                     datacatWorker.handle(parseMetadataRequest);
+                                }else if(applicationName.toLowerCase().contains("gamess")){
+                                    String remoteGaussianLogFilePath = null;
+                                    for(OutputDataObjectType outputDataObjectTypes : experimentModel.getExperimentOutputs()){
+                                        if(applicationName.contains("Gamess_BR2")){
+                                            if(outputDataObjectTypes.getName().equals("Gamess-Job-Standard-Output")){
+                                                remoteGaussianLogFilePath = outputDataObjectTypes.getValue();
+                                            }
+                                        }else{
+                                            //FIXME in Airavata
+                                            if(outputDataObjectTypes.getName().equals("Gamess-Standard-Out")){
+                                                remoteGaussianLogFilePath = outputDataObjectTypes.getValue();
+                                            }
+                                        }
+                                    }
+                                    if(remoteGaussianLogFilePath == null || remoteGaussianLogFilePath.isEmpty()){
+                                        throw new Exception("No Gamess stdout file available for experiment : "
+                                                + experimentModel.getExperimentId());
+                                    }
+                                    ParseMetadataRequest parseMetadataRequest = new ParseMetadataRequest();
+                                    //FIXME
+                                    parseMetadataRequest.setFileUri(new URI("scp://gw54.iu.xsede.org:"
+                                            + remoteGaussianLogFilePath));
+                                    HashMap<String, Object> inputMetadata = new HashMap<>();
+                                    inputMetadata.put("experimentId", experimentModel.getExperimentId());
+                                    parseMetadataRequest.setIngestMetadata(inputMetadata);
+                                    parseMetadataRequest.setMimeType(MimeTypes.APPLICATION_GAMESS);
+
+                                    //TODO RabbitMQ Queue
+                                    datacatWorker.handle(parseMetadataRequest);
                                 }else{
                                     logger.info("Unsupported application format for experiment : "
                                             + experimentModel.getExperimentId());

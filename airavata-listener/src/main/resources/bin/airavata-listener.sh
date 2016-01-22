@@ -18,10 +18,10 @@
 # under the License.
 
 . `dirname $0`/setenv.sh
-cd $datacat_LISTENER_HOME
+cd $DATACAT_LISTENER_HOME
 
 IS_DAEMON_MODE=false
-datacat_LISTENER_COMMAND=""
+DATACAT_LISTENER_COMMAND=""
 STOP=false
 FORCE=false
 
@@ -34,8 +34,8 @@ do
         ;;
 	stop)
 	    STOP=true
-	    datacat_LISTENER_COMMAND="$
-	    datacat_LISTENER_COMMAND $var"
+	    DATACAT_LISTENER_COMMAND="$
+	    DATACAT_LISTENER_COMMAND $var"
             shift
         ;;
         -h)
@@ -48,7 +48,7 @@ do
             exit 0
         ;;
 	*)
-	    datacat_LISTENER_COMMAND="$datacat_LISTENER_COMMAND $var"
+	    DATACAT_LISTENER_COMMAND="$DATACAT_LISTENER_COMMAND $var"
             shift
     esac
 done
@@ -75,13 +75,13 @@ then
 	done
 else
 	if $IS_DAEMON_MODE ; then
-		echo "Starting datacat listener in daemon mode..."
-		cd "$datacat_LISTENER_HOME"/lib
-		nohup $JAVA_HOME/bin/java -jar "$datacat_LISTENER_HOME"/lib/airavata-listener-0.1-SNAPSHOT.jar > ../datacat-listener.out & echo $! > "../datacat-listener-start_$!"
+		echo "Starting DATACAT listener in daemon mode..."
+		cd "$DATACAT_LISTENER_HOME"/lib
+		nohup $JAVA_HOME/bin/java -jar "$DATACAT_LISTENER_HOME"/lib/airavata-listener-0.1-SNAPSHOT.jar > ../airavata-listener.out & echo $! > "../airavata-listener-start_$!"
 		cd ..
 	else
-        cd "$datacat_LISTENER_HOME"/lib
-		$JAVA_HOME/bin/java -jar "$datacat_LISTENER_HOME"/lib/airavata-listener-0.1-SNAPSHOT.jar & echo $! > "datacat-listener-start_$!"
+        cd "$DATACAT_LISTENER_HOME"/lib
+		$JAVA_HOME/bin/java -jar "$DATACAT_LISTENER_HOME"/lib/airavata-listener-0.1-SNAPSHOT.jar & echo $! > "airavata-listener-start_$!"
 		cd ..
 	fi
 fi

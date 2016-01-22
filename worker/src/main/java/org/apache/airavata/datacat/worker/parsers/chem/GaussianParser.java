@@ -77,7 +77,7 @@ public class GaussianParser extends AbstractParser {
                 error += s;
             }
             if(error == null || !error.isEmpty()){
-                throw new Exception(error);
+                logger.warn(error);
             }
 
             File outputFile = new File(workingDir + gaussianOutputFileName);
