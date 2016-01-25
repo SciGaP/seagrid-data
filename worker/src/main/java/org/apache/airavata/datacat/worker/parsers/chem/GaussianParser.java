@@ -28,11 +28,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.misc.BASE64Encoder;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Map;
 import java.util.UUID;
 
@@ -94,13 +91,13 @@ public class GaussianParser extends AbstractParser {
                     jsonObject.put("id", UUID.randomUUID().toString());
                 }
 
-                try{
-                    byte[] imageBytes = Files.readAllBytes(Paths.get(workingDir + gaussianMoleculeImageFileName));
-                    BASE64Encoder encoder = new BASE64Encoder();
-                    jsonObject.put("image", encoder.encode(imageBytes));
-                }catch(Exception ex){
-                    logger.error("Unable to read bytes from image file", ex);
-                }
+//                try{
+//                    byte[] imageBytes = Files.readAllBytes(Paths.get(workingDir + gaussianMoleculeImageFileName));
+//                    BASE64Encoder encoder = new BASE64Encoder();
+//                    jsonObject.put("image", encoder.encode(imageBytes));
+//                }catch(Exception ex){
+//                    logger.error("Unable to read bytes from image file", ex);
+//                }
                 return jsonObject;
             }
             throw new Exception("Could not parse data");

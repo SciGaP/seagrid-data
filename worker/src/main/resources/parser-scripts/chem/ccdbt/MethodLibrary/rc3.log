@@ -1,0 +1,6 @@
+Wed, 20 Aug 2008 20:38:12	 rc3          137   INFO     [root]Scan by ownerships without a pattern.. 
+Wed, 20 Aug 2008 20:43:36	 rc3          171   INFO     [root]Scan in the local path '/home/4.8/mchen10/mchen10-pople.chem.ua.edu/molpro.sample/examples_2006.1/lih2_D0D1.out'.. 
+Wed, 20 Aug 2008 20:44:00	 rc3          137   INFO     [root]Scan by ownerships without a pattern.. 
+Wed, 20 Aug 2008 20:44:01	 rc3          140   ERROR    [root]Error occurs during scaning by ownerships.. 
+Wed, 20 Aug 2008 20:46:00	 rc3          137   INFO     [root]Scan by ownerships without a pattern.. 
+Wed, 20 Aug 2008 20:46:02	 rc3          140   ERROR    [root]Error occurs during scaning by ownerships.. 

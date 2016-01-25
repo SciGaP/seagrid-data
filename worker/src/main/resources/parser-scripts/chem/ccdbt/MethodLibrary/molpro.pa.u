@@ -1,0 +1,43 @@
+######################
+### molpro.pa ####
+######################
+
+# This is a molpro parser. 
+
+#########
+# Basic	#
+#########
+[name] molpro_gerneral
+[method] molpro06.molpro
+[priority] 4060 
+[suffix] out
+[verify] {'PROGRAM\sSYSTEM\sMOLPRO'} {'Version\s2006'}
+[pair] {'log'}
+#OTHERS: #[pair] #[pre] #[archive] DICT:Convergence,RMSD|Convergence,RMSF 
+
+#############
+# Functions #
+#############
+
+<CodeVersion> std.findline_s {'(Version.*)linked\s\w*'} #Version 2006.0 linked 11 May
+<JobStatus> std.findkey_return_str {'Variable\smemory\sreleased'} {'CalcDone'} {'Unfinished'} {"True"} # fullmatch=True 
+	#'\s' will match any whitespace, for the reason space are forbidden for defining a parser.
+<Dipole> std.findline_s {'!.*dipole\smoments:.*'} {"True"} {"False"} {"False"} {"False"} {'compress'} #using filter 'compress'
+#<Thermal> std.findline_s {'Thermal\scorrection\sto\sEnergy=\s*([^\s]*)'} {"True"} #fullmatch=True
+#<Enthalpy> std.findline_s {'Thermal\scorrection\sto\sEnthalpy=\s*([^\s]*)'} {"True"} #fullmatch=True
+#<Gibbs> std.findline_s {'Thermal\scorrection\sto\sGibbs\sFree\sEnergy=\s*([^\s]*)'} {"True"} #fullmatch=True
+#<ZPE> std.findline_s {'Zero-point\scorrection=\s*([^\s]*)'} {"True"} #fullmatch=True
+#<OrbSym> std.findsection_dict {'Population\sanalysis'} {'Occupied'} {'Virtual'} {"True"} {"False"} {"False"} {"True"} {"False"} {"False"} {"0"} {"0"} {"True"} {'orbsym'}
+	#fullmatch=True; bra_include=True; last_match=True #i.e. only take the last orbital sym
+#<FinalGeom> std.findsection_dict {'Standard\sOrientation:'} {'----------'} {'----------'} {"True"} {"False"} {"False"} {"False"} {"False"} {"False"} {"1"} {"0"} {"True"} {'g03tojmol'}
+	#fullmatch=True; bra_skip=1; last_match=True #i.e. only take the last geom
+#<NumBasis> std.findline_s {'([0-9]+\sbasis\sfunctions.*)'} {"False"} #fullmatch=False
+#<ElecSym> std.findline_s {'The\selectronic\sstate\sis\s*([^\s]*?)\.+'} {"True"} {"False"} {"False"} {"True"} #fullmatch=True; last_match=True
+#<NImag> std.findline_s {'\s*[0-9]+\s*imaginary\sfrequencies'} {"True"} #fullmatch=True
+#
+#<Conditions> std.findline_s {'(Temperature.*Pressure.*)'} {"True"} #fullmatch=True
+#<Mass> std.findline_s {'Molecular\smass:\s*([^\s]*)\s'} {"False"} #fullmatch=False
+
+
+
+######################################### change in naming, parser --> func after v3.3##########################################################

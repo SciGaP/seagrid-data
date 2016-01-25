@@ -20,7 +20,7 @@
 */
 package org.apache.airavata.datacat.worker.parsers;
 
-import org.apache.airavata.datacat.commons.ParseMetadataRequest;
+import org.apache.airavata.datacat.commons.CatalogFileRequest;
 import org.apache.airavata.datacat.worker.util.ParserProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +28,10 @@ import org.slf4j.LoggerFactory;
 public class DefaultParserResolver implements IParserResolver {
     private final static Logger logger = LoggerFactory.getLogger(DefaultParserResolver.class);
 
-    public AbstractParser resolveParser(ParseMetadataRequest parseMetadataRequest){
+    public AbstractParser resolveParser(CatalogFileRequest catalogFileRequest){
         AbstractParser parser = null;
         //FIXME
-        String mimeType = parseMetadataRequest.getMimeType();
+        String mimeType = catalogFileRequest.getMimeType();
         if(mimeType.toLowerCase().contains("gaussian")){
             String className = ParserProperties.getInstance().getProperty(ParserProperties.GAUSSIAN_PARSER, "");
             if(className != null && !className.isEmpty()){

@@ -20,7 +20,7 @@
 # Get standard environment variables
 # if JAVA_HOME is not set we're not happy
 if [ -z "$JAVA_HOME" ]; then
-  echo "You must set the JAVA_HOME variable before running datacat-listener scripts."
+  echo "You must set the JAVA_HOME variable before running airavata-listener scripts."
   exit 1
 fi
 
@@ -47,19 +47,19 @@ done
 
 PRGDIR=`dirname "$PRG"`
 
-# Only set DATACAT_LISTENER_HOME if not already set
-[ -z "$DATACAT_LISTENER_HOME" ] && DATACAT_LISTENER_HOME=`cd "$PRGDIR/.." ; pwd`
+# Only set AIRAVATA_LISTENER_HOME if not already set
+[ -z "$AIRAVATA_LISTENER_HOME" ] && AIRAVATA_LISTENER_HOME=`cd "$PRGDIR/.." ; pwd`
 
-DATACAT_LISTENER_CLASSPATH=""
+AIRAVATA_LISTENER_CLASSPATH=""
 
 
 
-for f in "DATACAT_LISTENER_HOME"/lib/*.jar
+for f in "AIRAVATA_LISTENER_HOME"/lib/*.jar
 do
-  DATACAT_LISTENER_CLASSPATH="$DATACAT_LISTENER_CLASSPATH":$f
+  AIRAVATA_LISTENER_CLASSPATH="$AIRAVATA_LISTENER_CLASSPATH":$f
 done
 
-DATACAT_LISTENER_CLASSPATH="$DATACAT_LISTENER_CLASSPATH":"$DATACAT_LISTENER_HOME"/conf/log4j.properties
+AIRAVATA_LISTENER_CLASSPATH="$AIRAVATA_LISTENER_CLASSPATH":"$AIRAVATA_LISTENER_HOME"/conf/log4j.properties
 
-export DATACAT_LISTENER_HOME
-export DATACAT_LISTENER_CLASSPATH
+export AIRAVATA_LISTENER_HOME
+export AIRAVATA_LISTENER_CLASSPATH

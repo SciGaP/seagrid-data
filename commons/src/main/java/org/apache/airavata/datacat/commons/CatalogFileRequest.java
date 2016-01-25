@@ -20,10 +20,11 @@
 */
 package org.apache.airavata.datacat.commons;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.util.HashMap;
 
-public class ParseMetadataRequest {
+public class CatalogFileRequest implements Serializable{
     private HashMap<String, Object> ingestMetadata;
     private URI fileUri;
     private String mimeType;

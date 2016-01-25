@@ -20,7 +20,6 @@
 */
 package org.apache.airavata.datacat.worker.parsers.weather;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.airavata.datacat.worker.parsers.AbstractParser;
 import org.apache.airavata.datacat.worker.parsers.ParserException;
 import org.apache.tika.metadata.Metadata;
@@ -32,15 +31,12 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
+import ucar.ma2.DataType;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -62,21 +58,87 @@ public class NetCDFParser extends AbstractParser {
 //            System.out.println(handler.toString());
 //            System.out.println(metadata);
 
-            NetcdfFile ncFile = NetcdfFile.open("/Users/supun/Downloads/wrfout_d01_2000-01-24_12-00-00", null);
-            Map<String, String> jsonMap = new HashMap<>();
-            ncFile.getVariables().stream().forEach(var->{
+            NetcdfFile ncFile = NetcdfFile.open("wrfout_d01_2000-01-24_12-00-00", null);
+            BufferedWriter recordWriter = new BufferedWriter(new FileWriter("netcdf.json"));
+            BufferedWriter schemaWriter = new BufferedWriter(new FileWriter("netcdf.avsc"));
+            schemaWriter.write("{\"namespace\" : \"org.apache.airavata.netcdf\",\n" +
+                    "  \"name\": \"NetCDFRecord\",\n" +
+                    "  \"type\" :  \"record\",\n" +
+                    "  \"fields\" : [\n");
+            recordWriter.write("{\n");
+            int count = ncFile.getVariables().size();
+            for(Variable var : ncFile.getVariables()){
                 String key = var.getDataType() + " " + var.getNameAndDimensions();
                 List<Variable> variableList = new ArrayList<>();
                 variableList.add(var);
                 try {
+                    count--;
+                    if(var.getName().equals("Times"))
+                        continue;
                     List<Array> arrays = ncFile.readArrays(variableList);
-                    jsonMap.put(key, arrays.toString());
+                    recordWriter.write("  \"" + var.getNameAndDimensions().replaceAll("\\(([^\\)]+)\\)", ""));
+                    recordWriter.write("\":[");
+                    String[] bits = arrays.get(0).toString().split(" ");
+                    boolean first = true;
+                    for(String bit : bits){
+                        if(first){
+                            first = false;
+                        }else{
+                            recordWriter.write(",");
+                        }
+                        recordWriter.write(bit);
+                    }
+                    recordWriter.write("]");
+                    if(var.getDataType().equals(DataType.CHAR)){
+                        schemaWriter.write("    {\"name\": \""+ var.getName() +"\", \"type\": [\"null\",\n" +
+                                "                {\n" +
+                                "                    \"type\":\"array\",\n" +
+                                "                    \"items\":\"string\"\n" +
+                                "                }\n" +
+                                "            ],\n" +
+                                "            \"default\":null}");
+                    }else if(var.getDataType().equals(DataType.INT)){
+                        schemaWriter.write("    {\"name\": \""+ var.getName() +"\", \"type\": [\"null\",\n" +
+                                "                {\n" +
+                                "                    \"type\":\"array\",\n" +
+                                "                    \"items\":\"int\"\n" +
+                                "                }\n" +
+                                "            ],\n" +
+                                "            \"default\":null}");
+                    }else if(var.getDataType().equals(DataType.DOUBLE)){
+                        schemaWriter.write("    {\"name\": \"" + var.getName() + "\", \"type\":[\"null\",\n" +
+                                "                {\n" +
+                                "                    \"type\":\"array\",\n" +
+                                "                    \"items\":\"double\"\n" +
+                                "                }\n" +
+                                "            ],\n" +
+                                "            \"default\":null}");
+                    }else if(var.getDataType().equals(DataType.FLOAT)){
+                        schemaWriter.write("    {\"name\": \""+ var.getName() +"\", \"type\": [\"null\",\n" +
+                                "                {\n" +
+                                "                    \"type\":\"array\",\n" +
+                                "                    \"items\":\"double\"\n" +
+                                "                }\n" +
+                                "            ],\n" +
+                                "            \"default\":null}");
+                    }
+
+                    if(count>0){
+                        schemaWriter.write(",\n");
+                        recordWriter.write(",\n");
+                    }else{
+                        schemaWriter.write("\n");
+                        recordWriter.write("\n");
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            });
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.writeValue(new File("netcdf.json"), jsonMap);
+            }
+            schemaWriter.write("  ]\n" +
+                    "}");
+            recordWriter.write("}");
+            schemaWriter.close();
+            recordWriter.close();
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw new ParserException(e);

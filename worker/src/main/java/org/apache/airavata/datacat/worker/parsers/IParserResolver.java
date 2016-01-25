@@ -20,8 +20,8 @@
 */
 package org.apache.airavata.datacat.worker.parsers;
 
-import org.apache.airavata.datacat.commons.ParseMetadataRequest;
+import org.apache.airavata.datacat.commons.CatalogFileRequest;
 
 public interface IParserResolver {
-    AbstractParser resolveParser(ParseMetadataRequest parseMetadataRequest);
+    AbstractParser resolveParser(CatalogFileRequest catalogFileRequest);
 }

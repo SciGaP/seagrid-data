@@ -20,11 +20,13 @@
 */
 package org.apache.airavata.datacat.listner;
 
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
 import org.apache.airavata.common.utils.ThriftUtils;
 import org.apache.airavata.datacat.commons.MimeTypes;
-import org.apache.airavata.datacat.commons.ParseMetadataRequest;
+import org.apache.airavata.datacat.commons.CatalogFileRequest;
 import org.apache.airavata.datacat.listner.util.ListenerProperties;
-import org.apache.airavata.datacat.worker.DataCatWorker;
 import org.apache.airavata.messaging.core.MessageContext;
 import org.apache.airavata.messaging.core.MessageHandler;
 import org.apache.airavata.messaging.core.MessagingConstants;
@@ -37,6 +39,9 @@ import org.apache.thrift.TBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,18 +50,21 @@ import java.util.Map;
 
 public class AiravataRabbitMQListener {
     private final static Logger logger = LoggerFactory.getLogger(AiravataRabbitMQListener.class);
-    public static final String RABBITMQ_BROKER_URL = "rabbitmq.broker.url";
+    public static final String AIRAVATA_RABBITMQ_BROKER_URL = "airavata,rabbitmq.broker.url";
     public static final String AIRAVATA_RABBITMQ_EXCHANGE_NAME = "airavata.rabbitmq.exchange.name";
     private static final String EXPERIMENT_COMPLETED_STATE = "COMPLETED";
 
+    public static final String DATACAT_RABBITMQ_BROKER_URL = "datacat.rabbitmq.broker.url";
+    public static final String DATACAT_RABBITMQ_WORK_QUEUE_NAME = "datacat.rabbitmq.work.queue.name";
+
+    private static final String datacatBrokerUrl = ListenerProperties.getInstance().getProperty(DATACAT_RABBITMQ_BROKER_URL, "");
+    private static final String datacatWorkQueueName = ListenerProperties.getInstance().getProperty(DATACAT_RABBITMQ_WORK_QUEUE_NAME, "");
+
     public static void main(String[] args) {
         try {
-            String brokerUrl = ListenerProperties.getInstance().getProperty(RABBITMQ_BROKER_URL, "");
-            logger.info("RabbitMQ broker url " + brokerUrl);
+            String airavataBrokerUrl = ListenerProperties.getInstance().getProperty(AIRAVATA_RABBITMQ_BROKER_URL, "");
             final String exchangeName = ListenerProperties.getInstance().getProperty(AIRAVATA_RABBITMQ_EXCHANGE_NAME, "");
-            RabbitMQStatusConsumer consumer = new RabbitMQStatusConsumer(brokerUrl, exchangeName);
-
-            final DataCatWorker datacatWorker = new DataCatWorker();
+            RabbitMQStatusConsumer consumer = new RabbitMQStatusConsumer(airavataBrokerUrl, exchangeName);
             consumer.listen(new MessageHandler() {
                 @Override
                 public Map<String, Object> getProperties() {
@@ -69,7 +77,7 @@ public class AiravataRabbitMQListener {
 
                 @Override
                 public void onMessage(MessageContext message) {
-                    if (message.getType().equals(MessageType.EXPERIMENT)){
+                    if (message.getType().equals(MessageType.EXPERIMENT)) {
                         try {
                             ExperimentStatusChangeEvent event = new ExperimentStatusChangeEvent();
                             TBase messageEvent = message.getEvent();
@@ -78,62 +86,63 @@ public class AiravataRabbitMQListener {
                             logger.info(" Message Received with message id '" + message.getMessageId()
                                     + "' and with message type '" + message.getType() + "' and with state : '"
                                     + event.getState().toString() + " for Experiment " + event.getExperimentId());
-                            if(event.getState().toString().equals(EXPERIMENT_COMPLETED_STATE)){
+                            if (event.getState().toString().equals(EXPERIMENT_COMPLETED_STATE)) {
                                 String experimentId = event.getExperimentId();
                                 ExperimentModel experimentModel = AiravataAPIClient.getInstance().getExperiment(experimentId);
                                 String applicationName = experimentModel.getExecutionId();
-                                if(applicationName.toLowerCase().contains("gaussian")){
+                                if (applicationName.toLowerCase().contains("gaussian")) {
                                     String remoteGaussianLogFilePath = null;
-                                    for(OutputDataObjectType outputDataObjectTypes : experimentModel.getExperimentOutputs()){
-                                        if(outputDataObjectTypes.getName().equals("Gaussian-Application-Output")){
+                                    for (OutputDataObjectType outputDataObjectTypes : experimentModel.getExperimentOutputs()) {
+                                        if (outputDataObjectTypes.getName().equals("Gaussian-Application-Output")) {
                                             remoteGaussianLogFilePath = outputDataObjectTypes.getValue();
                                         }
                                     }
-                                    if(remoteGaussianLogFilePath == null || remoteGaussianLogFilePath.isEmpty()){
+                                    if (remoteGaussianLogFilePath == null || remoteGaussianLogFilePath.isEmpty()) {
                                         throw new Exception("No Gaussian log file available for experiment : "
                                                 + experimentModel.getExperimentId());
                                     }
-                                    ParseMetadataRequest parseMetadataRequest = new ParseMetadataRequest();
+                                    CatalogFileRequest catalogFileRequest = new CatalogFileRequest();
                                     //FIXME
-                                    parseMetadataRequest.setFileUri(new URI("scp://gw54.iu.xsede.org:"
+                                    catalogFileRequest.setFileUri(new URI("scp://gw54.iu.xsede.org:"
                                             + remoteGaussianLogFilePath));
                                     HashMap<String, Object> inputMetadata = new HashMap<>();
                                     inputMetadata.put("experimentId", experimentModel.getExperimentId());
-                                    parseMetadataRequest.setIngestMetadata(inputMetadata);
-                                    parseMetadataRequest.setMimeType(MimeTypes.APPLICATION_GAUSSIAN);
+                                    catalogFileRequest.setIngestMetadata(inputMetadata);
+                                    catalogFileRequest.setMimeType(MimeTypes.APPLICATION_GAUSSIAN_LOG);
 
-                                    //TODO RabbitMQ Queue
-                                    datacatWorker.handle(parseMetadataRequest);
-                                }else if(applicationName.toLowerCase().contains("gamess")){
+                                    publishMessage(catalogFileRequest);
+                                } else if (applicationName.toLowerCase().contains("gamess")) {
                                     String remoteGaussianLogFilePath = null;
-                                    for(OutputDataObjectType outputDataObjectTypes : experimentModel.getExperimentOutputs()){
-                                        if(applicationName.contains("Gamess_BR2")){
-                                            if(outputDataObjectTypes.getName().equals("Gamess-Job-Standard-Output")){
+                                    for (OutputDataObjectType outputDataObjectTypes : experimentModel.getExperimentOutputs()) {
+                                        if (applicationName.contains("Gamess_BR2")) {
+                                            if (outputDataObjectTypes.getName().equals("Gamess-Job-Standard-Output")) {
                                                 remoteGaussianLogFilePath = outputDataObjectTypes.getValue();
                                             }
-                                        }else{
-                                            //FIXME in Airavata
-                                            if(outputDataObjectTypes.getName().equals("Gamess-Standard-Out")){
+                                        } else if (applicationName.contains("Gamess_Stampede")) {
+                                            if (outputDataObjectTypes.getName().equals("Gamess-Standard-Out")) {
+                                                remoteGaussianLogFilePath = outputDataObjectTypes.getValue();
+                                            }
+                                        } else {
+                                            if (outputDataObjectTypes.getName().equals("Gamess-Standard-Out")) {
                                                 remoteGaussianLogFilePath = outputDataObjectTypes.getValue();
                                             }
                                         }
                                     }
-                                    if(remoteGaussianLogFilePath == null || remoteGaussianLogFilePath.isEmpty()){
+                                    if (remoteGaussianLogFilePath == null || remoteGaussianLogFilePath.isEmpty()) {
                                         throw new Exception("No Gamess stdout file available for experiment : "
                                                 + experimentModel.getExperimentId());
                                     }
-                                    ParseMetadataRequest parseMetadataRequest = new ParseMetadataRequest();
+                                    CatalogFileRequest catalogFileRequest = new CatalogFileRequest();
                                     //FIXME
-                                    parseMetadataRequest.setFileUri(new URI("scp://gw54.iu.xsede.org:"
+                                    catalogFileRequest.setFileUri(new URI("scp://gw54.iu.xsede.org:"
                                             + remoteGaussianLogFilePath));
                                     HashMap<String, Object> inputMetadata = new HashMap<>();
                                     inputMetadata.put("experimentId", experimentModel.getExperimentId());
-                                    parseMetadataRequest.setIngestMetadata(inputMetadata);
-                                    parseMetadataRequest.setMimeType(MimeTypes.APPLICATION_GAMESS);
+                                    catalogFileRequest.setIngestMetadata(inputMetadata);
+                                    catalogFileRequest.setMimeType(MimeTypes.APPLICATION_GAMESS_STDOUT);
 
-                                    //TODO RabbitMQ Queue
-                                    datacatWorker.handle(parseMetadataRequest);
-                                }else{
+                                    publishMessage(catalogFileRequest);
+                                } else {
                                     logger.info("Unsupported application format for experiment : "
                                             + experimentModel.getExperimentId());
                                 }
@@ -147,5 +156,23 @@ public class AiravataRabbitMQListener {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
+    }
+
+    private static void publishMessage(CatalogFileRequest catalogFileRequest) throws Exception {
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setUri(datacatBrokerUrl);
+        Connection connection = factory.newConnection();
+        Channel channel = connection.createChannel();
+        boolean durable = true;
+        channel.queueDeclare(datacatWorkQueueName, durable, false, false, null);
+        logger.info("Publishing to DataCat work queue ...");
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutput out = null;
+        out = new ObjectOutputStream(bos);
+        out.writeObject(catalogFileRequest);
+        channel.basicPublish("", datacatWorkQueueName, null, bos.toByteArray());
+        logger.info("Successfully published to launch queue ...");
+        channel.close();
+        connection.close();
     }
 }

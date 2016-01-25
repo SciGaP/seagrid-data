@@ -1,0 +1,45 @@
+######################
+### gaussian03.pa ####
+######################
+
+# This parser can parse most gaussian output files, but special cases like QST2, QST3, G3MP2, etc. need be treated specially with higher priority!!! 
+
+
+
+###########
+# Basic	  #
+###########
+[name] gaussian_03
+[method] gaussian03.gaussian 
+[priority] 5030 
+[suffix] {'log'}
+[verify] {'Gaussian\s03'} 
+#OTHERS: #[pair] #[pre] #[archive] DICT:Convergence,RMSD|Convergence,RMSF 
+
+#############
+# Functions #
+#############
+
+<CodeVersion> std.findline_s {'(Gaussian.*Revision.*),'}
+<Keywords> std.findsection_dict {'Gaussian\s03:'} {'----------'} {'----------'} {"True"} # fullmatch=True
+<Title> std.findsection_dict {'Gaussian\s03:'} {'----------'} {'--------'} {"True"} {"False"} {"False"} {"False"} {"False"} {"False"} {"2"} 
+	# find all titles and join together,  #fullmatch=True ;  bra_skip=2 
+<JobStatus> std.findkey_return_str {'Normal\stermination\sof'} {'CalcDone'} {'Unfinished'} {"True"} # fullmatch=True 
+	#'\s' will match any whitespace, for the reason space are forbidden for defining a parser.
+<Thermal> std.findline_s {'Thermal\scorrection\sto\sEnergy=\s*([^\s]*)'} {"True"} #fullmatch=True
+<Enthalpy> std.findline_s {'Thermal\scorrection\sto\sEnthalpy=\s*([^\s]*)'} {"True"} #fullmatch=True
+<Gibbs> std.findline_s {'Thermal\scorrection\sto\sGibbs\sFree\sEnergy=\s*([^\s]*)'} {"True"} #fullmatch=True
+<ZPE> std.findline_s {'Zero-point\scorrection=\s*([^\s]*)'} {"True"} #fullmatch=True
+<OrbSym> std.findsection_dict {'Population\sanalysis'} {'Occupied'} {'Virtual'} {"True"} {"False"} {"False"} {"True"} {"False"} {"False"} {"0"} {"0"} {"True"} {'orbsym'}
+	#fullmatch=True; bra_include=True; last_match=True #i.e. only take the last orbital sym
+<FinalGeom> std.findsection_dict {'Standard\sOrientation:'} {'----------'} {'----------'} {"True"} {"False"} {"False"} {"False"} {"False"} {"False"} {"1"} {"0"} {"True"} {'g03tojmol'}
+	#fullmatch=True; bra_skip=1; last_match=True #i.e. only take the last geom
+<NumBasis> std.findline_s {'([0-9]+\sbasis\sfunctions.*)'} {"False"} #fullmatch=False
+<ElecSym> std.findline_s {'The\selectronic\sstate\sis\s*([^\s]*?)\.+'} {"True"} {"False"} {"False"} {"True"} #fullmatch=True; last_match=True
+<NImag> std.findline_s {'\s*([0-9]+)\s*imaginary\sfrequencies'} {"True"} #fullmatch=True
+
+<Conditions> std.findline_s {'(Temperature.*Pressure.*)'} {"True"} {"False"} {"False"} {"False"} {'compress'} #fullmatch=True; filter=compress
+
+
+
+######################################### change in naming, parser --> func after v3.3##########################################################

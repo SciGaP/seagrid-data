@@ -1,0 +1,98 @@
+################################## README #######################################
+# Read these document to start with writing your own parser!!!!!!!              #
+# This is a template also as a help for creating a user-defined parser.         #
+#################################################################################
+# Comments or helps will follow '#', they will be skipped by the interpreter.
+# Pattern match use 're' style.(re is a python standard module)
+# Seperate terms using empty spaces.
+# no space in [] or {} or <>, if it is nessasary to use a ' ', use '\1' instead.
+#
+# NEVER modify this template, 
+# -- but copy it to another file named like 'parsername.pa', then do modification.
+#
+#################################################################################
+
+##################################################
+# built-in string dictionary  
+##################################################
+# referred by '$name$'              
+#-------------------------------------------------
+# dft = b3lyp|bp86|pw91 ...
+# num = -??[0-9]+\.??[0-9]*
+# element = H|h|1|HE|He|he|2 ... 
+# xyz = $element$[\s,]*$num$[\s,]*$num$[\s,]*$num$
+#
+# ...
+#-------------------------------------------------
+# definitions will be somewhere else 
+# interpreter-sensetive
+##################################################
+
+###########
+# Basic	  #
+###########
+[name] gaussian_dft_opt_freq
+[method] default.method # will load ../BasicMethod/default.py 's {method} class. [default method] is default.method.
+
+[priority] 5034 
+	# important! e.g. opt+freq should have a higher priority than opt, i.e. as a bigger number. 
+	# it is an example here:50 stands for gaussian, 34 stands for dft freq. these will provide great flexiblity.
+
+[suffix] {'log'}
+[verify] {'Gaussian'} {'$dft$'} {'opt'} {'freq'} 
+[pair] 
+	# e.g. '-.log' means pair's name is the filename with rightmost '.log' removed. '-log+com' means '.log&.com'-pair. 
+#[pre] 
+	# define and load pre-operation for further data extraction.
+#[archive] DICT:Convergence,RMSD|Convergence,RMSF 
+	# This is an example to setup some dictionary values.
+	# [archive] direct to a method to parse the archived fields(Gaussian03, etc.).
+
+#############
+# Functions #
+#############
+ # Available keys: the squence below is the squence data are stored in the database.
+ #    version, keyword, title, ifnorm, ifopted, coor1, coor_norm1, coor2, coor_norm2 
+ #    formula, energy, energy2, energy3, sym1, pg1, sym2, pg2, memory, basicfunc
+ #    freq, zpe, energy, dipole, reserve1, reserve2, reserve3, reserve4
+ #    coor3, coor_norm3, sym3, pg3, coor4, coor_norm4, sym4, pg4, energy5, energy6 
+ #    unkown1, unkown2, unkown3, unkown4, unkown5, unkown6, unkown7, unkown8, unkown9
+<version> std.findline_s {'(Gaussian.*Revision.*),'}
+ # parameters are always specified starting from 2nd one in definition since the 1st is always 'linelist'.	
+ # format: <keyname:description> funcname {parameter1} {parameter2} ... 
+ #    'keyname' should be in the available key list.
+ #    'description' is to distinguish similar records in the database.
+ #    string 'parameters' should be quoted by "'".
+<keywords> std.findsection # gaussian keywords is always a headace
+<title> std.findline_s {'Title.*'} # find all titles and join together
+<ifnorm>
+<>
+
+ ################ belows are obsoleted ###################### but for code develop purpose ######################################     
+
+                     
+       # THIS IS VERY IMPORTANT, choose which kinds of information will get parsed here.
+	                             # -- these are available for parser_list: 
+				     # -- 'version' : version of a calculation software package, e.g. 'Gaussion 03.02'.
+				     # -- 'init_coor', 'init_coor_norm' : inital coordinamtes of a calculation, the latter one is normalized coordinates based on the former one.
+				     # -- 'formula' : will only affect when have 'init_coor' and 'init_coor_norm'.
+				     # -- 'title' : title of a calculation. usually specified by user who run a calculation.
+				     # -- 'keyword' : keyword of a calculation. e.g. 'freq=noraman b3lyp/3-21G'.
+				     # -- 'basicfunction' : how many basic functions have been used in the calculation.
+				     # -- 'mem' : memory used by a calculation.
+				     # -- 'ifnorm' : it is mandatory, you don't have to choose it here, but need to specify it later. see 'ifopted'
+				     # -- 'ifopted' : if an optimization calculation finishes well, if not the parser will then skip this file, following parsings will not be performed.
+				     # -- 'final_coor', 'final_coor_norm' : useful in an optimization calculation. will also return final_coor_type, e.g. 'opt' or 'ts', maybe...
+				     # -- 'freq' : frequencies.
+				     # -- 'zpe' : Zero point energy.
+				     # -- 'energy' : will return energy and energytype. e.g. ('HF',236.1231)
+				     # -- 'sym' : symmetry information.
+				     # -- 'pg' : which point group the last geometry belongs to.
+	func = dict(               # parser is a D{dictionary} inside 'setting', storing parameter for each parsers.
+		ifnorm = dict(agorithm = 'std.findline', description = '',para = [] )				     
+		                    # 'func' is the agorithm name. defined under the path '/RCcube/Method/Parser'. 'std' refers to 'std.py', 'findline' is the function inside 'std.py'		     
+				    # 'type' is specify different parser, e.g. energy has types 'HF', 'b3lyp', 'CCSD(T)'
+				   
+
+
+######################################### change in naming, parser --> func after v3.3##########################################################

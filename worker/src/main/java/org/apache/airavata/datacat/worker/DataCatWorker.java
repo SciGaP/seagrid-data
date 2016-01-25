@@ -20,7 +20,7 @@
 */
 package org.apache.airavata.datacat.worker;
 
-import org.apache.airavata.datacat.commons.ParseMetadataRequest;
+import org.apache.airavata.datacat.commons.CatalogFileRequest;
 import org.apache.airavata.datacat.registry.IRegistry;
 import org.apache.airavata.datacat.registry.RegistryFactory;
 import org.apache.airavata.datacat.worker.parsers.AbstractParser;
@@ -51,16 +51,16 @@ public class DataCatWorker {
         fileHelper = new FileHelper();
     }
 
-    public void handle(ParseMetadataRequest parseMetadataRequest){
-        AbstractParser parser = parserResolver.resolveParser(parseMetadataRequest);
+    public void handle(CatalogFileRequest catalogFileRequest){
+        AbstractParser parser = parserResolver.resolveParser(catalogFileRequest);
         if(parser != null){
             String localFilePath = null;
             try {
-                URI uri = parseMetadataRequest.getFileUri();
+                URI uri = catalogFileRequest.getFileUri();
                 localFilePath = fileHelper.createLocalCopyOfFile(uri);
-                JSONObject jsonObject = parser.parse(localFilePath, parseMetadataRequest.getIngestMetadata());
+                JSONObject jsonObject = parser.parse(localFilePath, catalogFileRequest.getIngestMetadata());
                 registry.publish(jsonObject);
-                logger.info("Published metadata for experiment : " + parseMetadataRequest.getFileUri().toString());
+                logger.info("Published metadata for experiment : " + catalogFileRequest.getFileUri().toString());
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             } finally {
@@ -72,7 +72,7 @@ public class DataCatWorker {
                 }
             }
         }else{
-            logger.warn("No suitable parser found for experiment : " + parseMetadataRequest.getFileUri().toString());
+            logger.warn("No suitable parser found for experiment : " + catalogFileRequest.getFileUri().toString());
         }
     }
 

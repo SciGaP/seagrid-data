@@ -1,0 +1,6 @@
+07/08/10 mingyang chen: changes in gaussian03.py
+	formula from gaussian archive area is reparsed to have "C-H-alphabetical" order
+08/08/10 add try: except: to all the calls of Method/.../std.py functions
+
+
+

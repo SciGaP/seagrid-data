@@ -55,6 +55,7 @@
             <directory>../worker/src/main/resources/parser-scripts</directory>
             <outputDirectory>parser-scripts</outputDirectory>
             <includes>
+                <include>**/**/*.*</include>
                 <include>**/*.*</include>
                 <include>*.*</include>
             </includes>

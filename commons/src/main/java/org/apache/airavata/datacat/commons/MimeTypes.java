@@ -21,6 +21,8 @@
 package org.apache.airavata.datacat.commons;
 
 public class MimeTypes {
-    public static String APPLICATION_GAUSSIAN = "application/gaussian";
-    public static String APPLICATION_GAMESS = "application/gamess";
+    public static String APPLICATION_GAUSSIAN_LOG = "application/gaussian-log";
+    public static String APPLICATION_GAMESS_STDOUT = "application/gamess-stdout";
+    public static String APPLICATION_MOLPRO_STDOUT = "application/molpro-stdout";
+    public static String APPLICATION_NWCHEM_STDOUT = "application/nwchem-stdout";
 }

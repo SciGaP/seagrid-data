@@ -1,0 +1,58 @@
+######################
+### nwchem5x.pa   ####
+######################
+
+# This is a nwchem parser for version 5.0, 5.1, etc. 
+
+#########
+# Basic	#
+#########
+[name] nwchem_gerneral
+[method] nwchem50.nwchem
+[priority] 3050 
+[suffix] {'out'} {'nwout'} {'log'}
+[verify] {'\(NWChem\)\s5'}
+[pair] {'nw'} {'com'} {'in'}
+#OTHERS: #[pair] #[pre] #[archive] DICT:Convergence,RMSD|Convergence,RMSF 
+
+#############
+# Functions #
+#############
+
+<CodeVersion> std.findline_s {'(\(NWChem\)\s*[^\s]*)'} # (NWChem) 5.0
+<JobStatus> std.findkey_return_str {'Total\stimes'} {'CalcDone'} {'Unfinished'} {"True"} # fullmatch=True 
+	#'\s' will match any whitespace, for the reason space are forbidden for defining a parser.
+#<Dipole> std.findline_s {'!(.*dipole\smoment.*)'} {"True"} {"False"} {"False"} {"False"} {'compress'} #using filter 'compress'
+#<Conditions> std.findline_s {'(Temperature.*Pressure.*)'} {"True"} {"False"} {"False"} {"False"} {'compress'} #fullmatch; filter=compress
+#<Enthalpy> std.findline_s {'Enthalpy.*:\s*([^\s]*)\s*'} {"True"} {"False"} {"False"} {"True"} #fullmatch & last_match
+#<Gibbs> std.findline_s {'Free\sEnthalpy\sG.*:\s*([^\s]*)\s*'} {"True"} {"False"} {"False"} {"True"} #fullmatch & last_match
+#<ZPEKcal> std.findline {'Zero-Point\svibrational\sEnergy'} {'\s*([^\s]*)\s*\[kcal/Mol\]'} {"True"} {"False"} {"1"} {''} {"False"} {"False"} {"True"} #line_diff=1, fullmatch & last_match
+<PG> std.findline_s {'Group\sname\s*([^\s]*)'} {"True"} {"False"} {"False"} {"True"} {'compress'} #fullmatch; last_match; filter=compress
+<S2> std.findline_s {'<S2>\s=\s*([^\s]*)'} {"True"} {"False"} {"False"} {"True"} {'compress'} #fullmatch; last_match; filter=compress
+
+#<CPUTime> std.findline_s {'CPU\sTIME.*\*\s*([^\s]*)\s*'} {"True"} {"False"} {"False"} {"False"} {'compress'} #fullmatch; filter=compress
+#<TimeCost> std.findline_s {'REAL\sTIME.*\*\s*([^\s]*)\s*.*'} {"True"} {"False"} {"False"} {"False"} {'compress'} #fullmatch; filter=compress
+
+#<Thermal> std.findline_s {'Thermal\scorrection\sto\sEnergy=\s*([^\s]*)'} {"True"} #fullmatch=True
+#<Enthalpy> std.findline_s {'Thermal\scorrection\sto\sEnthalpy=\s*([^\s]*)'} {"True"} #fullmatch=True
+#<Gibbs> std.findline_s {'Thermal\scorrection\sto\sGibbs\sFree\sEnergy=\s*([^\s]*)'} {"True"} #fullmatch=True
+
+<EntropyKcal> std.findline_s {'Total\sEntropy\s*=\s*([^\s]*)'} {"True"} {"False"} {"False"} {"True"} {'DivBy1K'} #fullmatch; last_match; filter=DivBy1K
+
+#<ZPE> std.findline_s {'Zero-point\scorrection=\s*([^\s]*)'} {"True"} #fullmatch=True
+<ZPEKcal> std.findline_s {'The\sZero-Point\sEnergy\s*\(.*?\)\s*=\s*([^\s]*)'} {"True"} {"False"} {"False"} {"True"} {'compress'} #fullmatch; last_match; filter=compress
+
+#<OrbSym> std.findsection_dict {'Population\sanalysis'} {'Occupied'} {'Virtual'} {"True"} {"False"} {"False"} {"True"} {"False"} {"False"} {"0"} {"0"} {"True"} {'orbsym'}
+	#fullmatch=True; bra_include=True; last_match=True #i.e. only take the last orbital sym
+#<FinalGeom> std.findsection_dict {'Standard\sOrientation:'} {'----------'} {'----------'} {"True"} {"False"} {"False"} {"False"} {"False"} {"False"} {"1"} {"0"} {"True"} {'g03tojmol'}
+	#fullmatch=True; bra_skip=1; last_match=True #i.e. only take the last geom
+#<NumBasis> std.findline_s {'([0-9]+\sbasis\sfunctions.*)'} {"False"} #fullmatch=False
+#<ElecSym> std.findline_s {'The\selectronic\sstate\sis\s*([^\s]*?)\.+'} {"True"} {"False"} {"False"} {"True"} #fullmatch=True; last_match=True
+<NImag2> std.findline_s {'Negative\s*Nuclear\s*Hessian\s*Mode\s*([^\s]*)'} {"True"} #fullmatch=True
+#
+<Conditions> std.findline_s {'(Temperature\s*=.*)'} {"True"} {"False"} {"False"} {"False"} {'compress'} #fullmatch=True, filter=compress
+#<Mass> std.findline_s {'Molecular\smass:\s*([^\s]*)\s'} {"False"} #fullmatch=False
+
+
+
+######################################### change in naming, parser --> func after v3.3##########################################################

@@ -29,8 +29,8 @@ public class WorkerProperties {
 
     private final static Logger logger = LoggerFactory.getLogger(WorkerProperties.class);
 
-    public static final String LISTENER_PROPERTY_FILE = "../conf/datacat-worker.properties";
-    public static final String DEFAULT_LISTENER_PROPERTY_FILE = "conf/datacat-worker.properties";
+    public static final String WORKER_PROPERTY_FILE = "../conf/datacat-worker.properties";
+    public static final String DEFAULT_WORKER_PROPERTY_FILE = "conf/datacat-worker.properties";
 
     private static WorkerProperties instance;
 
@@ -39,12 +39,12 @@ public class WorkerProperties {
     private WorkerProperties() {
         try {
             InputStream fileInput;
-            if (new File(LISTENER_PROPERTY_FILE).exists()) {
-                fileInput = new FileInputStream(LISTENER_PROPERTY_FILE);
+            if (new File(WORKER_PROPERTY_FILE).exists()) {
+                fileInput = new FileInputStream(WORKER_PROPERTY_FILE);
                 logger.info("Using configured worker property (datacat-worker.properties) file");
             } else {
                 logger.info("Using default worker property (datacat-worker) file");
-                fileInput = ClassLoader.getSystemResource(DEFAULT_LISTENER_PROPERTY_FILE).openStream();
+                fileInput = ClassLoader.getSystemResource(DEFAULT_WORKER_PROPERTY_FILE).openStream();
             }
             java.util.Properties properties = new java.util.Properties();
             properties.load(fileInput);
