@@ -59,7 +59,7 @@ public class DataCatWorker {
                 URI uri = catalogFileRequest.getFileUri();
                 localFilePath = fileHelper.createLocalCopyOfFile(uri);
                 JSONObject jsonObject = parser.parse(localFilePath, catalogFileRequest.getIngestMetadata());
-                registry.publish(jsonObject);
+                registry.create(jsonObject);
                 logger.info("Published metadata for experiment : " + catalogFileRequest.getFileUri().toString());
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);

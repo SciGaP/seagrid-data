@@ -24,5 +24,5 @@ import org.json.simple.JSONObject;
 
 public interface IRegistry {
 
-    boolean publish(JSONObject jsonObject) throws RegistryException;
+    boolean create(JSONObject jsonObject) throws RegistryException;
 }

@@ -40,11 +40,13 @@ public class SolrRegistryImpl implements IRegistry {
 
     private static final String SOLR_SERVER_URL = "solr.server.url";
 
-    private static final String UNIQUE_ID_FIELD = "id";
+    private static final String PRIMARY_KEY_FIELD = "solr.primary.field";
 
-    public boolean publish(JSONObject jsonObject) throws RegistryException {
-        if(jsonObject.get(UNIQUE_ID_FIELD) == null || jsonObject.get(UNIQUE_ID_FIELD).toString().isEmpty()){
-            throw new RegistryException("Unique ID " + UNIQUE_ID_FIELD + " not set");
+    private String primaryKeyField = RegistryProperties.getInstance().getProperty(PRIMARY_KEY_FIELD,"id");
+
+    public boolean create(JSONObject jsonObject) throws RegistryException {
+        if(jsonObject.get(primaryKeyField) == null || jsonObject.get(primaryKeyField).toString().isEmpty()){
+            throw new RegistryException("Primary Key " + primaryKeyField + " not set");
         }
         CloseableHttpClient httpClient = null;
         try {
@@ -67,7 +69,7 @@ public class SolrRegistryImpl implements IRegistry {
             if(response.getStatusLine().getStatusCode() == 200) {
                 logger.info("Published metadata to Solr. Response Text is " + responseText.replaceAll("\n",""));
             }else{
-                throw new Exception("Failed to publish data to solr. Response Text is " + responseText);
+                throw new Exception("Failed to create data to solr. Response Text is " + responseText);
             }
         } catch (Exception e) {
             throw new RegistryException(e);
