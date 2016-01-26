@@ -40,7 +40,7 @@ public class NWChemParser extends AbstractParser {
     public static final String NWCHEM_SCRIPT_FILE = "../parser-scripts/chem/nwchem.py";
     public static final String DEFAULT_NWCHEM_SCRIPT_FILE = "parser-scripts/chem/nwchem.py";
     private final String nwchemOutputFileName = "nwchem-output.json";
-    private final String nwchemMoleculeImageFileName = "nwchem-molecule.png";
+//    private final String nwchemMoleculeImageFileName = "nwchem-molecule.png";
 
     private final String scriptFilePath;
 
@@ -64,7 +64,7 @@ public class NWChemParser extends AbstractParser {
                 workingDir += File.separator;
             }
             Process proc = Runtime.getRuntime().exec("python " + scriptFilePath + " " + localFilePath + " "
-                    + workingDir + nwchemOutputFileName + " " + workingDir + nwchemMoleculeImageFileName);
+                    + workingDir + nwchemOutputFileName); //+ " " + workingDir + gamessMoleculeImageFileName);
             BufferedReader stdError = new BufferedReader(new
                     InputStreamReader(proc.getErrorStream()));
             String s;
@@ -109,10 +109,10 @@ public class NWChemParser extends AbstractParser {
             if(outputFile.exists()){
                 outputFile.delete();
             }
-            outputFile = new File(workingDir+nwchemMoleculeImageFileName);
-            if(outputFile.exists()){
-                outputFile.delete();
-            }
+//            outputFile = new File(workingDir+nwchemMoleculeImageFileName);
+//            if(outputFile.exists()){
+//                outputFile.delete();
+//            }
         }
     }
 }

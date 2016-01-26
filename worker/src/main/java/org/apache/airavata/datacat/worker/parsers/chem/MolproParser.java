@@ -40,7 +40,7 @@ public class MolproParser extends AbstractParser {
     public static final String MOLPRO_SCRIPT_FILE = "../parser-scripts/chem/molpro.py";
     public static final String DEFAULT_MOLPRO_SCRIPT_FILE = "parser-scripts/chem/molpro.py";
     private final String molproOutputFileName = "molpro-output.json";
-    private final String molproMoleculeImageFileName = "molpro-molecule.png";
+//    private final String molproMoleculeImageFileName = "molpro-molecule.png";
 
     private final String scriptFilePath;
 
@@ -64,7 +64,7 @@ public class MolproParser extends AbstractParser {
                 workingDir += File.separator;
             }
             Process proc = Runtime.getRuntime().exec("python " + scriptFilePath + " " + localFilePath + " "
-                    + workingDir + molproOutputFileName + " " + workingDir + molproMoleculeImageFileName);
+                    + workingDir + molproOutputFileName); //+ " " + workingDir + gamessMoleculeImageFileName);
             BufferedReader stdError = new BufferedReader(new
                     InputStreamReader(proc.getErrorStream()));
             String s;
@@ -109,10 +109,10 @@ public class MolproParser extends AbstractParser {
             if(outputFile.exists()){
                 outputFile.delete();
             }
-            outputFile = new File(workingDir+molproMoleculeImageFileName);
-            if(outputFile.exists()){
-                outputFile.delete();
-            }
+//            outputFile = new File(workingDir+molproMoleculeImageFileName);
+//            if(outputFile.exists()){
+//                outputFile.delete();
+//            }
         }
     }
 }

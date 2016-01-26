@@ -6,7 +6,7 @@ from collections import OrderedDict
 
 file_name = sys.argv[1]
 output_file_name = sys.argv[2]
-molecule_image_file = sys.argv[3]
+#molecule_image_file = sys.argv[3]
 result = OrderedDict()
 
 #extracting fields from open-babel
@@ -15,7 +15,7 @@ result['InChI'] = mol.write('inchi').strip()
 result['InChIKey'] = mol.write('inchikey').strip()
 result['SMILES'] = mol.write('smiles').split('\t')[0]
 result['CanonicalSMILES'] = mol.write('can').split('\t')[0]
-result['PDB'] = mol.write('pdf').split('\t')[0]
+result['PDB'] = mol.write('pdb').split('\t')[0]
 result['SDF'] = mol.write('sdf').split('\t')[0]
 
 #extracting fields from ccdbt

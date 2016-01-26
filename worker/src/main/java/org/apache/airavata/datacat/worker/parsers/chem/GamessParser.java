@@ -39,7 +39,7 @@ public class GamessParser extends AbstractParser {
     public static final String GAMESS_SCRIPT_FILE = "../parser-scripts/chem/gamess.py";
     public static final String DEFAULT_GAMESS_SCRIPT_FILE = "parser-scripts/chem/gamess.py";
     private final String gamessOutputFileName = "gamess-output.json";
-    private final String gamessMoleculeImageFileName = "gamess-molecule.png";
+//    private final String gamessMoleculeImageFileName = "gamess-molecule.png";
 
     private final String scriptFilePath;
 
@@ -62,7 +62,7 @@ public class GamessParser extends AbstractParser {
                 workingDir += File.separator;
             }
             Process proc = Runtime.getRuntime().exec("python " + scriptFilePath + " " + localFilePath + " "
-                    + workingDir + gamessOutputFileName + " " + workingDir + gamessMoleculeImageFileName);
+                    + workingDir + gamessOutputFileName ); //+ " " + workingDir + gamessMoleculeImageFileName);
             BufferedReader stdError = new BufferedReader(new
                     InputStreamReader(proc.getErrorStream()));
             String s;
@@ -107,10 +107,10 @@ public class GamessParser extends AbstractParser {
             if(outputFile.exists()){
                 outputFile.delete();
             }
-            outputFile = new File(workingDir+ gamessMoleculeImageFileName);
-            if(outputFile.exists()){
-                outputFile.delete();
-            }
+//            outputFile = new File(workingDir+ gamessMoleculeImageFileName);
+//            if(outputFile.exists()){
+//                outputFile.delete();
+//            }
         }
     }
 }

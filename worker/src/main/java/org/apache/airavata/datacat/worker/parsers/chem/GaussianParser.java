@@ -40,7 +40,7 @@ public class GaussianParser extends AbstractParser {
     public static final String GAUSSIAN_SCRIPT_FILE = "../parser-scripts/chem/gaussian.py";
     public static final String DEFAULT_GAUSSIAN_SCRIPT_FILE = "parser-scripts/chem/gaussian.py";
     private final String gaussianOutputFileName = "gaussian-output.json";
-    private final String gaussianMoleculeImageFileName = "gaussian-molecule.png";
+//    private final String gaussianMoleculeImageFileName = "gaussian-molecule.png";
 
     private final String scriptFilePath;
 
@@ -64,7 +64,7 @@ public class GaussianParser extends AbstractParser {
                 workingDir += File.separator;
             }
             Process proc = Runtime.getRuntime().exec("python " + scriptFilePath + " " + localFilePath + " "
-                    + workingDir + gaussianOutputFileName + " " + workingDir + gaussianMoleculeImageFileName);
+                    + workingDir + gaussianOutputFileName); //+ " " + workingDir + gamessMoleculeImageFileName);
             BufferedReader stdError = new BufferedReader(new
                     InputStreamReader(proc.getErrorStream()));
             String s;
@@ -109,10 +109,10 @@ public class GaussianParser extends AbstractParser {
             if(outputFile.exists()){
                 outputFile.delete();
             }
-            outputFile = new File(workingDir+gaussianMoleculeImageFileName);
-            if(outputFile.exists()){
-                outputFile.delete();
-            }
+//            outputFile = new File(workingDir+gaussianMoleculeImageFileName);
+//            if(outputFile.exists()){
+//                outputFile.delete();
+//            }
         }
     }
 }
