@@ -33,25 +33,25 @@ import java.io.*;
 import java.util.Map;
 import java.util.UUID;
 
-public class GaussianParser extends AbstractParser {
+public class MolproParser extends AbstractParser {
 
-    private final static Logger logger = LoggerFactory.getLogger(GaussianParser.class);
+    private final static Logger logger = LoggerFactory.getLogger(MolproParser.class);
 
-    public static final String GAUSSIAN_SCRIPT_FILE = "../parser-scripts/chem/gaussian.py";
-    public static final String DEFAULT_GAUSSIAN_SCRIPT_FILE = "parser-scripts/chem/gaussian.py";
-    private final String gaussianOutputFileName = "gaussian-output.json";
-    private final String gaussianMoleculeImageFileName = "gaussian-molecule.png";
+    public static final String MOLPRO_SCRIPT_FILE = "../parser-scripts/chem/molpro.py";
+    public static final String DEFAULT_MOLPRO_SCRIPT_FILE = "parser-scripts/chem/molpro.py";
+    private final String molproOutputFileName = "molpro-output.json";
+    private final String molproMoleculeImageFileName = "molpro-molecule.png";
 
     private final String scriptFilePath;
 
-    public GaussianParser() throws IOException {
+    public MolproParser() throws IOException {
         super();
-        if (new File(GAUSSIAN_SCRIPT_FILE).exists()) {
-            logger.info("Using configured gaussian parser (gaussian.py) file");
-            scriptFilePath = GAUSSIAN_SCRIPT_FILE;
+        if (new File(MOLPRO_SCRIPT_FILE).exists()) {
+            logger.info("Using configured molpro parser (molpro.py) file");
+            scriptFilePath = MOLPRO_SCRIPT_FILE;
         } else {
-            logger.info("Using default gaussian parser (gaussian.py) file");
-            scriptFilePath = ClassLoader.getSystemResource(DEFAULT_GAUSSIAN_SCRIPT_FILE).getPath();
+            logger.info("Using default molpro parser (molpro.py) file");
+            scriptFilePath = ClassLoader.getSystemResource(DEFAULT_MOLPRO_SCRIPT_FILE).getPath();
 
         }
     }
@@ -64,7 +64,7 @@ public class GaussianParser extends AbstractParser {
                 workingDir += File.separator;
             }
             Process proc = Runtime.getRuntime().exec("python " + scriptFilePath + " " + localFilePath + " "
-                    + workingDir + gaussianOutputFileName + " " + workingDir + gaussianMoleculeImageFileName);
+                    + workingDir + molproOutputFileName + " " + workingDir + molproMoleculeImageFileName);
             BufferedReader stdError = new BufferedReader(new
                     InputStreamReader(proc.getErrorStream()));
             String s;
@@ -77,10 +77,10 @@ public class GaussianParser extends AbstractParser {
                 logger.warn(error);
             }
 
-            File outputFile = new File(workingDir + gaussianOutputFileName);
+            File outputFile = new File(workingDir + molproOutputFileName);
             if(outputFile.exists()){
                 JSONParser jsonParser = new JSONParser();
-                Object obj = jsonParser.parse(new FileReader(workingDir + gaussianOutputFileName));
+                Object obj = jsonParser.parse(new FileReader(workingDir + molproOutputFileName));
                 JSONObject jsonObject = (JSONObject) obj;
 
                 //TODO populate other fields
@@ -92,7 +92,7 @@ public class GaussianParser extends AbstractParser {
                 }
 
 //                try{
-//                    byte[] imageBytes = Files.readAllBytes(Paths.get(workingDir + gaussianMoleculeImageFileName));
+//                    byte[] imageBytes = Files.readAllBytes(Paths.get(workingDir + molproMoleculeImageFileName));
 //                    BASE64Encoder encoder = new BASE64Encoder();
 //                    jsonObject.put("MolecularImage", encoder.encode(imageBytes));
 //                }catch(Exception ex){
@@ -105,11 +105,11 @@ public class GaussianParser extends AbstractParser {
             logger.error(ex.getMessage(), ex);
             throw new ParserException(ex);
         }finally {
-            File outputFile = new File(workingDir+gaussianOutputFileName);
+            File outputFile = new File(workingDir+molproOutputFileName);
             if(outputFile.exists()){
                 outputFile.delete();
             }
-            outputFile = new File(workingDir+gaussianMoleculeImageFileName);
+            outputFile = new File(workingDir+molproMoleculeImageFileName);
             if(outputFile.exists()){
                 outputFile.delete();
             }

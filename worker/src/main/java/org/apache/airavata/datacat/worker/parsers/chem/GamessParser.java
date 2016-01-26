@@ -92,7 +92,7 @@ public class GamessParser extends AbstractParser {
 //                try{
 //                    byte[] imageBytes = Files.readAllBytes(Paths.get(workingDir + gamessMoleculeImageFileName));
 //                    BASE64Encoder encoder = new BASE64Encoder();
-//                    jsonObject.put("image", encoder.encode(imageBytes));
+//                    jsonObject.put("MolecularImage", encoder.encode(imageBytes));
 //                }catch(Exception ex){
 //                    logger.error("Unable to read bytes from image file", ex);
 //                }

@@ -15,6 +15,8 @@ result['InChI'] = mol.write('inchi').strip()
 result['InChIKey'] = mol.write('inchikey').strip()
 result['SMILES'] = mol.write('smiles').split('\t')[0]
 result['CanonicalSMILES'] = mol.write('can').split('\t')[0]
+result['PDB'] = mol.write('pdf').split('\t')[0]
+result['SDF'] = mol.write('sdf').split('\t')[0]
 
 #extracting fields from ccdbt
 parser_pyramid = ParserPyramid()
@@ -135,29 +137,29 @@ myfile = ccopen(file_name)
 data = myfile.parse()
 if data:
     data.listify()
-    if data.natom:
+    if hasattr(data, 'natom'):
         result['NAtom'] = data.natom
-    if data.homos:
+    if hasattr(data, 'homos'):
         result['Homos'] = data.homos
-    if data.scfenergies:
+    if hasattr(data, 'scfenergies'):
         result['ScfEnergies'] = data.scfenergies
-    if data.coreelectrons:
+    if hasattr(data, 'coreelectrons'):
        result['CoreElectrons'] = data.coreelectrons
-    if data.moenergies:
+    if hasattr(data, 'moenergies'):
         result['MoEnergies'] = data.moenergies
-    if data.atomcoords:
+    if hasattr(data, 'atomcoords'):
         result['AtomCoords'] = data.atomcoords
-    if data.scftargets:
+    if hasattr(data, 'scftargets'):
         result['ScfTargets'] = data.scftargets
-    if data.nmo:
+    if hasattr(data, 'nmo'):
         result['Nmo'] = data.nmo
-    if data.nbasis:
+    if hasattr(data, 'nbasis'):
         result['NBasis'] = data.nbasis
-    if data.atomnos:
+    if hasattr(data, 'atomnos'):
         result['AtomNos'] = data.atomnos
 
 #Drawing the molecule
-#gaussian_mol.draw(show=False, filename=molecule_image_file)
+#mol.draw(show=False, filename=molecule_image_file)
 
 result = json.dumps(result, separators=(',', ':'), sort_keys=False, indent=4)
 file = open(output_file_name, 'w')

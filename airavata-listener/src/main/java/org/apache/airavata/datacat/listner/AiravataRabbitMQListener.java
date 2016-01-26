@@ -78,6 +78,7 @@ public class AiravataRabbitMQListener {
                 @Override
                 public void onMessage(MessageContext message) {
                     if (message.getType().equals(MessageType.EXPERIMENT)) {
+                        //TODO Check Experiment Succeeded, Job Succeeded
                         try {
                             ExperimentStatusChangeEvent event = new ExperimentStatusChangeEvent();
                             TBase messageEvent = message.getEvent();
@@ -140,6 +141,27 @@ public class AiravataRabbitMQListener {
                                     inputMetadata.put("experimentId", experimentModel.getExperimentId());
                                     catalogFileRequest.setIngestMetadata(inputMetadata);
                                     catalogFileRequest.setMimeType(MimeTypes.APPLICATION_GAMESS_STDOUT);
+
+                                    publishMessage(catalogFileRequest);
+                                } else if (applicationName.toLowerCase().contains("nwchem")) {
+                                    String remoteGaussianLogFilePath = null;
+                                    for (OutputDataObjectType outputDataObjectTypes : experimentModel.getExperimentOutputs()) {
+                                        if (outputDataObjectTypes.getName().equals("NWChem-Standard-Out")) {
+                                            remoteGaussianLogFilePath = outputDataObjectTypes.getValue();
+                                        }
+                                    }
+                                    if (remoteGaussianLogFilePath == null || remoteGaussianLogFilePath.isEmpty()) {
+                                        throw new Exception("No NWChem stdout file available for experiment : "
+                                                + experimentModel.getExperimentId());
+                                    }
+                                    CatalogFileRequest catalogFileRequest = new CatalogFileRequest();
+                                    //FIXME
+                                    catalogFileRequest.setFileUri(new URI("scp://gw54.iu.xsede.org:"
+                                            + remoteGaussianLogFilePath));
+                                    HashMap<String, Object> inputMetadata = new HashMap<>();
+                                    inputMetadata.put("experimentId", experimentModel.getExperimentId());
+                                    catalogFileRequest.setIngestMetadata(inputMetadata);
+                                    catalogFileRequest.setMimeType(MimeTypes.APPLICATION_NWCHEM_STDOUT);
 
                                     publishMessage(catalogFileRequest);
                                 } else {
