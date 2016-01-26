@@ -23,16 +23,20 @@ package org.apache.airavata.datacat.worker;
 import org.apache.airavata.datacat.commons.CatalogFileRequest;
 import org.apache.airavata.datacat.registry.IRegistry;
 import org.apache.airavata.datacat.registry.RegistryFactory;
-import org.apache.airavata.datacat.worker.parsers.AbstractParser;
+import org.apache.airavata.datacat.worker.parsers.IParser;
 import org.apache.airavata.datacat.worker.parsers.IParserResolver;
 import org.apache.airavata.datacat.worker.util.FileHelper;
 import org.apache.airavata.datacat.worker.util.ParserProperties;
+import org.apache.airavata.datacat.worker.util.WorkerConstants;
+import org.apache.airavata.datacat.worker.util.WorkerProperties;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URI;
+import java.nio.file.Paths;
+import java.util.UUID;
 
 public class DataCatWorker {
 
@@ -52,20 +56,27 @@ public class DataCatWorker {
     }
 
     public void handle(CatalogFileRequest catalogFileRequest){
-        AbstractParser parser = parserResolver.resolveParser(catalogFileRequest);
+        IParser parser = parserResolver.resolveParser(catalogFileRequest);
         if(parser != null){
-            String localFilePath = null;
+            String workingDir = null;
             try {
                 URI uri = catalogFileRequest.getFileUri();
-                localFilePath = fileHelper.createLocalCopyOfFile(uri);
-                JSONObject jsonObject = parser.parse(localFilePath, catalogFileRequest.getIngestMetadata());
+                workingDir = WorkerProperties.getInstance().getProperty(WorkerConstants.WORKING_DIR, "/tmp");
+                if(!workingDir.endsWith(File.separator)){
+                    workingDir += File.separator;
+                }
+                workingDir += UUID.randomUUID().toString();
+                new File(workingDir).mkdirs();
+                String localFilePath = fileHelper.createLocalCopyOfFile(uri, workingDir);
+                JSONObject jsonObject = parser.parse(Paths.get(localFilePath).getFileName().toString(), workingDir,
+                        catalogFileRequest.getIngestMetadata());
                 registry.create(jsonObject);
                 logger.info("Published metadata for experiment : " + catalogFileRequest.getFileUri().toString());
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             } finally {
-                if(localFilePath != null && !localFilePath.isEmpty()) {
-                    File file = new File(localFilePath);
+                if(workingDir != null && !workingDir.isEmpty()) {
+                    File file = new File(workingDir);
                     if(file.exists()){
                         file.delete();
                     }

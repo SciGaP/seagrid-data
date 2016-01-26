@@ -28,29 +28,29 @@ import org.slf4j.LoggerFactory;
 public class DefaultParserResolver implements IParserResolver {
     private final static Logger logger = LoggerFactory.getLogger(DefaultParserResolver.class);
 
-    public AbstractParser resolveParser(CatalogFileRequest catalogFileRequest){
-        AbstractParser parser = null;
+    public IParser resolveParser(CatalogFileRequest catalogFileRequest){
+        IParser parser = null;
         //FIXME
         String mimeType = catalogFileRequest.getMimeType();
         if(mimeType.toLowerCase().contains("gaussian")){
             String className = ParserProperties.getInstance().getProperty(ParserProperties.GAUSSIAN_PARSER, "");
             if(className != null && !className.isEmpty()){
-                parser = instantiate(className, AbstractParser.class);
+                parser = instantiate(className, IParser.class);
             }
         }else if(mimeType.toLowerCase().contains("gamess")){
             String className = ParserProperties.getInstance().getProperty(ParserProperties.GAMESS_PARSER, "");
             if(className != null && !className.isEmpty()){
-                parser = instantiate(className, AbstractParser.class);
+                parser = instantiate(className, IParser.class);
             }
         }else if(mimeType.toLowerCase().contains("nwchem")){
             String className = ParserProperties.getInstance().getProperty(ParserProperties.NWCHEM_PARSER, "");
             if(className != null && !className.isEmpty()){
-                parser = instantiate(className, AbstractParser.class);
+                parser = instantiate(className, IParser.class);
             }
         }else if(mimeType.toLowerCase().contains("molpro")){
             String className = ParserProperties.getInstance().getProperty(ParserProperties.MOLPRO_PARSER, "");
             if(className != null && !className.isEmpty()){
-                parser = instantiate(className, AbstractParser.class);
+                parser = instantiate(className, IParser.class);
             }
         }
         return parser;

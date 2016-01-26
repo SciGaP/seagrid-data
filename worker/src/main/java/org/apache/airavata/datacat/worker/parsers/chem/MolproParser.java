@@ -20,10 +20,8 @@
 */
 package org.apache.airavata.datacat.worker.parsers.chem;
 
-import org.apache.airavata.datacat.worker.parsers.AbstractParser;
+import org.apache.airavata.datacat.worker.parsers.IParser;
 import org.apache.airavata.datacat.worker.parsers.ParserException;
-import org.apache.airavata.datacat.worker.util.WorkerConstants;
-import org.apache.airavata.datacat.worker.util.WorkerProperties;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -33,40 +31,28 @@ import java.io.*;
 import java.util.Map;
 import java.util.UUID;
 
-public class MolproParser extends AbstractParser {
+public class MolproParser implements IParser {
 
     private final static Logger logger = LoggerFactory.getLogger(MolproParser.class);
 
-    public static final String MOLPRO_SCRIPT_FILE = "../parser-scripts/chem/molpro.py";
-    public static final String DEFAULT_MOLPRO_SCRIPT_FILE = "parser-scripts/chem/molpro.py";
-    private final String molproOutputFileName = "molpro-output.json";
-//    private final String molproMoleculeImageFileName = "molpro-molecule.png";
+    private final String outputFileName = "molpro-output.json";
 
-    private final String scriptFilePath;
-
-    public MolproParser() throws IOException {
-        super();
-        if (new File(MOLPRO_SCRIPT_FILE).exists()) {
-            logger.info("Using configured molpro parser (molpro.py) file");
-            scriptFilePath = MOLPRO_SCRIPT_FILE;
-        } else {
-            logger.info("Using default molpro parser (molpro.py) file");
-            scriptFilePath = ClassLoader.getSystemResource(DEFAULT_MOLPRO_SCRIPT_FILE).getPath();
-
-        }
-    }
-
-    @Override
-    public JSONObject parse(String localFilePath, Map<String, Object> inputMetadata) throws Exception {
-        String workingDir = WorkerProperties.getInstance().getProperty(WorkerConstants.WORKING_DIR, "/tmp");
+    @SuppressWarnings("unchecked")
+    public JSONObject parse(String inputFileName, String workingDir, Map<String, Object> inputMetadata) throws Exception {
         try{
             if(!workingDir.endsWith(File.separator)){
                 workingDir += File.separator;
             }
-            Process proc = Runtime.getRuntime().exec("python " + scriptFilePath + " " + localFilePath + " "
-                    + workingDir + molproOutputFileName); //+ " " + workingDir + gamessMoleculeImageFileName);
-            BufferedReader stdError = new BufferedReader(new
-                    InputStreamReader(proc.getErrorStream()));
+
+            //FIXME Move the hardcoded script to some kind of configuration
+            Process proc = Runtime.getRuntime().exec(
+                    "docker run -t --env LD_LIBRARY_PATH=/usr/local/lib -v " +
+                            workingDir +":/datacat/working-dir scnakandala/datacat-chem python" +
+                            " /datacat/molpro.py /datacat/working-dir/"
+                            + inputFileName +" /datacat/working-dir/" + outputFileName);
+
+
+            BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
             String s;
             // read any errors from the attempted command
             String error = "";
@@ -77,27 +63,23 @@ public class MolproParser extends AbstractParser {
                 logger.warn(error);
             }
 
-            File outputFile = new File(workingDir + molproOutputFileName);
+            File outputFile = new File(workingDir + outputFileName);
             if(outputFile.exists()){
                 JSONParser jsonParser = new JSONParser();
-                Object obj = jsonParser.parse(new FileReader(workingDir + molproOutputFileName));
+                Object obj = jsonParser.parse(new FileReader(workingDir + outputFileName));
                 JSONObject jsonObject = (JSONObject) obj;
 
                 //TODO populate other fields
                 if(inputMetadata != null && inputMetadata.get("experimentId") != null) {
+                    //For MongoDB
+                    jsonObject.put("_id", inputMetadata.get("experimentId"));
+                    //For Solr
                     jsonObject.put("id", inputMetadata.get("experimentId"));
                     jsonObject.put("experimentId", inputMetadata.get("experimentId"));
                 }else{
                     jsonObject.put("id", UUID.randomUUID().toString());
                 }
 
-//                try{
-//                    byte[] imageBytes = Files.readAllBytes(Paths.get(workingDir + molproMoleculeImageFileName));
-//                    BASE64Encoder encoder = new BASE64Encoder();
-//                    jsonObject.put("MolecularImage", encoder.encode(imageBytes));
-//                }catch(Exception ex){
-//                    logger.error("Unable to read bytes from image file", ex);
-//                }
                 return jsonObject;
             }
             throw new Exception("Could not parse data");
@@ -105,14 +87,10 @@ public class MolproParser extends AbstractParser {
             logger.error(ex.getMessage(), ex);
             throw new ParserException(ex);
         }finally {
-            File outputFile = new File(workingDir+molproOutputFileName);
+            File outputFile = new File(workingDir+ outputFileName);
             if(outputFile.exists()){
                 outputFile.delete();
             }
-//            outputFile = new File(workingDir+molproMoleculeImageFileName);
-//            if(outputFile.exists()){
-//                outputFile.delete();
-//            }
         }
     }
 }

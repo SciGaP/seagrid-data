@@ -59,7 +59,9 @@ public class MongoRegistryImpl implements IRegistry {
      * If indexes are already defined this will simply ignore them
      */
     private void initIndexes() {
-        collection.createIndex(new BasicDBObject(primaryKey, 1), new BasicDBObject("unique", true));
+        if(!primaryKey.equals("_id")) { //Not using the default MongoDB primary key
+            collection.createIndex(new BasicDBObject(primaryKey, 1), new BasicDBObject("unique", true));
+        }
     }
 
     public boolean create(JSONObject jsonObject) throws RegistryException {
@@ -67,8 +69,16 @@ public class MongoRegistryImpl implements IRegistry {
             throw new RegistryException("Primary Key " + primaryKey + " not set");
         }
         try {
-            WriteResult result = collection.insert((DBObject) JSON.parse(jsonObject.toJSONString()));
-            logger.debug("No of inserted results " + result.getN());
+            DBObject criteria = new BasicDBObject(primaryKey, jsonObject.get(primaryKey));
+            DBObject doc = collection.findOne(criteria);
+            if (doc != null) {
+                DBObject query = BasicDBObjectBuilder.start().add(primaryKey, jsonObject.get(primaryKey)).get();
+                collection.update(query, (DBObject) JSON.parse(jsonObject.toJSONString()));
+                logger.debug("Updated existing record " + primaryKey + ":" + jsonObject.get(primaryKey));
+            }else{
+                collection.insert((DBObject) JSON.parse(jsonObject.toJSONString()));
+                logger.debug("Created new record " + primaryKey + ":" + jsonObject.get(primaryKey));
+            }
         } catch (Exception e) {
             throw new RegistryException(e);
         }

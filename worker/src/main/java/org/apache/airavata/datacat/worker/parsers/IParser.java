@@ -21,15 +21,19 @@
 package org.apache.airavata.datacat.worker.parsers;
 
 import org.json.simple.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-public abstract class AbstractParser {
+public interface IParser {
 
-    private final static Logger logger = LoggerFactory.getLogger(AbstractParser.class);
-
-    public abstract JSONObject parse(String localFilePath, Map<String, Object> inputMetadata) throws Exception;
+    /**
+     * Input File should exist within the specified working directory
+     * @param inputFileName
+     * @param workingDir
+     * @param inputMetadata
+     * @return
+     * @throws Exception
+     */
+    public JSONObject parse(String inputFileName, String workingDir, Map<String, Object> inputMetadata) throws Exception;
 
 }

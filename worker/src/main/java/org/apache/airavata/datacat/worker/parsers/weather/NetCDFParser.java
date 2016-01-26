@@ -20,7 +20,7 @@
 */
 package org.apache.airavata.datacat.worker.parsers.weather;
 
-import org.apache.airavata.datacat.worker.parsers.AbstractParser;
+import org.apache.airavata.datacat.worker.parsers.IParser;
 import org.apache.airavata.datacat.worker.parsers.ParserException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.metadata.Property;
@@ -40,15 +40,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class NetCDFParser extends AbstractParser {
+public class NetCDFParser implements IParser {
     private final static Logger logger = LoggerFactory.getLogger(NetCDFParser.class);
 
     public NetCDFParser(){
         super();
     }
 
-    @Override
-    public JSONObject parse(String localFilePath, Map<String, Object> inputMetadata) throws Exception {
+    public JSONObject parse(String inputFileName, String workingDir, Map<String, Object> inputMetadata) throws Exception {
         try {
             InputStream stream = new FileInputStream("/Users/supun/Downloads/wrfout_d01_2000-01-24_12-00-00");
             BodyContentHandler handler = new BodyContentHandler();
@@ -155,7 +154,7 @@ public class NetCDFParser extends AbstractParser {
 
     public static void main(String[] args) throws Exception {
         NetCDFParser netCDFParser = new NetCDFParser();
-        netCDFParser.parse(null, null);
+        netCDFParser.parse(null, null, null);
     }
 
 

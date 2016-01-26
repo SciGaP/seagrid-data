@@ -21,12 +21,13 @@
 package org.apache.airavata.datacat.worker.util;
 
 import org.apache.airavata.datacat.worker.util.sshutils.SCPFileDownloader;
+import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URI;
-import java.util.UUID;
+import java.nio.file.Paths;
 
 public class FileHelper {private final static Logger logger = LoggerFactory.getLogger(FileHelper.class);
     public static final String PUBLIC_KEY_FILE = "public.key.file";
@@ -34,7 +35,7 @@ public class FileHelper {private final static Logger logger = LoggerFactory.getL
     public static final String SSH_LOGIN_USERNAME = "ssh.login.username";
     public static final String PASS_PHRASE = "pass.phrase";
 
-    public String createLocalCopyOfFile(URI uri) throws Exception {
+    public String createLocalCopyOfFile(URI uri, String destDir) throws Exception {
         if(uri.getScheme().equals("scp")){
             String pubKeyFile = WorkerProperties.getInstance().getProperty(PUBLIC_KEY_FILE, "");
             String privateKeyFile = WorkerProperties.getInstance().getProperty(PRIVATE_KEY_FILE, "");
@@ -43,19 +44,23 @@ public class FileHelper {private final static Logger logger = LoggerFactory.getL
 
             SCPFileDownloader scpFileDownloader = new SCPFileDownloader(uri.getHost(), pubKeyFile,
                     privateKeyFile, loginUsername, passPhrase, 22);
-            String workingDir = WorkerProperties.getInstance().getProperty(WorkerConstants.WORKING_DIR, "/tmp");
-            if(!workingDir.endsWith(File.separator)){
-                workingDir += File.separator;
+            if(!destDir.endsWith(File.separator)){
+                destDir += File.separator;
             }
-            String randomString = workingDir + UUID.randomUUID().toString();
-            scpFileDownloader.downloadFile(uri.getPath(), randomString);
-            File file = new File(randomString);
+            String destFilePath = destDir + Paths.get(uri.getPath()).getFileName().toString();
+            scpFileDownloader.downloadFile(uri.getPath(), destFilePath);
+            File file = new File(destFilePath);
             if(!file.exists()){
                 throw new Exception("File download failed for " + uri.toString());
             }
-            return randomString;
+            return destFilePath;
         }else if(uri.getScheme().equals("file")){
-            return uri.getPath();
+            if(!destDir.endsWith(File.separator)){
+                destDir += File.separator;
+            }
+            String destFilePath = destDir + Paths.get(uri.getPath()).getFileName().toString();
+            FileUtils.copyFile(new File(uri.getPath()),new File(destFilePath));
+            return destFilePath;
         }else{
             throw new Exception("Unsupported file protocol");
         }

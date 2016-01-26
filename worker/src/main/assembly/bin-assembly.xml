@@ -51,15 +51,6 @@
                 <include>log4j.properties</include>
             </includes>
         </fileSet>
-        <fileSet>
-            <directory>src/main/resources/parser-scripts</directory>
-            <outputDirectory>parser-scripts</outputDirectory>
-            <includes>
-                <include>**/**/*.*</include>
-                <include>**/*.*</include>
-                <include>*.*</include>
-            </includes>
-        </fileSet>
     </fileSets>
 
     <dependencySets>

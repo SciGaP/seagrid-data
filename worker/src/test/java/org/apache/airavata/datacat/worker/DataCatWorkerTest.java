@@ -20,28 +20,33 @@
 */
 package org.apache.airavata.datacat.worker;
 
-import org.apache.airavata.datacat.commons.MimeTypes;
+import junit.framework.Assert;
 import org.apache.airavata.datacat.commons.CatalogFileRequest;
+import org.apache.airavata.datacat.commons.MimeTypes;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 
 public class DataCatWorkerTest {
     private final static Logger logger = LoggerFactory.getLogger(DataCatWorkerTest.class);
 
     @Test
-    public void testDataCatWorker() throws URISyntaxException {
-        DataCatWorker datacatWorker = new DataCatWorker();
-        CatalogFileRequest catalogFileRequest = new CatalogFileRequest();
-        HashMap<String, Object> ingestMetadata = new HashMap<>();
-        ingestMetadata.put("experimentId", "test-000000-0000000-000000000-00000000000");
-        catalogFileRequest.setIngestMetadata(ingestMetadata);
-        catalogFileRequest.setMimeType(MimeTypes.APPLICATION_GAUSSIAN_LOG);
-        catalogFileRequest.setFileUri(new URI("file://"+DataCatWorkerTest.class.getResource("/Gaussian.log").getPath().toString()));
-        datacatWorker.handle(catalogFileRequest);
+    public void testDataCatWorker(){
+        try{
+            DataCatWorker datacatWorker = new DataCatWorker();
+            CatalogFileRequest catalogFileRequest = new CatalogFileRequest();
+            HashMap<String, Object> ingestMetadata = new HashMap<>();
+            ingestMetadata.put("experimentId", "test-000000-0000000-000000000-00000000000");
+            catalogFileRequest.setIngestMetadata(ingestMetadata);
+            catalogFileRequest.setMimeType(MimeTypes.APPLICATION_GAUSSIAN_LOG);
+            catalogFileRequest.setFileUri(new URI("file://"+DataCatWorkerTest.class.getResource("/Gaussian.log").getPath().toString()));
+            datacatWorker.handle(catalogFileRequest);
+        }catch (Exception ex){
+            Assert.fail();
+        }
+
     }
 }
