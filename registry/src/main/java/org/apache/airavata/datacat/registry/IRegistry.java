@@ -20,9 +20,14 @@
 */
 package org.apache.airavata.datacat.registry;
 
-import org.json.simple.JSONObject;
+
+import org.json.JSONObject;
+
+import java.util.List;
 
 public interface IRegistry {
 
     boolean create(JSONObject jsonObject) throws RegistryException;
+
+    List<JSONObject> select(String q) throws RegistryException;
 }

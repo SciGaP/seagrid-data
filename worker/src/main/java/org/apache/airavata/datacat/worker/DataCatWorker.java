@@ -29,7 +29,7 @@ import org.apache.airavata.datacat.worker.util.FileHelper;
 import org.apache.airavata.datacat.worker.util.ParserProperties;
 import org.apache.airavata.datacat.worker.util.WorkerConstants;
 import org.apache.airavata.datacat.worker.util.WorkerProperties;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +51,7 @@ public class DataCatWorker {
     public DataCatWorker(){
         String parserResolverClass = ParserProperties.getInstance().getProperty(PARSER_RESOLVER_CLASS, "");
         parserResolver = instantiate(parserResolverClass, IParserResolver.class);
-        registry = (new RegistryFactory()).getRegistryImpl();
+        registry = RegistryFactory.getRegistryImpl();
         fileHelper = new FileHelper();
     }
 

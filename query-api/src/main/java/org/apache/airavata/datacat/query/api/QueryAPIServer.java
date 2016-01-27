@@ -38,38 +38,6 @@ public class QueryAPIServer {
 
     public static void main(String[] args) {
         try {
-//            // Grizzly ssl configuration
-//            SSLContextConfigurator sslContext = new SSLContextConfigurator();
-//
-//            // set up security context
-//            if (new File("../security/" + QueryAPIProperties.getInstance()
-//                    .getProperty(Constants.KEYSTORE_FILE, "")).exists()) {
-//                sslContext.setKeyStoreFile("../security/" + QueryAPIProperties.getInstance()
-//                        .getProperty(Constants.KEYSTORE_FILE, ""));
-//                logger.info("Using the configured key store");
-//            } else {
-//                sslContext.setKeyStoreFile(ClassLoader.getSystemResource("security/" +
-//                        QueryAPIProperties.getInstance()
-//                                .getProperty(Constants.KEYSTORE_FILE, "")).getPath());
-//                logger.info("Using the default key store");
-//            }
-//            sslContext.setKeyStorePass(QueryAPIProperties.getInstance()
-//                    .getProperty(Constants.KEYSTORE_PWD,""));
-//
-//            if (new File("../security/" + QueryAPIProperties.getInstance()
-//                    .getProperty(Constants.TRUST_STORE_FILE, "")).exists()) {
-//                sslContext.setTrustStoreFile("../security/" + QueryAPIProperties.getInstance()
-//                        .getProperty(Constants.TRUST_STORE_FILE, ""));
-//                logger.info("Using the configured trust store");
-//            } else {
-//                sslContext.setTrustStoreFile(ClassLoader.getSystemResource("security/" +
-//                        QueryAPIProperties.getInstance()
-//                                .getProperty(Constants.TRUST_STORE_FILE, "")).getPath());
-//                logger.info("Using the default trust store");
-//            }
-//            sslContext.setTrustStoreFile(QueryAPIProperties.getInstance()
-//                    .getProperty(Constants.TRUST_STORE_PWD, ""));
-
             URI datacatQueryUri = UriBuilder.fromUri(
                     QueryAPIProperties.getInstance().getProperty(QUERY_SERVER_URI, "")).build();
 

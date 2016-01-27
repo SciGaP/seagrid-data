@@ -28,12 +28,13 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 public class SolrRegistryImpl implements IRegistry {
     private final static Logger logger = LoggerFactory.getLogger(SolrRegistryImpl.class);
@@ -44,6 +45,7 @@ public class SolrRegistryImpl implements IRegistry {
 
     private String primaryKeyField = RegistryProperties.getInstance().getProperty(PRIMARY_KEY_FIELD,"id");
 
+    @Override
     public boolean create(JSONObject jsonObject) throws RegistryException {
         if(jsonObject.get(primaryKeyField) == null || jsonObject.get(primaryKeyField).toString().isEmpty()){
             throw new RegistryException("Primary Key " + primaryKeyField + " not set");
@@ -54,7 +56,7 @@ public class SolrRegistryImpl implements IRegistry {
             solrServerPubUrl += "/update/json?wt=json";
             httpClient = HttpClientBuilder.create().build();
             HttpPost post = new HttpPost(solrServerPubUrl);
-            StringEntity entity  = new StringEntity("{add: {doc:" + jsonObject.toJSONString() + ",boost:1.0,overwrite:true," +
+            StringEntity entity  = new StringEntity("{add: {doc:" + jsonObject.toString() + ",boost:1.0,overwrite:true," +
                     "commitWithin:1000}}", "UTF-8");
             entity.setContentType("application/json");
             post.setEntity(entity);
@@ -83,5 +85,10 @@ public class SolrRegistryImpl implements IRegistry {
             }
         }
         return true;
+    }
+
+    @Override
+    public List<JSONObject> select(String q) throws RegistryException {
+        return null;
     }
 }

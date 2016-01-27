@@ -22,12 +22,15 @@ package org.apache.airavata.datacat.worker.parsers.chem;
 
 import org.apache.airavata.datacat.worker.parsers.IParser;
 import org.apache.airavata.datacat.worker.parsers.ParserException;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.UUID;
 
@@ -64,9 +67,7 @@ public class GamessParser implements IParser {
 
             File outputFile = new File(workingDir + outputFileName);
             if(outputFile.exists()){
-                JSONParser jsonParser = new JSONParser();
-                Object obj = jsonParser.parse(new FileReader(workingDir + outputFileName));
-                JSONObject jsonObject = (JSONObject) obj;
+                JSONObject jsonObject = new JSONObject(new JSONTokener(new FileReader(workingDir + outputFileName)));
 
                 //TODO populate other fields
                 if(inputMetadata != null && inputMetadata.get("experimentId") != null) {

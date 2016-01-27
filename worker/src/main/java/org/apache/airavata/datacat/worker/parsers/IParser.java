@@ -20,7 +20,7 @@
 */
 package org.apache.airavata.datacat.worker.parsers;
 
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 
 import java.util.Map;
 

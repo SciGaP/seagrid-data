@@ -23,9 +23,12 @@ package org.apache.airavata.datacat.registry;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
 import org.apache.airavata.datacat.registry.util.RegistryProperties;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MongoRegistryImpl implements IRegistry {
     private final static Logger logger = LoggerFactory.getLogger(MongoRegistryImpl.class);
@@ -64,6 +67,7 @@ public class MongoRegistryImpl implements IRegistry {
         }
     }
 
+    @Override
     public boolean create(JSONObject jsonObject) throws RegistryException {
         if(jsonObject.get(primaryKey) == null || jsonObject.get(primaryKey).toString().isEmpty()){
             throw new RegistryException("Primary Key " + primaryKey + " not set");
@@ -73,15 +77,25 @@ public class MongoRegistryImpl implements IRegistry {
             DBObject doc = collection.findOne(criteria);
             if (doc != null) {
                 DBObject query = BasicDBObjectBuilder.start().add(primaryKey, jsonObject.get(primaryKey)).get();
-                collection.update(query, (DBObject) JSON.parse(jsonObject.toJSONString()));
+                collection.update(query, (DBObject) JSON.parse(jsonObject.toString()));
                 logger.debug("Updated existing record " + primaryKey + ":" + jsonObject.get(primaryKey));
             }else{
-                collection.insert((DBObject) JSON.parse(jsonObject.toJSONString()));
+                collection.insert((DBObject) JSON.parse(jsonObject.toString()));
                 logger.debug("Created new record " + primaryKey + ":" + jsonObject.get(primaryKey));
             }
         } catch (Exception e) {
             throw new RegistryException(e);
         }
         return true;
+    }
+
+    @Override
+    public List<JSONObject> select(String q) throws RegistryException {
+        List<JSONObject> result = new ArrayList<>();
+        DBCursor cursor = collection.find();
+        for(DBObject document: cursor){
+            result.add(new JSONObject(document.toString()));
+        }
+        return result;
     }
 }

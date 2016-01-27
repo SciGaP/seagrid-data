@@ -29,13 +29,13 @@ public class RegistryFactory {
 
     public static final String REGISTRY_IMPL_CLASS = "registry.impl.class";
 
-    public IRegistry getRegistryImpl(){
+    public static IRegistry getRegistryImpl(){
         String registryClassName = RegistryProperties.getInstance().getProperty(REGISTRY_IMPL_CLASS, "");
         IRegistry registry = instantiate(registryClassName, IRegistry.class);
         return registry;
     }
 
-    private  <T> T instantiate(final String className, final Class<T> type){
+    private static  <T> T instantiate(final String className, final Class<T> type){
         try{
             return type.cast(Class.forName(className).newInstance());
         } catch(final InstantiationException e){

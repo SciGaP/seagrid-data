@@ -20,13 +20,19 @@
 */
 package org.apache.airavata.datacat.query.api.services;
 
+import org.apache.airavata.datacat.registry.IRegistry;
+import org.apache.airavata.datacat.registry.RegistryFactory;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("/query-api")
 public class QueryAPIService {
@@ -34,11 +40,31 @@ public class QueryAPIService {
     private final static Logger logger = LoggerFactory.getLogger(QueryAPIService.class);
     public static final String QUERY_SERVER_VERSION = "0.1-SNAPSHOT";
 
+    private final IRegistry registry;
+
+    public QueryAPIService(){
+        registry = RegistryFactory.getRegistryImpl();
+    }
+
     @GET
     @Path("/getAPIVersion")
-    @Consumes("application/json")
+    @Produces("application/json")
     public Response getAPIVersion(){
         return Response.status(200).entity(QUERY_SERVER_VERSION).build();
+    }
+
+    @GET
+    @Path("/select")
+    @Produces("application/json")
+    public Response getAclList(@QueryParam("q") String queryString){
+        try {
+            List<JSONObject> result = registry.select(queryString);
+            JSONArray jsonArray = new JSONArray(result);
+            return Response.status(200).entity(jsonArray.toString()).build();
+        } catch (Exception e) {
+            logger.error(e.toString());
+            return Response.status(503).entity(e.toString()).build();
+        }
     }
 
 }
