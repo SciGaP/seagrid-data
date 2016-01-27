@@ -33,7 +33,7 @@ public class FileHelper {private final static Logger logger = LoggerFactory.getL
     public static final String PUBLIC_KEY_FILE = "public.key.file";
     public static final String PRIVATE_KEY_FILE = "private.key.file";
     public static final String SSH_LOGIN_USERNAME = "ssh.login.username";
-    public static final String PASS_PHRASE = "pass.phrase";
+    public static final String PASS_PHRASE = "key.pass.phrase";
 
     public String createLocalCopyOfFile(URI uri, String destDir) throws Exception {
         if(uri.getScheme().equals("scp")){

@@ -89,7 +89,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.apache.airavata.datacat.bin.Main</mainClass>
+                            <mainClass>org.apache.airavata.datacat.worker.Main</mainClass>
                             <addClasspath>true</addClasspath>
                         </manifest>
                     </archive>
