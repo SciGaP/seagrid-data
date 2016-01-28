@@ -49,7 +49,7 @@ public class NetCDFParser implements IParser {
 
     public JSONObject parse(String inputFileName, String workingDir, Map<String, Object> inputMetadata) throws Exception {
         try {
-            InputStream stream = new FileInputStream("/Users/supun/Downloads/wrfout_d01_2000-01-24_12-00-00");
+            InputStream stream = new FileInputStream("/Users/supun/Downloads/wrf-s3cn_arw/wrfout_d01_2015-05-28_05_12_00");
             BodyContentHandler handler = new BodyContentHandler();
             Metadata metadata = new Metadata();
             org.apache.tika.parser.netcdf.NetCDFParser  netCDFParser = new org.apache.tika.parser.netcdf.NetCDFParser();

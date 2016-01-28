@@ -10,11 +10,11 @@
     <version>0.1-SNAPSHOT</version>
 
     <modules>
-        <module>airavata-listener</module>
         <module>worker</module>
         <module>query-api</module>
         <module>commons</module>
         <module>registry</module>
+        <module>agents</module>
     </modules>
 
     <properties>
