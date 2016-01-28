@@ -51,6 +51,7 @@ public class MongoRegistryImpl implements IRegistry {
         mongoClient = new MongoClient(new MongoClientURI(mongoServerUrl));
         mongoDB = mongoClient.getDB(mongoDBName);
         collection = mongoDB.getCollection(mongoCollectionName);
+        collection.remove(new BasicDBObject());
         collection.dropIndexes();
         initIndexes();
         logger.debug("New Mongo Client created with [" + mongoServerUrl + "]");
