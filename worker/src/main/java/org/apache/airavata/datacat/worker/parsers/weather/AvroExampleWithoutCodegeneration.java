@@ -132,7 +132,7 @@ public class AvroExampleWithoutCodeGeneration {
 
     public static void main(String[] args) throws IOException {
         AvroExampleWithoutCodeGeneration AvroEx = new AvroExampleWithoutCodeGeneration();
-//        AvroEx.serialize();
+        AvroEx.serialize();
 //        AvroEx.deserialize();
         AvroEx.avroToParaquet();
     }
