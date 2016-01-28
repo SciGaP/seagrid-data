@@ -81,7 +81,7 @@ else
 		cd ..
 	else
         cd "$AIRAVATA_LISTENER_HOME"/lib
-		$JAVA_HOME/bin/java -jar "$AIRAVATA_LISTENER_HOME"/lib/airavata-listener-0.1-SNAPSHOT.jar & echo $! > "airavata-listener-start_$!"
+		$JAVA_HOME/bin/java -jar "$AIRAVATA_LISTENER_HOME"/lib/airavata-listener-0.1-SNAPSHOT.jar
 		cd ..
 	fi
 fi

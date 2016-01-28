@@ -81,7 +81,7 @@ else
 		cd ..
 	else
         cd "$DATACAT_WORKER_HOME"/lib
-		$JAVA_HOME/bin/java -jar "$DATACAT_WORKER_HOME"/lib/worker-0.1-SNAPSHOT.jar & echo $! > "datacat-worker-start_$!"
+		$JAVA_HOME/bin/java -jar "$DATACAT_WORKER_HOME"/lib/worker-0.1-SNAPSHOT.jar
 		cd ..
 	fi
 fi

@@ -24,7 +24,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import org.apache.airavata.common.utils.ThriftUtils;
-import org.apache.airavata.datacat.commons.MimeTypes;
+import org.apache.airavata.datacat.commons.FileTypes;
 import org.apache.airavata.datacat.commons.CatalogFileRequest;
 import org.apache.airavata.datacat.listner.util.ListenerProperties;
 import org.apache.airavata.messaging.core.MessageContext;
@@ -109,7 +109,7 @@ public class AiravataRabbitMQListener {
                                     HashMap<String, Object> inputMetadata = new HashMap<>();
                                     inputMetadata.put("experimentId", experimentModel.getExperimentId());
                                     catalogFileRequest.setIngestMetadata(inputMetadata);
-                                    catalogFileRequest.setMimeType(MimeTypes.APPLICATION_GAUSSIAN_LOG);
+                                    catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAUSSIAN_LOG);
 
                                     publishMessage(catalogFileRequest);
                                 } else if (applicationName.toLowerCase().contains("gamess")) {
@@ -140,7 +140,7 @@ public class AiravataRabbitMQListener {
                                     HashMap<String, Object> inputMetadata = new HashMap<>();
                                     inputMetadata.put("experimentId", experimentModel.getExperimentId());
                                     catalogFileRequest.setIngestMetadata(inputMetadata);
-                                    catalogFileRequest.setMimeType(MimeTypes.APPLICATION_GAMESS_STDOUT);
+                                    catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAMESS_STDOUT);
 
                                     publishMessage(catalogFileRequest);
                                 } else if (applicationName.toLowerCase().contains("nwchem")) {
@@ -161,7 +161,7 @@ public class AiravataRabbitMQListener {
                                     HashMap<String, Object> inputMetadata = new HashMap<>();
                                     inputMetadata.put("experimentId", experimentModel.getExperimentId());
                                     catalogFileRequest.setIngestMetadata(inputMetadata);
-                                    catalogFileRequest.setMimeType(MimeTypes.APPLICATION_NWCHEM_STDOUT);
+                                    catalogFileRequest.setMimeType(FileTypes.APPLICATION_NWCHEM_STDOUT);
 
                                     publishMessage(catalogFileRequest);
                                 } else {

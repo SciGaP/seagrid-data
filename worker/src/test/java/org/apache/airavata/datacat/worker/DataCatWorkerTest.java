@@ -22,7 +22,7 @@ package org.apache.airavata.datacat.worker;
 
 import junit.framework.Assert;
 import org.apache.airavata.datacat.commons.CatalogFileRequest;
-import org.apache.airavata.datacat.commons.MimeTypes;
+import org.apache.airavata.datacat.commons.FileTypes;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,7 @@ public class DataCatWorkerTest {
             HashMap<String, Object> ingestMetadata = new HashMap<>();
             ingestMetadata.put("experimentId", "test-000000-0000000-000000000-00000000000");
             catalogFileRequest.setIngestMetadata(ingestMetadata);
-            catalogFileRequest.setMimeType(MimeTypes.APPLICATION_GAUSSIAN_LOG);
+            catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAUSSIAN_LOG);
             catalogFileRequest.setFileUri(new URI("file://"+DataCatWorkerTest.class.getResource("/Gaussian.log").getPath().toString()));
             datacatWorker.handle(catalogFileRequest);
         }catch (Exception ex){

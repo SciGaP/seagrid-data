@@ -81,7 +81,7 @@ else
 		cd ..
 	else
         cd "$QUERY_API_HOME"/lib
-		$JAVA_HOME/bin/java -jar "$QUERY_API_HOME"/lib/query-api-0.1-SNAPSHOT.jar & echo $! > "query-api-start_$!"
+		$JAVA_HOME/bin/java -jar "$QUERY_API_HOME"/lib/query-api-0.1-SNAPSHOT.jar
 		cd ..
 	fi
 fi

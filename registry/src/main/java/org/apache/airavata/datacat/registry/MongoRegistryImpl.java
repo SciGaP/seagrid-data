@@ -33,15 +33,13 @@ import java.util.List;
 public class MongoRegistryImpl implements IRegistry {
     private final static Logger logger = LoggerFactory.getLogger(MongoRegistryImpl.class);
 
-    private static final String MONGO_SERVER_HOST = "mongo.server.host";
-    private static final String MONGO_SERVER_PORT = "mongo.server.port";
+    private static final String MONGO_SERVER_URL = "mongo.server.url";
     private static final String MONGO_DB_NAME = "mongo.db.name";
     private static final String MONGO_COLLECTION_NAME = "mongo.collection.name";
     private static final String MONGO_PRIMARY_FIELD = "mongo.primary.field";
 
     private String primaryKey = RegistryProperties.getInstance().getProperty(MONGO_PRIMARY_FIELD,"id");
-    private String mongoHost = RegistryProperties.getInstance().getProperty(MONGO_SERVER_HOST, "localhost");
-    private Integer mongoPort = Integer.parseInt(RegistryProperties.getInstance().getProperty(MONGO_SERVER_PORT, "27017"));
+    private String mongoServerUrl = RegistryProperties.getInstance().getProperty(MONGO_SERVER_URL, "");
     private String mongoDBName = RegistryProperties.getInstance().getProperty(MONGO_DB_NAME, "datacat-db");
     private String mongoCollectionName = RegistryProperties.getInstance().getProperty(MONGO_COLLECTION_NAME, "datacat-collection");
 
@@ -50,12 +48,12 @@ public class MongoRegistryImpl implements IRegistry {
     private DBCollection collection;
 
     public MongoRegistryImpl(){
-        mongoClient = new MongoClient(mongoHost, mongoPort);
-        logger.debug("New Mongo Client created with [" + mongoHost + "] and [" + mongoPort + "]");
+        mongoClient = new MongoClient(new MongoClientURI(mongoServerUrl));
         mongoDB = mongoClient.getDB(mongoDBName);
         collection = mongoDB.getCollection(mongoCollectionName);
         collection.dropIndexes();
         initIndexes();
+        logger.debug("New Mongo Client created with [" + mongoServerUrl + "]");
     }
 
     /**

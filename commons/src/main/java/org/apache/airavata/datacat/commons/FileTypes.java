@@ -20,8 +20,8 @@
 */
 package org.apache.airavata.datacat.commons;
 
-public class MimeTypes {
-    public static String APPLICATION_GAUSSIAN_LOG = "application/gaussian-log";
+public class FileTypes {
+    public static String APPLICATION_GAUSSIAN_LOG = "application/gaussian-stdout";
     public static String APPLICATION_GAMESS_STDOUT = "application/gamess-stdout";
     public static String APPLICATION_MOLPRO_STDOUT = "application/molpro-stdout";
     public static String APPLICATION_NWCHEM_STDOUT = "application/nwchem-stdout";
