@@ -18,10 +18,10 @@
  * under the License.
  *
 */
-package org.apache.airavata.datacat.listner;
+package org.apache.airavata.datacat.agent.airavata.listner;
 
 import org.apache.airavata.api.Airavata;
-import org.apache.airavata.datacat.listner.util.ListenerProperties;
+import org.apache.airavata.datacat.agent.airavata.listner.util.ListenerProperties;
 import org.apache.airavata.model.error.AiravataClientException;
 import org.apache.airavata.model.error.AiravataErrorType;
 import org.apache.airavata.model.experiment.ExperimentModel;

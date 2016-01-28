@@ -18,7 +18,7 @@
  * under the License.
  *
 */
-package org.apache.airavata.datacat.listner.util;
+package org.apache.airavata.datacat.agent.airavata.listner.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

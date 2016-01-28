@@ -22,11 +22,8 @@ package org.apache.airavata.datacat.worker.parsers.weather;
 
 import org.apache.airavata.datacat.worker.parsers.IParser;
 import org.apache.airavata.datacat.worker.parsers.ParserException;
-import org.apache.tika.metadata.Metadata;
 import org.apache.tika.metadata.Property;
 import org.apache.tika.metadata.TikaCoreProperties;
-import org.apache.tika.parser.ParseContext;
-import org.apache.tika.sax.BodyContentHandler;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +32,9 @@ import ucar.ma2.DataType;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -49,15 +48,8 @@ public class NetCDFParser implements IParser {
 
     public JSONObject parse(String inputFileName, String workingDir, Map<String, Object> inputMetadata) throws Exception {
         try {
-            InputStream stream = new FileInputStream("/Users/supun/Downloads/wrf-s3cn_arw/wrfout_d01_2015-05-28_05_12_00");
-            BodyContentHandler handler = new BodyContentHandler();
-            Metadata metadata = new Metadata();
-            org.apache.tika.parser.netcdf.NetCDFParser  netCDFParser = new org.apache.tika.parser.netcdf.NetCDFParser();
-            netCDFParser.parse(stream, handler, metadata, new ParseContext());
-//            System.out.println(handler.toString());
-//            System.out.println(metadata);
 
-            NetcdfFile ncFile = NetcdfFile.open("wrfout_d01_2000-01-24_12-00-00", null);
+            NetcdfFile ncFile = NetcdfFile.open("/Users/supun/Downloads/wrf-s3cn_arw/wrfout_d01_2015-05-28_05_12_00", null);
             BufferedWriter recordWriter = new BufferedWriter(new FileWriter("netcdf.json"));
             BufferedWriter schemaWriter = new BufferedWriter(new FileWriter("netcdf.avsc"));
             schemaWriter.write("{\"namespace\" : \"org.apache.airavata.netcdf\",\n" +
@@ -122,7 +114,7 @@ public class NetCDFParser implements IParser {
                                 "            \"default\":null}");
                     }
 
-                    if(count>0){
+                    if(count>1){
                         schemaWriter.write(",\n");
                         recordWriter.write(",\n");
                     }else{

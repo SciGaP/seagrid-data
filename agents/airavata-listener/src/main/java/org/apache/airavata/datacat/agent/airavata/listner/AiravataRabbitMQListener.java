@@ -18,13 +18,13 @@
  * under the License.
  *
 */
-package org.apache.airavata.datacat.listner;
+package org.apache.airavata.datacat.agent.airavata.listner;
 
 import org.apache.airavata.common.utils.ThriftUtils;
 import org.apache.airavata.datacat.commons.CatalogFileRequest;
 import org.apache.airavata.datacat.commons.FileTypes;
 import org.apache.airavata.datacat.commons.messaging.WorkQueuePublisher;
-import org.apache.airavata.datacat.listner.util.ListenerProperties;
+import org.apache.airavata.datacat.agent.airavata.listner.util.ListenerProperties;
 import org.apache.airavata.messaging.core.MessageContext;
 import org.apache.airavata.messaging.core.MessageHandler;
 import org.apache.airavata.messaging.core.MessagingConstants;
@@ -89,83 +89,87 @@ public class AiravataRabbitMQListener {
                                 ExperimentModel experimentModel = AiravataAPIClient.getInstance().getExperiment(experimentId);
                                 String applicationName = experimentModel.getExecutionId();
                                 if (applicationName.toLowerCase().contains("gaussian")) {
-                                    String remoteGaussianLogFilePath = null;
+                                    String remoteFilePath = null;
                                     for (OutputDataObjectType outputDataObjectTypes : experimentModel.getExperimentOutputs()) {
                                         if (outputDataObjectTypes.getName().equals("Gaussian-Application-Output")) {
-                                            remoteGaussianLogFilePath = outputDataObjectTypes.getValue();
+                                            remoteFilePath = outputDataObjectTypes.getValue();
                                         }
                                     }
-                                    if (remoteGaussianLogFilePath == null || remoteGaussianLogFilePath.isEmpty()) {
+                                    if (remoteFilePath == null || remoteFilePath.isEmpty()) {
                                         throw new Exception("No Gaussian log file available for experiment : "
                                                 + experimentModel.getExperimentId());
                                     }
                                     CatalogFileRequest catalogFileRequest = new CatalogFileRequest();
                                     //FIXME
                                     catalogFileRequest.setFileUri(new URI("scp://gw54.iu.xsede.org:"
-                                            + remoteGaussianLogFilePath));
+                                            + remoteFilePath));
                                     HashMap<String, Object> inputMetadata = new HashMap<>();
                                     inputMetadata.put("Id", experimentModel.getExperimentId());
                                     inputMetadata.put("ExperimentId", experimentModel.getExperimentId());
                                     inputMetadata.put("Username", experimentModel.getUserName());
                                     inputMetadata.put("GatewayId", experimentModel.getGatewayId());
+                                    inputMetadata.put("FullPath", "scp://gw54.iu.xsede.org:" + remoteFilePath);
                                     catalogFileRequest.setIngestMetadata(inputMetadata);
                                     catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAUSSIAN_LOG);
 
                                     workQueuePublisher.publishMessage(catalogFileRequest);
                                 } else if (applicationName.toLowerCase().contains("gamess")) {
-                                    String remoteGaussianLogFilePath = null;
+                                    String remoteFilePath = null;
                                     for (OutputDataObjectType outputDataObjectTypes : experimentModel.getExperimentOutputs()) {
                                         if (applicationName.contains("Gamess_BR2")) {
                                             if (outputDataObjectTypes.getName().equals("Gamess-Job-Standard-Output")) {
-                                                remoteGaussianLogFilePath = outputDataObjectTypes.getValue();
+                                                remoteFilePath = outputDataObjectTypes.getValue();
                                             }
                                         } else if (applicationName.contains("Gamess_Stampede")) {
                                             if (outputDataObjectTypes.getName().equals("Gamess-Standard-Out")) {
-                                                remoteGaussianLogFilePath = outputDataObjectTypes.getValue();
+                                                remoteFilePath = outputDataObjectTypes.getValue();
                                             }
                                         } else {
                                             if (outputDataObjectTypes.getName().equals("Gamess-Standard-Out")) {
-                                                remoteGaussianLogFilePath = outputDataObjectTypes.getValue();
+                                                remoteFilePath = outputDataObjectTypes.getValue();
                                             }
                                         }
                                     }
-                                    if (remoteGaussianLogFilePath == null || remoteGaussianLogFilePath.isEmpty()) {
+                                    if (remoteFilePath == null || remoteFilePath.isEmpty()) {
                                         throw new Exception("No Gamess stdout file available for experiment : "
                                                 + experimentModel.getExperimentId());
                                     }
                                     CatalogFileRequest catalogFileRequest = new CatalogFileRequest();
                                     //FIXME
                                     catalogFileRequest.setFileUri(new URI("scp://gw54.iu.xsede.org:"
-                                            + remoteGaussianLogFilePath));
+                                            + remoteFilePath));
                                     HashMap<String, Object> inputMetadata = new HashMap<>();
                                     inputMetadata.put("Id", experimentModel.getExperimentId());
                                     inputMetadata.put("ExperimentId", experimentModel.getExperimentId());
                                     inputMetadata.put("Username", experimentModel.getUserName());
                                     inputMetadata.put("GatewayId", experimentModel.getGatewayId());
+                                    inputMetadata.put("FullPath", "scp://gw54.iu.xsede.org:" + remoteFilePath);
+
                                     catalogFileRequest.setIngestMetadata(inputMetadata);
                                     catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAMESS_STDOUT);
 
                                     workQueuePublisher.publishMessage(catalogFileRequest);
                                 } else if (applicationName.toLowerCase().contains("nwchem")) {
-                                    String remoteGaussianLogFilePath = null;
+                                    String remoteFilePath = null;
                                     for (OutputDataObjectType outputDataObjectTypes : experimentModel.getExperimentOutputs()) {
                                         if (outputDataObjectTypes.getName().equals("NWChem-Standard-Out")) {
-                                            remoteGaussianLogFilePath = outputDataObjectTypes.getValue();
+                                            remoteFilePath = outputDataObjectTypes.getValue();
                                         }
                                     }
-                                    if (remoteGaussianLogFilePath == null || remoteGaussianLogFilePath.isEmpty()) {
+                                    if (remoteFilePath == null || remoteFilePath.isEmpty()) {
                                         throw new Exception("No NWChem stdout file available for experiment : "
                                                 + experimentModel.getExperimentId());
                                     }
                                     CatalogFileRequest catalogFileRequest = new CatalogFileRequest();
                                     //FIXME
                                     catalogFileRequest.setFileUri(new URI("scp://gw54.iu.xsede.org:"
-                                            + remoteGaussianLogFilePath));
+                                            + remoteFilePath));
                                     HashMap<String, Object> inputMetadata = new HashMap<>();
                                     inputMetadata.put("Id", experimentModel.getExperimentId());
                                     inputMetadata.put("ExperimentId", experimentModel.getExperimentId());
                                     inputMetadata.put("Username", experimentModel.getUserName());
                                     inputMetadata.put("GatewayId", experimentModel.getGatewayId());
+                                    inputMetadata.put("FullPath", "scp://gw54.iu.xsede.org:" + remoteFilePath);
                                     catalogFileRequest.setIngestMetadata(inputMetadata);
                                     catalogFileRequest.setMimeType(FileTypes.APPLICATION_NWCHEM_STDOUT);
 
