@@ -70,6 +70,8 @@ public class MongoRegistryImpl implements IRegistry {
         if(jsonObject.get(primaryKey) == null || jsonObject.get(primaryKey).toString().isEmpty()){
             throw new RegistryException("Primary Key " + primaryKey + " not set");
         }
+        //Default mongodb primary key
+        jsonObject.put("_id", jsonObject.get(primaryKey));
         try {
             DBObject criteria = new BasicDBObject(primaryKey, jsonObject.get(primaryKey));
             DBObject doc = collection.findOne(criteria);
@@ -90,7 +92,9 @@ public class MongoRegistryImpl implements IRegistry {
     @Override
     public List<JSONObject> select(String q) throws RegistryException {
         List<JSONObject> result = new ArrayList<>();
-        DBCursor cursor = collection.find();
+        DBObject allQuery = new BasicDBObject();
+        DBObject removeIdProjection = new BasicDBObject("_id", 0);
+        DBCursor cursor = collection.find(allQuery, removeIdProjection);
         for(DBObject document: cursor){
             result.add(new JSONObject(document.toString()));
         }

@@ -27,9 +27,11 @@ import org.json.JSONTokener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.util.Map;
-import java.util.UUID;
 
 public class GaussianParser implements IParser {
 
@@ -67,16 +69,9 @@ public class GaussianParser implements IParser {
             if(outputFile.exists()){
                 JSONObject jsonObject = new JSONObject(new JSONTokener(new FileReader(workingDir + outputFileName)));
 
-                //TODO populate other fields
-                if(inputMetadata != null && inputMetadata.get("experimentId") != null) {
-                    //For MongoDB
-                    jsonObject.put("_id", inputMetadata.get("experimentId"));
-                    //For Solr
-                    jsonObject.put("id", inputMetadata.get("experimentId"));
-                    jsonObject.put("experimentId", inputMetadata.get("experimentId"));
-                }else{
-                    jsonObject.put("id", UUID.randomUUID().toString());
-                }
+                inputMetadata.keySet().stream().forEach(key->{
+                    jsonObject.put(key, inputMetadata.get(key));
+                });
 
                 return jsonObject;
             }

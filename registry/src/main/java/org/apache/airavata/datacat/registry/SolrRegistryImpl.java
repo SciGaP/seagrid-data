@@ -50,6 +50,8 @@ public class SolrRegistryImpl implements IRegistry {
         if(jsonObject.get(primaryKeyField) == null || jsonObject.get(primaryKeyField).toString().isEmpty()){
             throw new RegistryException("Primary Key " + primaryKeyField + " not set");
         }
+        //Default solr primary key
+        jsonObject.put("id", jsonObject.get(primaryKeyField));
         CloseableHttpClient httpClient = null;
         try {
             String solrServerPubUrl = RegistryProperties.getInstance().getProperty(SOLR_SERVER_URL, "");

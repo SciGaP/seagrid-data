@@ -20,12 +20,10 @@
 */
 package org.apache.airavata.datacat.listner;
 
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
 import org.apache.airavata.common.utils.ThriftUtils;
-import org.apache.airavata.datacat.commons.FileTypes;
 import org.apache.airavata.datacat.commons.CatalogFileRequest;
+import org.apache.airavata.datacat.commons.FileTypes;
+import org.apache.airavata.datacat.commons.messaging.WorkQueuePublisher;
 import org.apache.airavata.datacat.listner.util.ListenerProperties;
 import org.apache.airavata.messaging.core.MessageContext;
 import org.apache.airavata.messaging.core.MessageHandler;
@@ -39,9 +37,6 @@ import org.apache.thrift.TBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,6 +60,8 @@ public class AiravataRabbitMQListener {
             String airavataBrokerUrl = ListenerProperties.getInstance().getProperty(AIRAVATA_RABBITMQ_BROKER_URL, "");
             final String exchangeName = ListenerProperties.getInstance().getProperty(AIRAVATA_RABBITMQ_EXCHANGE_NAME, "");
             RabbitMQStatusConsumer consumer = new RabbitMQStatusConsumer(airavataBrokerUrl, exchangeName);
+
+            WorkQueuePublisher workQueuePublisher = new WorkQueuePublisher(datacatBrokerUrl, datacatWorkQueueName);
             consumer.listen(new MessageHandler() {
                 @Override
                 public Map<String, Object> getProperties() {
@@ -107,11 +104,14 @@ public class AiravataRabbitMQListener {
                                     catalogFileRequest.setFileUri(new URI("scp://gw54.iu.xsede.org:"
                                             + remoteGaussianLogFilePath));
                                     HashMap<String, Object> inputMetadata = new HashMap<>();
-                                    inputMetadata.put("experimentId", experimentModel.getExperimentId());
+                                    inputMetadata.put("Id", experimentModel.getExperimentId());
+                                    inputMetadata.put("ExperimentId", experimentModel.getExperimentId());
+                                    inputMetadata.put("Username", experimentModel.getUserName());
+                                    inputMetadata.put("GatewayId", experimentModel.getGatewayId());
                                     catalogFileRequest.setIngestMetadata(inputMetadata);
                                     catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAUSSIAN_LOG);
 
-                                    publishMessage(catalogFileRequest);
+                                    workQueuePublisher.publishMessage(catalogFileRequest);
                                 } else if (applicationName.toLowerCase().contains("gamess")) {
                                     String remoteGaussianLogFilePath = null;
                                     for (OutputDataObjectType outputDataObjectTypes : experimentModel.getExperimentOutputs()) {
@@ -138,11 +138,14 @@ public class AiravataRabbitMQListener {
                                     catalogFileRequest.setFileUri(new URI("scp://gw54.iu.xsede.org:"
                                             + remoteGaussianLogFilePath));
                                     HashMap<String, Object> inputMetadata = new HashMap<>();
-                                    inputMetadata.put("experimentId", experimentModel.getExperimentId());
+                                    inputMetadata.put("Id", experimentModel.getExperimentId());
+                                    inputMetadata.put("ExperimentId", experimentModel.getExperimentId());
+                                    inputMetadata.put("Username", experimentModel.getUserName());
+                                    inputMetadata.put("GatewayId", experimentModel.getGatewayId());
                                     catalogFileRequest.setIngestMetadata(inputMetadata);
                                     catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAMESS_STDOUT);
 
-                                    publishMessage(catalogFileRequest);
+                                    workQueuePublisher.publishMessage(catalogFileRequest);
                                 } else if (applicationName.toLowerCase().contains("nwchem")) {
                                     String remoteGaussianLogFilePath = null;
                                     for (OutputDataObjectType outputDataObjectTypes : experimentModel.getExperimentOutputs()) {
@@ -159,11 +162,14 @@ public class AiravataRabbitMQListener {
                                     catalogFileRequest.setFileUri(new URI("scp://gw54.iu.xsede.org:"
                                             + remoteGaussianLogFilePath));
                                     HashMap<String, Object> inputMetadata = new HashMap<>();
-                                    inputMetadata.put("experimentId", experimentModel.getExperimentId());
+                                    inputMetadata.put("Id", experimentModel.getExperimentId());
+                                    inputMetadata.put("ExperimentId", experimentModel.getExperimentId());
+                                    inputMetadata.put("Username", experimentModel.getUserName());
+                                    inputMetadata.put("GatewayId", experimentModel.getGatewayId());
                                     catalogFileRequest.setIngestMetadata(inputMetadata);
                                     catalogFileRequest.setMimeType(FileTypes.APPLICATION_NWCHEM_STDOUT);
 
-                                    publishMessage(catalogFileRequest);
+                                    workQueuePublisher.publishMessage(catalogFileRequest);
                                 } else {
                                     logger.info("Unsupported application format for experiment : "
                                             + experimentModel.getExperimentId());
@@ -178,23 +184,5 @@ public class AiravataRabbitMQListener {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
-    }
-
-    private static void publishMessage(CatalogFileRequest catalogFileRequest) throws Exception {
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setUri(datacatBrokerUrl);
-        Connection connection = factory.newConnection();
-        Channel channel = connection.createChannel();
-        boolean durable = true;
-        channel.queueDeclare(datacatWorkQueueName, durable, false, false, null);
-        logger.info("Publishing to DataCat work queue ...");
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutput out = null;
-        out = new ObjectOutputStream(bos);
-        out.writeObject(catalogFileRequest);
-        channel.basicPublish("", datacatWorkQueueName, null, bos.toByteArray());
-        logger.info("Successfully published to launch queue ...");
-        channel.close();
-        connection.close();
     }
 }
