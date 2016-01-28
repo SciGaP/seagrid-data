@@ -49,6 +49,7 @@ import java.util.Iterator;
 
 public class AvroExampleWithoutCodeGeneration {
 
+
     public void serialize() throws JsonParseException, JsonProcessingException, IOException {
 
         InputStream in = new FileInputStream("netcdf.json");
