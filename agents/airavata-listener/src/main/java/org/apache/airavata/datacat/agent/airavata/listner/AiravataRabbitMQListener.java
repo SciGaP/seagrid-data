@@ -110,7 +110,7 @@ public class AiravataRabbitMQListener {
                                     inputMetadata.put("GatewayId", experimentModel.getGatewayId());
                                     inputMetadata.put("FullPath", "scp://gw54.iu.xsede.org:" + remoteFilePath);
                                     catalogFileRequest.setIngestMetadata(inputMetadata);
-                                    catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAUSSIAN_LOG);
+                                    catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAUSSIAN_STDOUT);
 
                                     workQueuePublisher.publishMessage(catalogFileRequest);
                                 } else if (applicationName.toLowerCase().contains("gamess")) {

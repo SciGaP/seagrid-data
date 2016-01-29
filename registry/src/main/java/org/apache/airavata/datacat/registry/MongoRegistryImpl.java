@@ -95,7 +95,8 @@ public class MongoRegistryImpl implements IRegistry {
         List<JSONObject> result = new ArrayList<>();
         DBObject allQuery = new BasicDBObject();
         DBObject removeIdProjection = new BasicDBObject("_id", 0);
-        DBCursor cursor = collection.find(allQuery, removeIdProjection);
+        //FIXME Limit
+        DBCursor cursor = collection.find(allQuery, removeIdProjection).limit(10);
         for(DBObject document: cursor){
             result.add(new JSONObject(document.toString()));
         }

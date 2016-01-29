@@ -39,7 +39,14 @@ public class FileHelper {private final static Logger logger = LoggerFactory.getL
         if(uri.getScheme().equals("scp")){
             String pubKeyFile = WorkerProperties.getInstance().getProperty(PUBLIC_KEY_FILE, "");
             String privateKeyFile = WorkerProperties.getInstance().getProperty(PRIVATE_KEY_FILE, "");
-            String loginUsername = WorkerProperties.getInstance().getProperty(SSH_LOGIN_USERNAME, "");
+
+            String loginUsername;
+            if(uri.getUserInfo() != null){
+                loginUsername = uri.getUserInfo();
+            }else{
+                loginUsername = WorkerProperties.getInstance().getProperty(SSH_LOGIN_USERNAME, "");
+            }
+
             String passPhrase = WorkerProperties.getInstance().getProperty(PASS_PHRASE, "");
 
             SCPFileDownloader scpFileDownloader = new SCPFileDownloader(uri.getHost(), pubKeyFile,

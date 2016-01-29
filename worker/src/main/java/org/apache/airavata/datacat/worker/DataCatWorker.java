@@ -71,20 +71,35 @@ public class DataCatWorker {
                 JSONObject jsonObject = parser.parse(Paths.get(localFilePath).getFileName().toString(), workingDir,
                         catalogFileRequest.getIngestMetadata());
                 registry.create(jsonObject);
-                logger.info("Published metadata for experiment : " + catalogFileRequest.getFileUri().toString());
+                logger.info("Published data for file : " + catalogFileRequest.getFileUri().toString());
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
+                logger.error("Failed to publish data for file : " + catalogFileRequest.getFileUri().toString());
             } finally {
                 if(workingDir != null && !workingDir.isEmpty()) {
                     File file = new File(workingDir);
                     if(file.exists()){
-                        file.delete();
+                        deleteDirectory(file);
                     }
                 }
             }
         }else{
-            logger.warn("No suitable parser found for experiment : " + catalogFileRequest.getFileUri().toString());
+            logger.warn("No suitable parser found for file : " + catalogFileRequest.getFileUri().toString());
         }
+    }
+
+    private boolean deleteDirectory(File path) {
+        if (path.exists()) {
+            File[] files = path.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].isDirectory()) {
+                    deleteDirectory(files[i]);
+                } else {
+                    files[i].delete();
+                }
+            }
+        }
+        return (path.delete());
     }
 
     private  <T> T instantiate(final String className, final Class<T> type){

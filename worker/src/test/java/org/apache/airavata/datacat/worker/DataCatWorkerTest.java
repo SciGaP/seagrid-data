@@ -41,7 +41,7 @@ public class DataCatWorkerTest {
             HashMap<String, Object> ingestMetadata = new HashMap<>();
             ingestMetadata.put("Id", "test-000000-0000000-000000000-00000000000");
             catalogFileRequest.setIngestMetadata(ingestMetadata);
-            catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAUSSIAN_LOG);
+            catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAUSSIAN_STDOUT);
             catalogFileRequest.setFileUri(new URI("file://"+DataCatWorkerTest.class.getResource("/Gaussian.log").getPath().toString()));
             datacatWorker.handle(catalogFileRequest);
         }catch (Exception ex){

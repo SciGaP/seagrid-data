@@ -11,7 +11,7 @@
 [name] gaussian_0x
 [method] gaussian03.gaussian 
 [priority] 5001 
-[suffix] {'log'}
+[suffix] {'log'} {'out'}
 [verify] {'Gaussian'} 
 #OTHERS: #[pair] #[pre] #[archive] DICT:Convergence,RMSD|Convergence,RMSF 
 

@@ -12,7 +12,7 @@
 [name] gaussian_09
 [method] gaussian03.gaussian 
 [priority] 5039 
-[suffix] {'log'}
+[suffix] {'log'} {'out'}
 [verify] {'Gaussian\s09'} 
 #OTHERS: #[pair] #[pre] #[archive] DICT:Convergence,RMSD|Convergence,RMSF 
 

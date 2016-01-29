@@ -20,15 +20,25 @@
 */
 package org.apache.airavata.datacat.agent.gridchem.scanner;
 
+import org.apache.airavata.datacat.commons.CatalogFileRequest;
+import org.apache.airavata.datacat.commons.FileTypes;
+import org.apache.airavata.datacat.commons.messaging.WorkQueuePublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.net.URI;
+import java.util.HashMap;
 
 public class GridChemUITSScanner {
     private final static Logger logger = LoggerFactory.getLogger(GridChemUITSScanner.class);
 
     public static void main(String[] args) {
+        int totalGaussianExpCount = 0;
+        WorkQueuePublisher workQueuePublisher = new WorkQueuePublisher("amqp://airavata:airavata@gw56.iu.xsede.org:5672/development",
+                "datacat_parse_data_work_queue");
         logger.info("Starting File System Scanning");
         String dataRootPath = "/home/ccguser/mss/internal";
         logger.info("Entering " + dataRootPath);
@@ -36,12 +46,60 @@ public class GridChemUITSScanner {
         for(File userDir : dataRoot.listFiles()){
             if(userDir.getName().equals("..") || userDir.getName().equals(".") || !userDir.isDirectory())
                 continue;
-            logger.info("Entering user dir" + userDir.getName());
-            for(File expDir : userDir.listFiles()){
-                if(expDir.getName().equals("..") || expDir.getName().equals(".") || !expDir.isDirectory())
+            String username = userDir.getName();
+            logger.info("Entering user dir" + username);
+
+            for(File projDir : userDir.listFiles()){
+                if(projDir.getName().equals("..") || projDir.getName().equals(".") || !projDir.isDirectory())
                     continue;
-                String experimentName = expDir.getName();
-                logger.info("Entering experiment dir" + expDir.getName());
+                String projDirName = projDir.getName();
+                logger.info("Entering project dir " + projDirName);
+
+                for(File expDir : projDir.listFiles()){
+                    if(expDir.getName().equals("..") || expDir.getName().equals(".") || !expDir.isDirectory())
+                        continue;
+                    String experimentDirName = expDir.getName();
+                    logger.info("Entering experiment dir " + experimentDirName);
+
+                    for(File outputFile : expDir.listFiles()){
+                        if(outputFile.getName().endsWith(".out")){
+                            try {
+                                BufferedReader reader = new BufferedReader(new FileReader(outputFile));
+                                String temp = reader.readLine();
+                                if(temp.toLowerCase().contains("gaussian")){
+                                    boolean failed = true;
+                                    temp = reader.readLine();
+                                    while (temp != null){
+                                        //Omitting failed experiments
+                                        if(temp.contains("Normal termination")){
+                                            failed = false;
+                                            break;
+                                        }
+                                        temp = reader.readLine();
+                                    }
+                                    if(!failed) {
+                                        logger.info("Gaussian experiment data found in exp-dir " + username + File.separator +
+                                                projDirName + File.separator + experimentDirName);
+                                        CatalogFileRequest catalogFileRequest = new CatalogFileRequest();
+                                        catalogFileRequest.setFileUri(new URI("scp://ccguser@gridchem.uits.iu.edu:" + outputFile.getAbsolutePath()));
+                                        HashMap<String, Object> inputMetadata = new HashMap<>();
+                                        inputMetadata.put("Id", experimentDirName);
+                                        inputMetadata.put("Username", username);
+                                        inputMetadata.put("GatewayId", "GridChem");
+                                        inputMetadata.put("FullPath", "scp://ccguser@gridchem.uits.iu.edu:" + outputFile.getAbsolutePath());
+                                        catalogFileRequest.setIngestMetadata(inputMetadata);
+                                        catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAUSSIAN_STDOUT);
+                                        workQueuePublisher.publishMessage(catalogFileRequest);
+                                        totalGaussianExpCount++;
+                                        logger.info("Published catalog file request to RabbitMQ. Total Gaussian output count : " + totalGaussianExpCount);
+                                    }
+                                }
+                            } catch (Exception e) {
+                                logger.error(e.getMessage(),e);
+                            }
+                        }
+                    }
+                }
             }
         }
 

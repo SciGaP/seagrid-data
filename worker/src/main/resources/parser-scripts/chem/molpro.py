@@ -20,9 +20,6 @@ result['SDF'] = mol.write('sdf').split('\t')[0]
 
 #extracting fields from ccdbt
 parser_pyramid = ParserPyramid()
-if not parser_pyramid:
-	print 'Fail to create a parser_pyramid'
-	raise SystemExit
 meta_f = metafile(file_name)
 if meta_f.parse(parser_pyramid):
 	if 'ParsedBy' in meta_f.record:
@@ -134,29 +131,31 @@ if meta_f.parse(parser_pyramid):
 
 #extracting fields from cclib
 myfile = ccopen(file_name)
-data = myfile.parse()
-if data:
-    data.listify()
-    if hasattr(data, 'natom'):
-        result['NAtom'] = data.natom
-    if hasattr(data, 'homos'):
-        result['Homos'] = data.homos
-    if hasattr(data, 'scfenergies'):
-        result['ScfEnergies'] = data.scfenergies
-    if hasattr(data, 'coreelectrons'):
-       result['CoreElectrons'] = data.coreelectrons
-    if hasattr(data, 'moenergies'):
-        result['MoEnergies'] = data.moenergies
-    if hasattr(data, 'atomcoords'):
-        result['AtomCoords'] = data.atomcoords
-    if hasattr(data, 'scftargets'):
-        result['ScfTargets'] = data.scftargets
-    if hasattr(data, 'nmo'):
-        result['Nmo'] = data.nmo
-    if hasattr(data, 'nbasis'):
-        result['NBasis'] = data.nbasis
-    if hasattr(data, 'atomnos'):
-        result['AtomNos'] = data.atomnos
+try:
+	data = myfile.parse()
+	data.listify()
+	if hasattr(data, 'natom'):
+		result['NAtom'] = data.natom
+	if hasattr(data, 'homos'):
+		result['Homos'] = data.homos
+	if hasattr(data, 'scfenergies'):
+		result['ScfEnergies'] = data.scfenergies
+	if hasattr(data, 'coreelectrons'):
+	   result['CoreElectrons'] = data.coreelectrons
+	if hasattr(data, 'moenergies'):
+		result['MoEnergies'] = data.moenergies
+	if hasattr(data, 'atomcoords'):
+		result['AtomCoords'] = data.atomcoords
+	if hasattr(data, 'scftargets'):
+		result['ScfTargets'] = data.scftargets
+	if hasattr(data, 'nmo'):
+		result['Nmo'] = data.nmo
+	if hasattr(data, 'nbasis'):
+		result['NBasis'] = data.nbasis
+	if hasattr(data, 'atomnos'):
+		result['AtomNos'] = data.atomnos
+except:
+	sys.stderr.write('cclib parsing failed!')
 
 #Drawing the molecule
 #mol.draw(show=False, filename=molecule_image_file)
