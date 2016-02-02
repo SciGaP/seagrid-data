@@ -92,18 +92,17 @@ public class WordCount {
 //                .set("spark.executor.memory", "256M");
 
         JavaSparkContext jsc = new JavaSparkContext(conf);
-        jsc.addJar("file://" + projectDir + "/analytics/target/analytics-0.1-SNAPSHOT-jar-with-dependencies.jar");
-        JavaRDD<String> file = jsc.textFile("file://"+ projectDir
-                + "/analytics/src/main/resources/loremipsum.txt");
+        jsc.addJar("file://" + projectDir + "/analytics/target/analytics.jar");
+        JavaRDD<String> file = jsc.textFile(analyticsOutputDir + "/word-count/loremipsum.txt");
         JavaRDD<String> words = file.flatMap(WORDS_EXTRACTOR);
         JavaPairRDD<String, Integer> pairs = words.mapToPair(WORDS_MAPPER);
         JavaPairRDD<String, Integer> counter = pairs.reduceByKey(WORDS_REDUCER);
 
-//        if((new File(analyticsOutputDir + "/word-count").exists())){
-//            deleteDirectory(new File(analyticsOutputDir + "/word-count"));
-//        }
-//        counter.saveAsTextFile(analyticsOutputDir + "/word-count");
-        System.out.println(counter.count());
+        if((new File(analyticsOutputDir + "/word-count").exists())){
+            deleteDirectory(new File(analyticsOutputDir + "/word-count"));
+        }
+        counter.saveAsTextFile(analyticsOutputDir + "/word-count/output-"+System.currentTimeMillis());
+        logger.info("Total number of records : " + counter.count());
     }
 
 }

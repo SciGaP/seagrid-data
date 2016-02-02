@@ -59,7 +59,7 @@ public class MongoDBTest {
                 .setMaster(sparkMasterUrl);
 
         JavaSparkContext jsc = new JavaSparkContext(sparkConf);
-        jsc.addJar("file://" + projectDir + "/analytics/target/analytics-0.1-SNAPSHOT-jar-with-dependencies.jar");
+        jsc.addJar("file://" + projectDir + "/analytics/target/analytics.jar");
 
         // Create an RDD backed by the MongoDB collection.
         JavaPairRDD<Object, BSONObject> parentDocuments = jsc.newAPIHadoopRDD(
