@@ -39,8 +39,9 @@ public class GridChemUITSScanner {
         int totalGaussianExpCount = 0;
         WorkQueuePublisher workQueuePublisher = new WorkQueuePublisher("amqp://airavata:airavata@gw56.iu.xsede.org:5672/development",
                 "datacat_parse_data_work_queue");
-        logger.info("Starting File System Scanning");
         String dataRootPath = "/home/ccguser/mss/internal";
+        String scpFilePathBase = "scp://ccguser@gridchem.uits.iu.edu:";
+        logger.info("Starting File System Scanning");
         logger.info("Entering " + dataRootPath);
         File dataRoot = new File(dataRootPath);
         for(File userDir : dataRoot.listFiles()){
@@ -81,17 +82,18 @@ public class GridChemUITSScanner {
                                         logger.info("Gaussian experiment data found in exp-dir " + username + File.separator +
                                                 projDirName + File.separator + experimentDirName);
                                         CatalogFileRequest catalogFileRequest = new CatalogFileRequest();
-                                        catalogFileRequest.setFileUri(new URI("scp://ccguser@gridchem.uits.iu.edu:" + outputFile.getAbsolutePath()));
+                                        catalogFileRequest.setFileUri(new URI(scpFilePathBase + outputFile.getAbsolutePath()));
                                         HashMap<String, Object> inputMetadata = new HashMap<>();
                                         inputMetadata.put("Id", experimentDirName);
                                         inputMetadata.put("Username", username);
                                         inputMetadata.put("GatewayId", "GridChem");
-                                        inputMetadata.put("FullPath", "scp://ccguser@gridchem.uits.iu.edu:" + outputFile.getAbsolutePath());
+                                        inputMetadata.put("FullPath", scpFilePathBase + outputFile.getAbsolutePath());
                                         catalogFileRequest.setIngestMetadata(inputMetadata);
                                         catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAUSSIAN_STDOUT);
                                         workQueuePublisher.publishMessage(catalogFileRequest);
                                         totalGaussianExpCount++;
-                                        logger.info("Published catalog file request to RabbitMQ. Total Gaussian output count : " + totalGaussianExpCount);
+                                        logger.info("Published catalog file request to RabbitMQ. Total Gaussian output count : "
+                                                + totalGaussianExpCount);
                                     }
                                 }
                             } catch (Exception e) {

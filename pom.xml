@@ -15,6 +15,7 @@
         <module>commons</module>
         <module>registry</module>
         <module>agents</module>
+        <module>analytics</module>
     </modules>
 
     <properties>
