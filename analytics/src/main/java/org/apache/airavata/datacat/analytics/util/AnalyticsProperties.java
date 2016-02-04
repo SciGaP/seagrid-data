@@ -20,17 +20,12 @@
 */
 package org.apache.airavata.datacat.analytics.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class AnalyticsProperties {
-
-    private final static Logger logger = LoggerFactory.getLogger(AnalyticsProperties.class);
-
-    public static final String ANALYTICS_PROPERTY_FILE = "../conf/datacat-analytics.properties";
-    public static final String DEFAULT_ANALYTICS_PROPERTY_FILE = "conf/datacat-analytics.properties";
+    public static final String ANALYTICS_PROPERTY_FILE = "conf/datacat-analytics.properties";
 
     private static AnalyticsProperties instance;
 
@@ -39,13 +34,7 @@ public class AnalyticsProperties {
     private AnalyticsProperties() {
         try {
             InputStream fileInput;
-            if (new File(ANALYTICS_PROPERTY_FILE).exists()) {
-                fileInput = new FileInputStream(ANALYTICS_PROPERTY_FILE);
-                logger.info("Using configured worker property (datacat-analytics.properties) file");
-            } else {
-                logger.info("Using default worker property (datacat-analytics) file");
-                fileInput = ClassLoader.getSystemResource(DEFAULT_ANALYTICS_PROPERTY_FILE).openStream();
-            }
+            fileInput = ClassLoader.getSystemResource(ANALYTICS_PROPERTY_FILE).openStream();
             java.util.Properties properties = new java.util.Properties();
             properties.load(fileInput);
             fileInput.close();

@@ -28,15 +28,12 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.PairFunction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 
 import java.io.File;
 import java.util.Arrays;
 
 public class WordCount {
-    private final static Logger logger = LoggerFactory.getLogger(WordCount.class);
 
     private static final String SPARK_MASTER_URL = "spark.master.url";
     private static final String ANALYTICS_OUTPUT_DIR = "analytics.output.dir";
@@ -92,7 +89,7 @@ public class WordCount {
 //                .set("spark.executor.memory", "256M");
 
         JavaSparkContext jsc = new JavaSparkContext(conf);
-        jsc.addJar("file://" + projectDir + "/analytics/target/analytics.jar");
+        jsc.addJar("file://" + projectDir + "/analytics/target/analytics-0.1-SNAPSHOT-jar-with-dependencies.jar");
         JavaRDD<String> file = jsc.textFile(analyticsOutputDir + "/word-count/loremipsum.txt");
         JavaRDD<String> words = file.flatMap(WORDS_EXTRACTOR);
         JavaPairRDD<String, Integer> pairs = words.mapToPair(WORDS_MAPPER);
@@ -102,7 +99,9 @@ public class WordCount {
             deleteDirectory(new File(analyticsOutputDir + "/word-count"));
         }
         counter.saveAsTextFile(analyticsOutputDir + "/word-count/output-"+System.currentTimeMillis());
-        logger.info("Total number of records : " + counter.count());
+        System.out.println("Total number of records : " + counter.count());
+
+        jsc.stop();
     }
 
 }

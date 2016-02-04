@@ -25,15 +25,23 @@ import org.apache.airavata.datacat.analytics.util.AnalyticsProperties;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.api.java.function.FlatMapFunction;
+import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.PairFunction;
 import org.bson.BSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.openscience.cdk.interfaces.IAtomContainer;
+import org.openscience.cdk.io.MDLReader;
+import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import scala.Tuple2;
 
-public class MongoDBTest {
-    private final static Logger logger = LoggerFactory.getLogger(MongoDBTest.class);
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+public class GridChemAnalysis {
 
     private static final String MONGO_INPUT_URI = "mongo.input.uri";
     private static final String SPARK_MASTER_URL = "spark.master.url";
@@ -55,11 +63,13 @@ public class MongoDBTest {
 
         //Creating the Spark Context
         SparkConf sparkConf = new SparkConf()
-                .setAppName("MongoDB-Test")
-                .setMaster(sparkMasterUrl);
+                .setAppName("GridChem-Analysis")
+                .setMaster(sparkMasterUrl)
+                .set("spark.cores.max", "4")
+                .set("spark.executor.memory", "1G");
 
         JavaSparkContext jsc = new JavaSparkContext(sparkConf);
-        jsc.addJar("file://" + projectDir + "/analytics/target/analytics.jar");
+        jsc.addJar("file://" + projectDir + "/analytics/target/analytics-0.1-SNAPSHOT-jar-with-dependencies.jar");
 
         // Create an RDD backed by the MongoDB collection.
         JavaPairRDD<Object, BSONObject> parentDocuments = jsc.newAPIHadoopRDD(
@@ -69,13 +79,51 @@ public class MongoDBTest {
                 BSONObject.class          // Value class
         );
 
-        //Extracting the SDFs
-        JavaPairRDD<String, String> sdfStructures = parentDocuments.mapToPair(new PairFunction<Tuple2<Object, BSONObject>, String, String>() {
-            public Tuple2<String, String> call(Tuple2<Object, BSONObject> objectBSONObjectTuple2) throws Exception {
-                return new Tuple2<String, String>(objectBSONObjectTuple2._1.toString(), objectBSONObjectTuple2._2.toString());
+        countAtoms(parentDocuments);
+
+        jsc.stop();
+    }
+
+    public static void countAtoms(JavaPairRDD<Object, BSONObject> parentDocuments) {
+        //Extracting Atoms from SDF structure
+        JavaRDD<String> atoms = parentDocuments.flatMap(new FlatMapFunction<Tuple2<Object, BSONObject>, String>() {
+            public Iterable<String> call(Tuple2<Object, BSONObject> objectBSONObjectTuple2) throws Exception {
+                ArrayList<String> atomList = new ArrayList();
+                try{
+                    String sdfString = objectBSONObjectTuple2._2().get("SDF").toString();
+                    if(sdfString!= null && !sdfString.isEmpty()){
+                        InputStream is = new ByteArrayInputStream(sdfString.getBytes());
+                        MDLReader mdlReader = new MDLReader(is);
+                        IAtomContainer atomContainer = mdlReader.read(SilentChemObjectBuilder.getInstance()
+                                .newInstance(IAtomContainer.class));
+                        for(int i=0;i<atomContainer.getAtomCount();i++){
+                            atomList.add(atomContainer.getAtom(i).getSymbol());
+                        }
+                    }
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+                return atomList;
             }
         });
 
-        System.out.println(sdfStructures.count());
+        JavaPairRDD<String, Integer> ones = atoms.mapToPair(new PairFunction<String, String, Integer>() {
+            public Tuple2<String, Integer> call(String s) {
+                return new Tuple2<String, Integer>(s, 1);
+            }
+        });
+
+        JavaPairRDD<String, Integer> counts = ones.reduceByKey(new Function2<Integer, Integer, Integer>() {
+            public Integer call(Integer i1, Integer i2) {
+                return i1 + i2;
+            }
+        });
+
+        List<Tuple2<String, Integer>> output = counts.collect();
+        System.out.println("\n-------------------Individual Atom Counts--------------------");
+        for (Tuple2<?,?> tuple : output) {
+            System.out.println(tuple._1() + ": " + tuple._2());
+        }
+        System.out.println("\n------------End of Individual Atom Counts--------------------");
     }
 }
