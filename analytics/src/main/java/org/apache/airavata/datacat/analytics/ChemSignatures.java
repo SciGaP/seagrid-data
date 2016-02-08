@@ -77,5 +77,7 @@ public class ChemSignatures {
         System.out.println("-------done------");
         // Use the previously created classifier to test these molecules.
         // ...
+
+        jsc.stop();
     }
 }
