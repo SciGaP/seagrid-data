@@ -20,9 +20,9 @@
 */
 package org.apache.airavata.datacat.analytics;
 
-import org.apache.airavata.datacat.analytics.input.DataCatChemInputFormat;
-import org.apache.airavata.datacat.analytics.input.DataCatChemObject;
-import org.apache.airavata.datacat.analytics.util.AnalyticsProperties;
+import org.apache.airavata.datacat.analytics.input.chem.ChemInputFormat;
+import org.apache.airavata.datacat.analytics.input.chem.ChemObject;
+import org.apache.airavata.datacat.analytics.util.AnalyticsConstants;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -38,19 +38,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GridChemAnalysis {
-
-    private static final String MONGO_INPUT_URI = "mongo.input.uri";
-    private static final String SPARK_MASTER_URL = "spark.master.url";
-
-    private static String mongoInputUri = AnalyticsProperties.getInstance().getProperty(MONGO_INPUT_URI, "");
-    private static String sparkMasterUrl = AnalyticsProperties.getInstance().getProperty(SPARK_MASTER_URL, "");
-    private static String projectDir = System.getProperty("user.dir");
+    private static String mongoInputUri = AnalyticsConstants.MONGO_INPUT_URI;
+    private static String sparkMasterUrl = AnalyticsConstants.SPARK_MASTER_URL;
+    private static String projectDir = AnalyticsConstants.PROJECT_DIR;
 
     public static void main(String[] args) {
 
         Configuration config = new Configuration();
         config.set("org.apache.airavata.datacat.analytics.input.format",
-                "org.apache.airavata.datacat.analytics.input.DataCatChemInputFormat");
+                "org.apache.airavata.datacat.analytics.input.chem.ChemInputFormat");
         config.set("org.apache.airavata.datacat.analytics.input.mongo.uri", mongoInputUri);
 
         SparkConf sparkConf = new SparkConf()
@@ -62,11 +58,11 @@ public class GridChemAnalysis {
         JavaSparkContext jsc = new JavaSparkContext(sparkConf);
         jsc.addJar("file://" + projectDir + "/analytics/target/analytics-0.1-SNAPSHOT-jar-with-dependencies.jar");
 
-        JavaPairRDD<String, DataCatChemObject> parentDocuments = jsc.newAPIHadoopRDD(
+        JavaPairRDD<String, ChemObject> parentDocuments = jsc.newAPIHadoopRDD(
                 config,
-                DataCatChemInputFormat.class,
+                ChemInputFormat.class,
                 String.class,
-                DataCatChemObject.class
+                ChemObject.class
         );
 
         parentDocuments.persist(org.apache.spark.storage.StorageLevel.MEMORY_ONLY_SER());
@@ -78,9 +74,9 @@ public class GridChemAnalysis {
         jsc.stop();
     }
 
-    public static void countAtoms(JavaPairRDD<String, DataCatChemObject> parentDocuments) {
-        JavaRDD<String> atoms = parentDocuments.flatMap(new FlatMapFunction<Tuple2<String, DataCatChemObject>, String>() {
-            public Iterable<String> call(Tuple2<String, DataCatChemObject> objectTuple) throws Exception {
+    public static void countAtoms(JavaPairRDD<String, ChemObject> parentDocuments) {
+        JavaRDD<String> atoms = parentDocuments.flatMap(new FlatMapFunction<Tuple2<String, ChemObject>, String>() {
+            public Iterable<String> call(Tuple2<String, ChemObject> objectTuple) throws Exception {
                 ArrayList<String> atomList = new ArrayList();
                 IAtomContainer atomContainer = objectTuple._2().getMolecule();
                 for(int i=0;i<atomContainer.getAtomCount();i++){
@@ -110,9 +106,9 @@ public class GridChemAnalysis {
         System.out.println("\n------------End of Individual Atom Counts--------------------");
     }
 
-    public static void countNoOfAtoms(JavaPairRDD<String, DataCatChemObject> parentDocuments) {
-        JavaRDD<Integer> nAtoms = parentDocuments.flatMap(new FlatMapFunction<Tuple2<String, DataCatChemObject>, Integer>() {
-            public Iterable<Integer> call(Tuple2<String, DataCatChemObject> objectTuple) throws Exception {
+    public static void countNoOfAtoms(JavaPairRDD<String, ChemObject> parentDocuments) {
+        JavaRDD<Integer> nAtoms = parentDocuments.flatMap(new FlatMapFunction<Tuple2<String, ChemObject>, Integer>() {
+            public Iterable<Integer> call(Tuple2<String, ChemObject> objectTuple) throws Exception {
                 ArrayList<Integer> atomCountList = new ArrayList();
                 IAtomContainer atomContainer = objectTuple._2().getMolecule();
                 atomCountList.add(atomContainer.getAtomCount());
@@ -140,10 +136,10 @@ public class GridChemAnalysis {
         System.out.println("\n--------End of No of Atoms in Molecule Counts----------------");
     }
 
-    public static void countMolecularMass(JavaPairRDD<String, DataCatChemObject> parentDocuments) {
+    public static void countMolecularMass(JavaPairRDD<String, ChemObject> parentDocuments) {
         JavaRDD<Integer> massNumbers = parentDocuments.flatMap(new FlatMapFunction<Tuple2<String,
-                DataCatChemObject>, Integer>() {
-            public Iterable<Integer> call(Tuple2<String, DataCatChemObject> objectTuple) throws Exception {
+                ChemObject>, Integer>() {
+            public Iterable<Integer> call(Tuple2<String, ChemObject> objectTuple) throws Exception {
                 ArrayList<Integer> massNumberCountList = new ArrayList();
                 IAtomContainer atomContainer = objectTuple._2().getMolecule();
                 int massNumber = 0;

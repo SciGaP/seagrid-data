@@ -18,24 +18,15 @@
  * under the License.
  *
 */
-package org.apache.airavata.datacat.analytics.input;
-
-import org.openscience.cdk.interfaces.IAtomContainer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package org.apache.airavata.datacat.analytics.input.chem;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
-public class DataCatChemObject implements Serializable{
-    private final static Logger logger = LoggerFactory.getLogger(DataCatChemObject.class);
-
-    private IAtomContainer molecule;
-
-    public DataCatChemObject(IAtomContainer molecule){
-        this.molecule = molecule;
-    }
-
-    public IAtomContainer getMolecule(){
-        return molecule;
-    }
+/**
+ * SignatureRecord_ID = Map[SignatureID, #occurrences]
+ * This corresponds to a molecule after Signature generation and make sense only in combination with
+ * the Sig2ID_Mapping that give the translation SignatureID->Signature
+ */
+public class SignatureRecordID extends HashMap<Long, Integer> implements Serializable{
 }

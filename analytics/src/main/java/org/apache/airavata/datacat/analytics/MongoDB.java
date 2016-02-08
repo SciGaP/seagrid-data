@@ -21,7 +21,7 @@
 package org.apache.airavata.datacat.analytics;
 
 import com.mongodb.hadoop.MongoInputFormat;
-import org.apache.airavata.datacat.analytics.util.AnalyticsProperties;
+import org.apache.airavata.datacat.analytics.util.AnalyticsConstants;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -31,12 +31,9 @@ import org.bson.BSONObject;
 import scala.Tuple2;
 
 public class MongoDB {
-    private static final String MONGO_INPUT_URI = "mongo.input.uri";
-    private static final String SPARK_MASTER_URL = "spark.master.url";
-
-    private static String mongoInputUri = AnalyticsProperties.getInstance().getProperty(MONGO_INPUT_URI, "");
-    private static String sparkMasterUrl = AnalyticsProperties.getInstance().getProperty(SPARK_MASTER_URL, "");
-    private static String projectDir = System.getProperty("user.dir");
+    private static String mongoInputUri = AnalyticsConstants.MONGO_INPUT_URI;
+    private static String sparkMasterUrl = AnalyticsConstants.SPARK_MASTER_URL;
+    private static String projectDir = AnalyticsConstants.PROJECT_DIR;
 
     public static void main(String[] args) {
         // Set configuration options for the MongoDB Hadoop Connector.

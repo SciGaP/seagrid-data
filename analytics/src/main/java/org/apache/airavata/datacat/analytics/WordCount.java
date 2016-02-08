@@ -20,7 +20,7 @@
 */
 package org.apache.airavata.datacat.analytics;
 
-import org.apache.airavata.datacat.analytics.util.AnalyticsProperties;
+import org.apache.airavata.datacat.analytics.util.AnalyticsConstants;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
@@ -35,12 +35,9 @@ import java.util.Arrays;
 
 public class WordCount {
 
-    private static final String SPARK_MASTER_URL = "spark.master.url";
-    private static final String ANALYTICS_OUTPUT_DIR = "analytics.output.dir";
-
-    private static String sparkMasterUrl = AnalyticsProperties.getInstance().getProperty(SPARK_MASTER_URL, "");
-    private static String analyticsOutputDir = AnalyticsProperties.getInstance().getProperty(ANALYTICS_OUTPUT_DIR, "");
-    private static String projectDir = System.getProperty("user.dir");
+    private static String sparkMasterUrl = AnalyticsConstants.SPARK_MASTER_URL;
+    private static String analyticsOutputDir = AnalyticsConstants.ANALYTICS_OUTPUT_DIR;
+    private static String projectDir = AnalyticsConstants.PROJECT_DIR;
 
 
     private static final FlatMapFunction<String, String> WORDS_EXTRACTOR =

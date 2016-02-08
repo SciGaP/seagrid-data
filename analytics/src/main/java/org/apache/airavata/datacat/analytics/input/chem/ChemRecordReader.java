@@ -18,7 +18,7 @@
  * under the License.
  *
 */
-package org.apache.airavata.datacat.analytics.input;
+package org.apache.airavata.datacat.analytics.input.chem;
 
 import com.mongodb.DBCursor;
 import com.mongodb.MongoException;
@@ -39,16 +39,16 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class DataCatChemRecordReader extends RecordReader<String, DataCatChemObject> {
-    private final static Logger logger = LoggerFactory.getLogger(DataCatChemRecordReader.class);
+public class ChemRecordReader extends RecordReader<String, ChemObject> {
+    private final static Logger logger = LoggerFactory.getLogger(ChemRecordReader.class);
     private BSONObject currentBson;
-    private DataCatChemObject currentChemObject;
+    private ChemObject currentChemObject;
     private final MongoInputSplit split;
     private final DBCursor cursor;
     private float seen = 0.0F;
     private float total;
 
-    public DataCatChemRecordReader(MongoInputSplit split) {
+    public ChemRecordReader(MongoInputSplit split) {
         this.split = split;
         this.cursor = split.getCursor();
     }
@@ -72,7 +72,7 @@ public class DataCatChemRecordReader extends RecordReader<String, DataCatChemObj
                 MDLReader mdlReader = new MDLReader(is);
                 IAtomContainer atomContainer = mdlReader.read(SilentChemObjectBuilder.getInstance()
                         .newInstance(IAtomContainer.class));
-                this.currentChemObject = new DataCatChemObject(atomContainer);
+                this.currentChemObject = new ChemObject(atomContainer);
                 ++this.seen;
                 return true;
             }
@@ -93,7 +93,7 @@ public class DataCatChemRecordReader extends RecordReader<String, DataCatChemObj
     }
 
     @Override
-    public DataCatChemObject getCurrentValue() throws IOException, InterruptedException {
+    public ChemObject getCurrentValue() throws IOException, InterruptedException {
         return this.currentChemObject;
     }
 

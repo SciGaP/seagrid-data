@@ -18,7 +18,7 @@
  * under the License.
  *
 */
-package org.apache.airavata.datacat.analytics.input;
+package org.apache.airavata.datacat.analytics.input.chem;
 
 import com.mongodb.hadoop.input.MongoInputSplit;
 import com.mongodb.hadoop.splitter.MongoSplitter;
@@ -32,8 +32,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.List;
 
-public class DataCatChemInputFormat extends InputFormat<String, DataCatChemObject> {
-    private final static Logger logger = LoggerFactory.getLogger(DataCatChemInputFormat.class);
+public class ChemInputFormat extends InputFormat<String, ChemObject> {
+    private final static Logger logger = LoggerFactory.getLogger(ChemInputFormat.class);
 
     @Override
     public List<InputSplit> getSplits(JobContext jobContext) throws IOException, InterruptedException {
@@ -54,13 +54,13 @@ public class DataCatChemInputFormat extends InputFormat<String, DataCatChemObjec
     }
 
     @Override
-    public RecordReader<String, DataCatChemObject> createRecordReader(InputSplit inputSplit
+    public RecordReader<String, ChemObject> createRecordReader(InputSplit inputSplit
             , TaskAttemptContext taskAttemptContext) throws IOException, InterruptedException {
         if(!(inputSplit instanceof MongoInputSplit)) {
             throw new IllegalStateException("Creation of a new RecordReader requires a MongoInputSplit instance.");
         } else {
             MongoInputSplit mis = (MongoInputSplit)inputSplit;
-            return new DataCatChemRecordReader(mis);
+            return new ChemRecordReader(mis);
         }
     }
 }
