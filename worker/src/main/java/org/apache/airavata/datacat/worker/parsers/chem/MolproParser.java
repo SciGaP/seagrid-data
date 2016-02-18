@@ -40,16 +40,16 @@ public class MolproParser implements IParser {
     private final String outputFileName = "molpro-output.json";
 
     @SuppressWarnings("unchecked")
-    public JSONObject parse(String inputFileName, String workingDir, Map<String, Object> inputMetadata) throws Exception {
+    public JSONObject parse(String dir, Map<String, Object> inputMetadata) throws Exception {
         try{
-            if(!workingDir.endsWith(File.separator)){
-                workingDir += File.separator;
+            if(!dir.endsWith(File.separator)){
+                dir += File.separator;
             }
-
+            String inputFileName = dir + ".out";
             //FIXME Move the hardcoded script to some kind of configuration
             Process proc = Runtime.getRuntime().exec(
                     "docker run -t --env LD_LIBRARY_PATH=/usr/local/lib -v " +
-                            workingDir +":/datacat/working-dir scnakandala/datacat-chem python" +
+                            dir +":/datacat/working-dir scnakandala/datacat-chem python" +
                             " /datacat/molpro.py /datacat/working-dir/"
                             + inputFileName +" /datacat/working-dir/" + outputFileName);
 
@@ -65,9 +65,9 @@ public class MolproParser implements IParser {
                 logger.warn(error);
             }
 
-            File outputFile = new File(workingDir + outputFileName);
+            File outputFile = new File(dir + outputFileName);
             if(outputFile.exists()){
-                JSONObject jsonObject = new JSONObject(new JSONTokener(new FileReader(workingDir + outputFileName)));
+                JSONObject jsonObject = new JSONObject(new JSONTokener(new FileReader(dir + outputFileName)));
 
                 inputMetadata.keySet().stream().forEach(key->{
                     jsonObject.put(key, inputMetadata.get(key));
@@ -80,7 +80,7 @@ public class MolproParser implements IParser {
             logger.error(ex.getMessage(), ex);
             throw new ParserException(ex);
         }finally {
-            File outputFile = new File(workingDir+ outputFileName);
+            File outputFile = new File(dir + outputFileName);
             if(outputFile.exists()){
                 outputFile.delete();
             }

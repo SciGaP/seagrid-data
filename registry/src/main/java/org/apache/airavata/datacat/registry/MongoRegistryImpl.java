@@ -74,16 +74,8 @@ public class MongoRegistryImpl implements IRegistry {
         //Default mongodb primary key
         jsonObject.put("_id", jsonObject.get(primaryKey));
         try {
-            DBObject criteria = new BasicDBObject(primaryKey, jsonObject.get(primaryKey));
-            DBObject doc = collection.findOne(criteria);
-            if (doc != null) {
-                DBObject query = BasicDBObjectBuilder.start().add(primaryKey, jsonObject.get(primaryKey)).get();
-                collection.update(query, (DBObject) JSON.parse(jsonObject.toString()));
-                logger.debug("Updated existing record " + primaryKey + ":" + jsonObject.get(primaryKey));
-            }else{
-                collection.insert((DBObject) JSON.parse(jsonObject.toString()));
-                logger.debug("Created new record " + primaryKey + ":" + jsonObject.get(primaryKey));
-            }
+            collection.save((DBObject) JSON.parse(jsonObject.toString()));
+            logger.debug("Created new record " + primaryKey + ":" + jsonObject.get(primaryKey));
         } catch (Exception e) {
             throw new RegistryException(e);
         }

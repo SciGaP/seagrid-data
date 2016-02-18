@@ -26,7 +26,7 @@ import java.util.HashMap;
 
 public class CatalogFileRequest implements Serializable{
     private HashMap<String, Object> ingestMetadata;
-    private URI fileUri;
+    private URI dirUri;
     private String mimeType;
 
     public HashMap<String, Object> getIngestMetadata() {
@@ -37,12 +37,12 @@ public class CatalogFileRequest implements Serializable{
         this.ingestMetadata = ingestMetadata;
     }
 
-    public URI getFileUri() {
-        return fileUri;
+    public URI getDirUri() {
+        return dirUri;
     }
 
-    public void setFileUri(URI fileUri) {
-        this.fileUri = fileUri;
+    public void setDirUri(URI dirUri) {
+        this.dirUri = dirUri;
     }
 
     public String getMimeType() {

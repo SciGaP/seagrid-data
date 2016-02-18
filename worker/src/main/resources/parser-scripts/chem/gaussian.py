@@ -12,7 +12,7 @@ result = OrderedDict()
 #extracting fields from open-babel
 mol = pybel.readfile('g98',file_name).next()
 result['InChI'] = mol.write('inchi').strip()
-result['InChIKey'] = mol.write('inchikey').strip()
+result['InChIKey'] = mol.sc
 result['SMILES'] = mol.write('smiles').split('\t')[0]
 result['CanonicalSMILES'] = mol.write('can').split('\t')[0]
 result['PDB'] = mol.write('pdb').split('\t')[0]

@@ -35,7 +35,7 @@ public class FileHelper {private final static Logger logger = LoggerFactory.getL
     public static final String SSH_LOGIN_USERNAME = "ssh.login.username";
     public static final String PASS_PHRASE = "key.pass.phrase";
 
-    public String createLocalCopyOfFile(URI uri, String destDir) throws Exception {
+    public String createLocalCopyOfDir(URI uri, String workingDir) throws Exception {
         if(uri.getScheme().equals("scp")){
             String pubKeyFile = WorkerProperties.getInstance().getProperty(PUBLIC_KEY_FILE, "");
             String privateKeyFile = WorkerProperties.getInstance().getProperty(PRIVATE_KEY_FILE, "");
@@ -51,25 +51,31 @@ public class FileHelper {private final static Logger logger = LoggerFactory.getL
 
             SCPFileDownloader scpFileDownloader = new SCPFileDownloader(uri.getHost(), pubKeyFile,
                     privateKeyFile, loginUsername, passPhrase, 22);
-            if(!destDir.endsWith(File.separator)){
-                destDir += File.separator;
+            if(!workingDir.endsWith(File.separator)){
+                workingDir += File.separator;
             }
-            String destFilePath = destDir + Paths.get(uri.getPath()).getFileName().toString();
+            String destFilePath = workingDir + Paths.get(uri.getPath()).getFileName().toString();
             scpFileDownloader.downloadFile(uri.getPath(), destFilePath);
             File file = new File(destFilePath);
             if(!file.exists()){
-                throw new Exception("File download failed for " + uri.toString());
+                throw new Exception("Dir download failed for " + uri.toString());
             }
             return destFilePath;
         }else if(uri.getScheme().equals("file")){
-            if(!destDir.endsWith(File.separator)){
-                destDir += File.separator;
+            if(!workingDir.endsWith(File.separator)){
+                workingDir += File.separator;
             }
-            String destFilePath = destDir + Paths.get(uri.getPath()).getFileName().toString();
+            String destFilePath = workingDir + Paths.get(uri.getPath()).getFileName().toString();
             FileUtils.copyFile(new File(uri.getPath()),new File(destFilePath));
             return destFilePath;
         }else{
             throw new Exception("Unsupported file protocol");
         }
+    }
+
+    public static void main(String[] args) throws Exception {
+        FileHelper fileHelper = new FileHelper();
+        fileHelper.createLocalCopyOfDir(new URI("scp://root@gw127.iu.xsede.org:/home/datacat/data/diaoyiju/" +
+                "diaoyiju_proj/CaCO3_Asp_pH11_14H2O_37out.comet.sdsc.xsede.org.1103012.151006/input.com"), "/Users/supun/Desktop");
     }
 }

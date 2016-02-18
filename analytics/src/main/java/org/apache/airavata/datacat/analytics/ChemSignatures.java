@@ -62,7 +62,8 @@ public class ChemSignatures {
         JavaRDD<SignatureRecordDecision> moleculesAfterSG  = mols.map(m -> SGUtils.atom2SigRecordDecision(m._2(), m._1(), 1, 3));
         Tuple2<JavaRDD<SignatureRecordDecisionID>, JavaRDD<Sig2IDMapping>> sig2ID = SGUtils.sig2ID(moleculesAfterSG);
         JavaRDD<LabeledPoint> resultAsLp = SGUtils.sig2LP(sig2ID._1());
-        System.out.println(resultAsLp.count());
+        JavaRDD<Vector> molFeatureVectors = resultAsLp.map(lp->lp.features());
+        System.out.println("No of dimensions : " + molFeatureVectors.collect().get(0).size());
         // Use the labeledPoints to build a classifier of your own choice
         // ...
 

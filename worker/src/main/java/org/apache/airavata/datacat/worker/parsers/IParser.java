@@ -28,12 +28,11 @@ public interface IParser {
 
     /**
      * Input File should exist within the specified working directory
-     * @param inputFileName
-     * @param workingDir
+     * @param dir
      * @param inputMetadata
      * @return
      * @throws Exception
      */
-    public JSONObject parse(String inputFileName, String workingDir, Map<String, Object> inputMetadata) throws Exception;
+    public JSONObject parse(String dir, Map<String, Object> inputMetadata) throws Exception;
 
 }

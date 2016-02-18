@@ -3,13 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>agents</artifactId>
+        <artifactId>datacat</artifactId>
         <groupId>org.apache.airavata.datacat</groupId>
         <version>0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>gridchem-file-scanner</artifactId>
+    <artifactId>gridchem-scaner</artifactId>
 
 
     <build>
@@ -33,7 +33,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.apache.airavata.datacat.agent.gridchem.scanner.GridChemUITSScanner</mainClass>
+                            <mainClass>org.apache.airavata.datacat.gridchem.GridChemFileScanner</mainClass>
                             <addClasspath>true</addClasspath>
                         </manifest>
                     </archive>
@@ -45,7 +45,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.apache.airavata.datacat.agent.gridchem.scanner.GridChemUITSScanner</mainClass>
+                            <mainClass>org.apache.airavata.datacat.gridchem.GridChemFileScanner</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -66,6 +66,11 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.airavata.datacat</groupId>
+            <artifactId>worker</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.airavata.datacat</groupId>
             <artifactId>commons</artifactId>

@@ -40,18 +40,27 @@ public class GaussianParser implements IParser {
     private final String outputFileName = "gaussian-output.json";
 
     @SuppressWarnings("unchecked")
-    public JSONObject parse(String inputFileName, String workingDir, Map<String, Object> inputMetadata) throws Exception {
+    public JSONObject parse(String dir, Map<String, Object> inputMetadata) throws Exception {
         try{
-            if(!workingDir.endsWith(File.separator)){
-                workingDir += File.separator;
+            if(!dir.endsWith(File.separator)){
+                dir += File.separator;
+            }
+            String gaussianOutputFile = null;
+            for(File file : (new File(dir).listFiles())){
+                if(file.getName().endsWith(".out")){
+                    gaussianOutputFile = file.getAbsolutePath();
+                }
+            }
+            if(gaussianOutputFile == null){
+                throw new Exception("Could not find the gaussian output file");
             }
 
             //FIXME Move the hardcoded script to some kind of configuration
             Process proc = Runtime.getRuntime().exec(
                     "docker run -t --env LD_LIBRARY_PATH=/usr/local/lib -v " +
-                    workingDir +":/datacat/working-dir scnakandala/datacat-chem python" +
+                            dir +":/datacat/working-dir scnakandala/datacat-chem python" +
                             " /datacat/gaussian.py /datacat/working-dir/"
-                    + inputFileName +" /datacat/working-dir/" + outputFileName);
+                    + (new File(gaussianOutputFile)).getName() +" /datacat/working-dir/" + outputFileName);
 
 
             BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
@@ -65,22 +74,23 @@ public class GaussianParser implements IParser {
                 logger.warn(error);
             }
 
-            File outputFile = new File(workingDir + outputFileName);
+            File outputFile = new File(dir + outputFileName);
             if(outputFile.exists()){
-                JSONObject jsonObject = new JSONObject(new JSONTokener(new FileReader(workingDir + outputFileName)));
+                JSONObject temp = new JSONObject(new JSONTokener(new FileReader(dir + outputFileName)));
 
                 inputMetadata.keySet().stream().forEach(key->{
-                    jsonObject.put(key, inputMetadata.get(key));
+                    temp.put(key, inputMetadata.get(key));
                 });
 
-                return jsonObject;
+                return temp;
             }
+
             throw new Exception("Could not parse data");
         }catch (Exception ex){
             logger.error(ex.getMessage(), ex);
             throw new ParserException(ex);
         }finally {
-            File outputFile = new File(workingDir+ outputFileName);
+            File outputFile = new File(dir + outputFileName);
             if(outputFile.exists()){
                 outputFile.delete();
             }

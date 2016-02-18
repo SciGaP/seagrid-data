@@ -101,7 +101,7 @@ public class AiravataRabbitMQListener {
                                     }
                                     CatalogFileRequest catalogFileRequest = new CatalogFileRequest();
                                     //FIXME
-                                    catalogFileRequest.setFileUri(new URI("scp://gw54.iu.xsede.org:"
+                                    catalogFileRequest.setDirUri(new URI("scp://gw54.iu.xsede.org:"
                                             + remoteFilePath));
                                     HashMap<String, Object> inputMetadata = new HashMap<>();
                                     inputMetadata.put("Id", experimentModel.getExperimentId());
@@ -110,7 +110,7 @@ public class AiravataRabbitMQListener {
                                     inputMetadata.put("GatewayId", experimentModel.getGatewayId());
                                     inputMetadata.put("FullPath", "scp://gw54.iu.xsede.org:" + remoteFilePath);
                                     catalogFileRequest.setIngestMetadata(inputMetadata);
-                                    catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAUSSIAN_STDOUT);
+                                    catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAUSSIAN);
 
                                     workQueuePublisher.publishMessage(catalogFileRequest);
                                 } else if (applicationName.toLowerCase().contains("gamess")) {
@@ -136,7 +136,7 @@ public class AiravataRabbitMQListener {
                                     }
                                     CatalogFileRequest catalogFileRequest = new CatalogFileRequest();
                                     //FIXME
-                                    catalogFileRequest.setFileUri(new URI("scp://gw54.iu.xsede.org:"
+                                    catalogFileRequest.setDirUri(new URI("scp://gw54.iu.xsede.org:"
                                             + remoteFilePath));
                                     HashMap<String, Object> inputMetadata = new HashMap<>();
                                     inputMetadata.put("Id", experimentModel.getExperimentId());
@@ -146,7 +146,7 @@ public class AiravataRabbitMQListener {
                                     inputMetadata.put("FullPath", "scp://gw54.iu.xsede.org:" + remoteFilePath);
 
                                     catalogFileRequest.setIngestMetadata(inputMetadata);
-                                    catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAMESS_STDOUT);
+                                    catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAMESS);
 
                                     workQueuePublisher.publishMessage(catalogFileRequest);
                                 } else if (applicationName.toLowerCase().contains("nwchem")) {
@@ -162,7 +162,7 @@ public class AiravataRabbitMQListener {
                                     }
                                     CatalogFileRequest catalogFileRequest = new CatalogFileRequest();
                                     //FIXME
-                                    catalogFileRequest.setFileUri(new URI("scp://gw54.iu.xsede.org:"
+                                    catalogFileRequest.setDirUri(new URI("scp://gw54.iu.xsede.org:"
                                             + remoteFilePath));
                                     HashMap<String, Object> inputMetadata = new HashMap<>();
                                     inputMetadata.put("Id", experimentModel.getExperimentId());
@@ -171,7 +171,7 @@ public class AiravataRabbitMQListener {
                                     inputMetadata.put("GatewayId", experimentModel.getGatewayId());
                                     inputMetadata.put("FullPath", "scp://gw54.iu.xsede.org:" + remoteFilePath);
                                     catalogFileRequest.setIngestMetadata(inputMetadata);
-                                    catalogFileRequest.setMimeType(FileTypes.APPLICATION_NWCHEM_STDOUT);
+                                    catalogFileRequest.setMimeType(FileTypes.APPLICATION_NWCHEM);
 
                                     workQueuePublisher.publishMessage(catalogFileRequest);
                                 } else {

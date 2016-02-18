@@ -25,17 +25,21 @@ import org.apache.airavata.datacat.analytics.util.AnalyticsConstants;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.api.java.function.PairFunction;
 import org.bson.BSONObject;
-import scala.Tuple2;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
 
 public class MongoDB {
     private static String mongoInputUri = AnalyticsConstants.MONGO_INPUT_URI;
     private static String sparkMasterUrl = AnalyticsConstants.SPARK_MASTER_URL;
     private static String projectDir = AnalyticsConstants.PROJECT_DIR;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // Set configuration options for the MongoDB Hadoop Connector.
         Configuration mongodbConfig = new Configuration();
         // MongoInputFormat allows us to read from a live MongoDB instance.
@@ -63,14 +67,14 @@ public class MongoDB {
         );
 
         //Extracting the SDFs
-        JavaPairRDD<String, String> sdfStructures = parentDocuments.mapToPair(new PairFunction<Tuple2<Object, BSONObject>, String, String>() {
-            public Tuple2<String, String> call(Tuple2<Object, BSONObject> objectBSONObjectTuple2) throws Exception {
-                return new Tuple2<String, String>(objectBSONObjectTuple2._1.toString(), objectBSONObjectTuple2._2.toString());
-            }
-        });
-
-        System.out.println(sdfStructures.count());
-
+        JavaRDD<String> sdfStructures = parentDocuments.map(d->d._2().get("SDF").toString());
+        List<String> sdfList = sdfStructures.collect();
+        BufferedWriter writer = new BufferedWriter(new FileWriter("gridchem.sdf"));
+        for(String s:sdfList){
+            writer.write(s);
+        }
+        writer.flush();
+        writer.close();
         jsc.stop();
     }
 }

@@ -35,8 +35,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URI;
-import java.nio.file.Paths;
-import java.util.UUID;
 
 public class DataCatWorker {
 
@@ -59,32 +57,31 @@ public class DataCatWorker {
         IParser parser = parserResolver.resolveParser(catalogFileRequest);
         if(parser != null){
             String workingDir = null;
+            String localDirPath = null;
             try {
-                URI uri = catalogFileRequest.getFileUri();
-                workingDir = WorkerProperties.getInstance().getProperty(WorkerConstants.WORKING_DIR, "/tmp");
-                if(!workingDir.endsWith(File.separator)){
-                    workingDir += File.separator;
+                URI uri = catalogFileRequest.getDirUri();
+                if(!uri.getScheme().contains("file")) {
+                    workingDir = WorkerProperties.getInstance().getProperty(WorkerConstants.WORKING_DIR, "/tmp");
+                    localDirPath = fileHelper.createLocalCopyOfDir(uri, workingDir);
+                }else{
+                    localDirPath = uri.getPath();
                 }
-                workingDir += UUID.randomUUID().toString();
-                new File(workingDir).mkdirs();
-                String localFilePath = fileHelper.createLocalCopyOfFile(uri, workingDir);
-                JSONObject jsonObject = parser.parse(Paths.get(localFilePath).getFileName().toString(), workingDir,
-                        catalogFileRequest.getIngestMetadata());
+                JSONObject jsonObject = parser.parse(localDirPath, catalogFileRequest.getIngestMetadata());
                 registry.create(jsonObject);
-                logger.info("Published data for file : " + catalogFileRequest.getFileUri().toString());
+                logger.info("Published data for directory : " + catalogFileRequest.getDirUri().toString());
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
-                logger.error("Failed to publish data for file : " + catalogFileRequest.getFileUri().toString());
+                logger.error("Failed to publish data for directory : " + catalogFileRequest.getDirUri().toString());
             } finally {
-                if(workingDir != null && !workingDir.isEmpty()) {
-                    File file = new File(workingDir);
+                if(localDirPath != null && !localDirPath.isEmpty()) {
+                    File file = new File(localDirPath);
                     if(file.exists()){
                         deleteDirectory(file);
                     }
                 }
             }
         }else{
-            logger.warn("No suitable parser found for file : " + catalogFileRequest.getFileUri().toString());
+            logger.warn("No suitable parser found for directory : " + catalogFileRequest.getDirUri().toString());
         }
     }
 

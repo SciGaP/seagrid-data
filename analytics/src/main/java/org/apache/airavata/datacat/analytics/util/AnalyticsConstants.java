@@ -22,7 +22,8 @@ package org.apache.airavata.datacat.analytics.util;
 
 public class AnalyticsConstants {
     public static String MONGO_INPUT_URI = "mongodb://root:SciDBAdmin@gw62.iu.xsede.org:27017/datacat-chem.datacat-chem-collection";
-    public static String SPARK_MASTER_URL = "spark://gw111.iu.xsede.org:7077";
+//    public static String SPARK_MASTER_URL = "spark://gw111.iu.xsede.org:7077";
+    public static String SPARK_MASTER_URL = "local[4]";
     public static String ANALYTICS_OUTPUT_DIR = "hdfs://gw111.iu.xsede.org:9000/user/snakanda";
     public static String PROJECT_DIR = System.getProperty("user.dir");
 

@@ -46,7 +46,7 @@ public class NetCDFParser implements IParser {
         super();
     }
 
-    public JSONObject parse(String inputFileName, String workingDir, Map<String, Object> inputMetadata) throws Exception {
+    public JSONObject parse(String dir, Map<String, Object> inputMetadata) throws Exception {
         try {
 
             NetcdfFile ncFile = NetcdfFile.open("/Users/supun/Downloads/wrf-s3cn_arw/wrfout_d01_2015-05-28_05_12_00", null);
@@ -146,7 +146,7 @@ public class NetCDFParser implements IParser {
 
     public static void main(String[] args) throws Exception {
         NetCDFParser netCDFParser = new NetCDFParser();
-        netCDFParser.parse(null, null, null);
+        netCDFParser.parse(null, null);
     }
 
 

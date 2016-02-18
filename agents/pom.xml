@@ -10,10 +10,10 @@
 
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
-    <modules>
-        <module>gridchem-file-scanner</module>
-    </modules>
     <artifactId>agents</artifactId>
-
+    <modules>
+        <module>airavata-listener</module>
+        <module>gridchem-scaner</module>
+    </modules>
 
 </project>

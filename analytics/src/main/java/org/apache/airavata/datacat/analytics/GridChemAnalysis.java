@@ -45,7 +45,7 @@ public class GridChemAnalysis {
     private static String sparkMasterUrl = AnalyticsConstants.SPARK_MASTER_URL;
     private static String projectDir = AnalyticsConstants.PROJECT_DIR;
 
-    public static void main(String[] args) {
+    public static void main(String[] args){
 
         Configuration config = new Configuration();
         config.set("org.apache.airavata.datacat.analytics.input.format",
@@ -144,7 +144,7 @@ public class GridChemAnalysis {
         System.out.println("\n--------End of Molecule Mass Number Counts-------------------");
     }
 
-    public static void clusterMolecules(JavaPairRDD<String, ChemObject> parentDocuments) {
+    public static void clusterMolecules(JavaPairRDD<String, ChemObject> parentDocuments){
         JavaRDD<IAtomContainer> molecules = parentDocuments.map(r->r._2().getMolecule());
         //We are using the same classification model for clustering with dummy decision value
         JavaRDD<SignatureRecordDecision> signatureRecords = molecules.map(m -> SGUtils.atom2SigRecordDecision(m, 0.0, 1, 3));
