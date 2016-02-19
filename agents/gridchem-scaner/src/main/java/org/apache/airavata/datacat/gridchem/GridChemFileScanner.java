@@ -127,7 +127,8 @@ public class GridChemFileScanner {
                 HashMap<String, Object> inputMetadata = new HashMap<>();
                 inputMetadata.put("Id", (Paths.get(new URI(temp)).getFileName()));
                 inputMetadata.put("Username", (Paths.get(new URI(temp)).getParent().getParent().getFileName()));
-                inputMetadata.put("Project", (Paths.get(new URI(temp)).getParent().getFileName()));
+                inputMetadata.put("ExperimentName", (Paths.get(new URI(temp)).getFileName()));
+                inputMetadata.put("ProjectName", (Paths.get(new URI(temp)).getParent().getFileName()));
                 catalogFileRequest.setIngestMetadata(inputMetadata);
                 catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAUSSIAN);
                 worker.handle(catalogFileRequest);
