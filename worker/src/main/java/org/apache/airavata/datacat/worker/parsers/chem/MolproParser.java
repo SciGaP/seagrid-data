@@ -80,76 +80,76 @@ public class MolproParser implements IParser {
                 finalObj.put("Username", inputMetadata.get("Username"));
 
                 JSONObject temp2 = new JSONObject();
-                if(temp.get("InChI") != null)
+                if(temp.has("InChI"))
                     temp2.put("InChI", temp.get("InChI"));
-                if(temp.get("InChIKey") != null)
+                if(temp.has("InChIKey"))
                     temp2.put("InChIKey", temp.get("InChIKey"));
-                if(temp.get("SMILES") != null)
+                if(temp.has("SMILES"))
                     temp2.put("SMILES", temp.get("SMILES"));
-                if(temp.get("CanonicalSMILES") != null)
+                if(temp.has("CanonicalSMILES"))
                     temp2.put("CanonicalSMILES", temp.get("CanonicalSMILES"));
                 finalObj.put("Identifiers", temp2);
 
                 temp2 = new JSONObject();
-                if(temp.get("CodeVersion") != null)
+                if(temp.has("CodeVersion"))
                     temp2.put("Package", temp.get("CodeVersion"));
-                if(temp.get("Method") != null)
+                if(temp.has("Method"))
                     temp2.put("Method", temp.get("Method"));
-                if(temp.get("Keywords") != null)
+                if(temp.has("Keywords"))
                     temp2.put("Keywords", temp.get("Keywords"));
-                if(temp.get("Basis") != null)
+                if(temp.has("Basis"))
                     temp2.put("Basis", temp.get("Basis"));
-                if(temp.get("CalcType") != null)
+                if(temp.has("CalcType"))
                     temp2.put("CalcType", temp.get("CalcType"));
-                if(temp.get("NBasis") != null)
+                if(temp.has("NBasis"))
                     temp2.put("NBasis", temp.get("NBasis"));
-                if(temp.get("JobStatus") != null)
+                if(temp.has("JobStatus"))
                     temp2.put("JobStatus", temp.get("JobStatus"));
                 finalObj.put("Calculation", temp2);
 
                 temp2 = new JSONObject();
-                if(temp.get("Formula") != null)
+                if(temp.has("Formula"))
                     temp2.put("Formula", temp.get("Formula"));
-                if(temp.get("NAtom") != null)
+                if(temp.has("NAtom"))
                     temp2.put("NAtom", temp.get("NAtom"));
-                if(temp.get("Nmo") != null)
+                if(temp.has("Nmo"))
                     temp2.put("NMo", temp.get("Nmo"));
-                if(temp.get("OrbSym") != null)
+                if(temp.has("OrbSym"))
                     temp2.put("OrbSym", temp.get("OrbSym"));
-                if(temp.get("NAtom") != null)
+                if(temp.has("NAtom"))
                     temp2.put("NAtom", temp.get("NAtom"));
-                if(temp.get("Multiplicity") != null)
+                if(temp.has("Multiplicity"))
                     temp2.put("Multiplicity", temp.get("Multiplicity"));
-                if(temp.get("Charge") != null)
+                if(temp.has("Charge"))
                     temp2.put("Charge", temp.get("Charge"));
-                if(temp.get("ElecSym") != null)
+                if(temp.has("ElecSym"))
                     temp2.put("ElecSym", temp.get("ElecSym"));
                 finalObj.put("Molecule", temp2);
 
                 temp2 = new JSONObject();
-                if(temp.get("Energy") != null)
+                if(temp.has("Energy"))
                     temp2.put("Energy", temp.get("Energy"));
-                if(temp.get("Dipole") != null)
+                if(temp.has("Dipole"))
                     temp2.put("Dipole", temp.get("Dipole"));
-                if(temp.get("HF") != null)
+                if(temp.has("HF"))
                     temp2.put("HF", temp.get("HF"));
-                if(temp.get("Homos") != null)
+                if(temp.has("Homos"))
                     temp2.put("Homos", temp.get("Homos"));
                 finalObj.put("CalculatedProperties", temp2);
 
                 temp2 = new JSONObject();
-                if(temp.get("CalcMachine") != null)
+                if(temp.has("CalcMachine"))
                     temp2.put("CalcMachine", temp.get("CalcMachine"));
-                if(temp.get("FinTime") != null)
+                if(temp.has("FinTime"))
                     temp2.put("FinTime", temp.get("FinTime"));
-                if(temp.get("CalcBy") != null)
+                if(temp.has("CalcBy"))
                     temp2.put("CalcBy", temp.get("CalcBy"));
                 finalObj.put("ExecutionEnvironment", temp2);
 
                 temp2 = new JSONObject();
-                if(temp.get("SDF") != null)
+                if(temp.has("SDF"))
                     temp2.put("SDF", temp.get("SDF"));
-                if(temp.get("PDB") != null)
+                if(temp.has("PDB"))
                     temp2.put("PDB", temp.get("PDB"));
                 finalObj.put("FinalMoleculeStructuralFormats", temp2);
 
