@@ -47,7 +47,7 @@ import java.util.Iterator;
 
 
 
-public class AvroExampleWithoutCodeGeneration {
+public class AvroExample {
 
 
     public void serialize() throws JsonParseException, JsonProcessingException, IOException {
@@ -132,7 +132,7 @@ public class AvroExampleWithoutCodeGeneration {
     }
 
     public static void main(String[] args) throws IOException {
-        AvroExampleWithoutCodeGeneration AvroEx = new AvroExampleWithoutCodeGeneration();
+        AvroExample AvroEx = new AvroExample();
         AvroEx.serialize();
 //        AvroEx.deserialize();
         AvroEx.avroToParaquet();
