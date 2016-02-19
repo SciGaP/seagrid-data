@@ -98,6 +98,8 @@ public class GridChemFileScanner {
                                                     + dataRootPath + File.separator + username + File.separator
                                                     + projDirName + File.separator + experimentDirName);
                                             writer.flush();
+                                        }else{
+                                            logger.warn("failed experiment");
                                         }
                                     }
                                 } catch (Exception e) {
