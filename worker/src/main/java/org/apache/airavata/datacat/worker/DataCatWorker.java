@@ -58,8 +58,8 @@ public class DataCatWorker {
         if(parser != null){
             String workingDir = null;
             String localDirPath = null;
+            URI uri = catalogFileRequest.getDirUri();
             try {
-                URI uri = catalogFileRequest.getDirUri();
                 if(!uri.getScheme().contains("file")) {
                     workingDir = WorkerProperties.getInstance().getProperty(WorkerConstants.WORKING_DIR, "/tmp");
                     localDirPath = fileHelper.createLocalCopyOfDir(uri, workingDir);
@@ -73,7 +73,7 @@ public class DataCatWorker {
                 logger.error(e.getMessage(), e);
                 logger.error("Failed to publish data for directory : " + catalogFileRequest.getDirUri().toString());
             } finally {
-                if(localDirPath != null && !localDirPath.isEmpty()) {
+                if(!uri.getScheme().contains("file") && localDirPath != null && !localDirPath.isEmpty()) {
                     File file = new File(localDirPath);
                     if(file.exists()){
                         deleteDirectory(file);
