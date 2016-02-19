@@ -98,8 +98,6 @@ public class GridChemFileScanner {
                                                     + dataRootPath + File.separator + username + File.separator
                                                     + projDirName + File.separator + experimentDirName);
                                             writer.flush();
-                                        }else{
-                                            logger.warn("failed experiment");
                                         }
                                     }
                                 } catch (Exception e) {
@@ -112,32 +110,31 @@ public class GridChemFileScanner {
                 }
             }
             writer.close();
-            logger.info("Publishing Records");
-            BufferedReader reader = new BufferedReader(new FileReader(fileName));
-            while(skipLinesCount>0){
-                reader.readLine();
-                skipLinesCount--;
-            }
-            DataCatWorker worker = new DataCatWorker();
-            String temp = reader.readLine();
-            while(temp != null && !temp.isEmpty()){
-                logger.info("Publishing metadata for " + temp);
-                temp = temp.split(" ")[1];
-
-                CatalogFileRequest catalogFileRequest = new CatalogFileRequest();
-                catalogFileRequest.setDirUri(new URI(temp));
-                HashMap<String, Object> inputMetadata = new HashMap<>();
-                inputMetadata.put("Id", (Paths.get(new URI(temp)).getFileName()));
-                inputMetadata.put("Username", (Paths.get(new URI(temp)).getParent().getParent().getFileName()));
-                inputMetadata.put("ExperimentName", (Paths.get(new URI(temp)).getFileName()));
-                inputMetadata.put("ProjectName", (Paths.get(new URI(temp)).getParent().getFileName()));
-                catalogFileRequest.setIngestMetadata(inputMetadata);
-                catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAUSSIAN);
-                worker.handle(catalogFileRequest);
-                temp = reader.readLine();
-            }
         }
 
-    }
+        logger.info("Publishing Records");
+        BufferedReader reader = new BufferedReader(new FileReader(fileName));
+        while(skipLinesCount>0){
+            reader.readLine();
+            skipLinesCount--;
+        }
+        DataCatWorker worker = new DataCatWorker();
+        String temp = reader.readLine();
+        while(temp != null && !temp.isEmpty()){
+            logger.info("Publishing metadata for " + temp);
+            temp = temp.split(" ")[1];
 
+            CatalogFileRequest catalogFileRequest = new CatalogFileRequest();
+            catalogFileRequest.setDirUri(new URI(temp));
+            HashMap<String, Object> inputMetadata = new HashMap<>();
+            inputMetadata.put("Id", (Paths.get(new URI(temp)).getFileName()));
+            inputMetadata.put("Username", (Paths.get(new URI(temp)).getParent().getParent().getFileName()));
+            inputMetadata.put("ExperimentName", (Paths.get(new URI(temp)).getFileName()));
+            inputMetadata.put("ProjectName", (Paths.get(new URI(temp)).getParent().getFileName()));
+            catalogFileRequest.setIngestMetadata(inputMetadata);
+            catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAUSSIAN);
+            worker.handle(catalogFileRequest);
+            temp = reader.readLine();
+        }
+    }
 }
