@@ -159,11 +159,6 @@ public class MolproParser implements IParser {
         }catch (Exception ex){
             logger.error(ex.getMessage(), ex);
             throw new ParserException(ex);
-        }finally {
-            File outputFile = new File(dir + outputFileName);
-            if(outputFile.exists()){
-                outputFile.delete();
-            }
         }
     }
 }

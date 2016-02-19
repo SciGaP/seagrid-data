@@ -83,7 +83,6 @@ public class GridChemFileScanner {
                                         temp = reader.readLine();
                                         while (temp != null){
                                             //Omitting failed experiments
-                                            System.out.println(temp);
                                             if(temp.contains("Normal termination")){
                                                 failed = false;
                                                 break;
