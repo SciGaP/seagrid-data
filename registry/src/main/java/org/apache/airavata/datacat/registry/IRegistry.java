@@ -30,4 +30,6 @@ public interface IRegistry {
     boolean create(JSONObject jsonObject) throws RegistryException;
 
     List<JSONObject> select(String q) throws RegistryException;
+
+    JSONObject get(String id) throws RegistryException;
 }

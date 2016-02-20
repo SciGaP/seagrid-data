@@ -94,4 +94,10 @@ public class MongoRegistryImpl implements IRegistry {
         }
         return result;
     }
+
+    @Override
+    public JSONObject get(String id) throws RegistryException {
+        DBObject document = collection.findOne(new BasicDBObject(primaryKey, id));
+        return new JSONObject(document);
+    }
 }

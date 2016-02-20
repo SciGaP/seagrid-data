@@ -56,11 +56,24 @@ public class QueryAPIService {
     @GET
     @Path("/select")
     @Produces("application/json")
-    public Response getAclList(@QueryParam("q") String queryString){
+    public Response select(@QueryParam("q") String queryString){
         try {
             List<JSONObject> result = registry.select(queryString);
             JSONArray jsonArray = new JSONArray(result);
             return Response.status(200).entity(jsonArray.toString()).build();
+        } catch (Exception e) {
+            logger.error(e.toString());
+            return Response.status(503).entity(e.toString()).build();
+        }
+    }
+
+    @GET
+    @Path("/get")
+    @Produces("application/json")
+    public Response get(@QueryParam("id") String queryString){
+        try {
+            JSONObject result = registry.get(queryString);
+            return Response.status(200).entity(result.toString()).build();
         } catch (Exception e) {
             logger.error(e.toString());
             return Response.status(503).entity(e.toString()).build();

@@ -93,4 +93,9 @@ public class SolrRegistryImpl implements IRegistry {
     public List<JSONObject> select(String q) throws RegistryException {
         return null;
     }
+
+    @Override
+    public JSONObject get(String id) throws RegistryException {
+        return null;
+    }
 }
