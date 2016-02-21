@@ -45,6 +45,12 @@
             <version>3.6.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>edu.princeton.cup</groupId>
+            <artifactId>java-cup</artifactId>
+            <version>10k</version>
+        </dependency>
+
         <!--Testing Dependencies-->
         <dependency>
             <groupId>org.apache.tika</groupId>

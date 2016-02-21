@@ -18,7 +18,7 @@
  * under the License.
  *
 */
-package org.apache.airavata.datacat.worker.parsers.chem;
+package org.apache.airavata.datacat.worker.parsers.chem.gaussian;
 
 import org.apache.airavata.datacat.worker.parsers.IParser;
 import org.apache.airavata.datacat.worker.parsers.ParserException;
@@ -31,13 +31,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Map;
 
-public class MolproParser implements IParser {
+public class MainGaussianParser implements IParser {
 
-    private final static Logger logger = LoggerFactory.getLogger(MolproParser.class);
+    private final static Logger logger = LoggerFactory.getLogger(MainGaussianParser.class);
 
-    private final String outputFileName = "molpro-output.json";
+    private final String outputFileName = "gaussian-output.json";
 
     @SuppressWarnings("unchecked")
     public JSONObject parse(String dir, Map<String, Object> inputMetadata) throws Exception {
@@ -45,13 +46,22 @@ public class MolproParser implements IParser {
             if(!dir.endsWith(File.separator)){
                 dir += File.separator;
             }
-            String inputFileName = dir + ".out";
+            String gaussianOutputFile = null;
+            for(File file : (new File(dir).listFiles())){
+                if(file.getName().endsWith(".out") || file.getName().endsWith(".log")){
+                    gaussianOutputFile = file.getAbsolutePath();
+                }
+            }
+            if(gaussianOutputFile == null){
+                throw new Exception("Could not find the gaussian output file");
+            }
+
             //FIXME Move the hardcoded script to some kind of configuration
             Process proc = Runtime.getRuntime().exec(
                     "docker run -t --env LD_LIBRARY_PATH=/usr/local/lib -v " +
                             dir +":/datacat/working-dir scnakandala/datacat-chem python" +
-                            " /datacat/molpro.py /datacat/working-dir/"
-                            + inputFileName +" /datacat/working-dir/" + outputFileName);
+                            " /datacat/gaussian.py /datacat/working-dir/"
+                    + (new File(gaussianOutputFile)).getName() +" /datacat/working-dir/" + outputFileName);
 
 
             BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
@@ -135,6 +145,13 @@ public class MolproParser implements IParser {
                     temp2.put("HF", temp.get("HF"));
                 if(temp.has("Homos"))
                     temp2.put("Homos", temp.get("Homos"));
+                try{
+                    Double[][] gradientValues = getGradientValues(gaussianOutputFile);
+                    temp2.put("MaximumGradientDistribution", gradientValues[1]);
+                    temp2.put("RMSGradientDistribution", gradientValues[2]);
+                }catch (Exception ex){
+                    logger.warn("Failed calculating Gradient Data");
+                }
                 finalObj.put("CalculatedProperties", temp2);
 
                 temp2 = new JSONObject();
@@ -153,12 +170,68 @@ public class MolproParser implements IParser {
                     temp2.put("PDB", temp.get("PDB"));
                 finalObj.put("FinalMoleculeStructuralFormats", temp2);
 
+                temp2 = new JSONObject();
+                File baseDir = new File(dir);
+                for(File f : baseDir.listFiles()){
+                    if(f.getName().endsWith(".out") || f.getName().endsWith(".log")){
+                        temp2.put("GaussianOutputFile", f.getAbsolutePath());
+                    }else if(f.getName().endsWith(".com") || f.getName().endsWith(".in")){
+                        temp2.put("GaussianInputFile", f.getAbsolutePath());
+                    }else if(f.getName().endsWith(".chk")){
+                        temp2.put("GaussianCheckpointFile", f.getAbsolutePath());
+                    }else if(f.getName().endsWith(".fchk")){
+                        temp2.put("GaussianFCheckpointFile", f.getAbsolutePath());
+                    }
+                }
+                finalObj.put("Files", temp2);
+
                 return finalObj;
             }
+
             throw new Exception("Could not parse data");
         }catch (Exception ex){
             logger.error(ex.getMessage(), ex);
             throw new ParserException(ex);
         }
+    }
+
+    private Double[][] getGradientValues(String gaussianInputFile) throws Exception{
+        GOPTLexer scanner = new GOPTLexer(new java.io.FileReader(gaussianInputFile));
+        GOPTParser goptParser = new GOPTParser(scanner);
+        goptParser.init_actions();
+        goptParser.parse();
+
+        BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("java.io.tmpdir") + File.separator
+                + CUP$GOPTParser$actions.randomNum+"temporary2"));
+        String temp = reader.readLine();
+        while(!temp.startsWith("DataSet:")){
+            temp = reader.readLine();
+        }
+        ArrayList<Double> values = new ArrayList();
+        while(temp != null && !temp.isEmpty()){
+            values.add(Double.parseDouble(temp.split(",")[1].trim()));
+            temp = reader.readLine();
+        }
+
+        Double[][] returnArr = new Double[4][];
+        for(double d=1; d<values.size();d++){
+            returnArr[0][(int)d-1] = d;
+        }
+        returnArr[1] = values.toArray(new Double[values.size()]);
+
+        reader = new BufferedReader(new FileReader(System.getProperty("java.io.tmpdir") + File.separator
+                + CUP$GOPTParser$actions.randomNum+"temporary3"));
+        temp = reader.readLine();
+        while(!temp.startsWith("DataSet:")){
+            temp = reader.readLine();
+        }
+        values = new ArrayList();
+        while(temp != null && !temp.isEmpty()){
+            values.add(Double.parseDouble(temp.split(",")[1].trim()));
+            temp = reader.readLine();
+        }
+        returnArr[2] = values.toArray(new Double[values.size()]);
+
+        return returnArr;
     }
 }

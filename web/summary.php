@@ -3,7 +3,7 @@
     if(!isset($results) || empty($results)){
         $results = array();
     }
-    $molecule = $results[7];
+    $molecule = $results[2];
 ?>
 
 <html>
@@ -263,6 +263,11 @@
                         <?php var_dump($molecule['FinalMoleculeStructuralFormats']['SDF'])?>
                     </textarea>
                     <div class="text-centered">Molecular Structure</div>
+                    <br><br>
+                    <!--?php if(isset($molecule['CalculatedProperties']['MaximumGradientDistribution'])):?-->
+                        <canvas id="gradientDistribution" width="300" height="300" style="margin-left: 10%"></canvas>
+                        <div class="text-centered">Gradient vs Iteration</div>
+                    <!--?php endif; ?-->
                 </div>
             </div>
 
@@ -276,7 +281,8 @@
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
                 integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-
+        <!--Charting library-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
     <script>
         $( document ).ready(function() {
             var glmol01 = new GLmol('glmol01', true);
@@ -300,5 +306,48 @@
             glmol01.loadMolecule();
         });
     </script>
+        <script>
+            $( document ).ready(function() {
+                var data = {
+                    labels: [1, 2, 3, 4, 5, 6, 7],
+                    datasets: [
+                        {
+                            label: "Maximum Gradient",
+                            fillColor: "rgba(220,220,220,0.2)",
+                            strokeColor: "rgba(220,220,220,1)",
+                            pointColor: "rgba(220,220,220,1)",
+                            pointStrokeColor: "#fff",
+                            pointHighlightFill: "#fff",
+                            pointHighlightStroke: "rgba(220,220,220,1)",
+                            data: [65, 59, 80, 81, 56, 55, 40]
+                        },
+                        {
+                            label: "RMS Gradient",
+                            fillColor: "rgba(151,187,205,0.2)",
+                            strokeColor: "rgba(151,187,205,1)",
+                            pointColor: "rgba(151,187,205,1)",
+                            pointStrokeColor: "#fff",
+                            pointHighlightFill: "#fff",
+                            pointHighlightStroke: "rgba(151,187,205,1)",
+                            data: [28, 48, 40, 19, 86, 27, 90]
+                        }
+                    ]
+                };
+                var ctx = document.getElementById("gradientDistribution").getContext("2d");
+                var options = {
+                    legendTemplate : '<ul>'
+                    +'<% for (var i=0; i<datasets.length; i++) { %>'
+                    +'<li>'
+                    +'<span style=\"background-color:<%=datasets[i].lineColor%>\"></span>'
+                    +'<% if (datasets[i].label) { %><%= datasets[i].label %><% } %>'
+                    +'</li>'
+                    +'<% } %>'
+                    +'</ul>'
+                }
+                var gradChart = new Chart(ctx).Line(data, {multiTooltipTemplate: "<%= datasetLabel %> - <%= value %>"});
+                var legend = lineChart.generateLegend();
+                $('#gradientDistribution').append(legend);
+            });
+        </script>
     </body>
 </html>

@@ -18,7 +18,7 @@
  * under the License.
  *
 */
-package org.apache.airavata.datacat.worker.parsers.chem;
+package org.apache.airavata.datacat.worker.parsers.chem.molpro;
 
 import org.apache.airavata.datacat.worker.parsers.IParser;
 import org.apache.airavata.datacat.worker.parsers.ParserException;
@@ -33,10 +33,11 @@ import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.Map;
 
-public class GamessParser implements IParser {
-    private final static Logger logger = LoggerFactory.getLogger(GamessParser.class);
+public class MainMolproParser implements IParser {
 
-    private final String outputFileName = "gamess-output.json";
+    private final static Logger logger = LoggerFactory.getLogger(MainMolproParser.class);
+
+    private final String outputFileName = "molpro-output.json";
 
     @SuppressWarnings("unchecked")
     public JSONObject parse(String dir, Map<String, Object> inputMetadata) throws Exception {
@@ -48,8 +49,8 @@ public class GamessParser implements IParser {
             //FIXME Move the hardcoded script to some kind of configuration
             Process proc = Runtime.getRuntime().exec(
                     "docker run -t --env LD_LIBRARY_PATH=/usr/local/lib -v " +
-                            dir +":/datacat/working-dir scnakandala/datacat-chem python " +
-                            "/datacat/gamess.py /datacat/working-dir/"
+                            dir +":/datacat/working-dir scnakandala/datacat-chem python" +
+                            " /datacat/molpro.py /datacat/working-dir/"
                             + inputFileName +" /datacat/working-dir/" + outputFileName);
 
 

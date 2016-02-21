@@ -18,7 +18,7 @@
  * under the License.
  *
 */
-package org.apache.airavata.datacat.worker.parsers.chem;
+package org.apache.airavata.datacat.worker.parsers.chem.nwchem;
 
 import org.apache.airavata.datacat.worker.parsers.IParser;
 import org.apache.airavata.datacat.worker.parsers.ParserException;
@@ -33,9 +33,9 @@ import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.Map;
 
-public class NWChemParser implements IParser {
+public class MainNWChemParser implements IParser {
 
-    private final static Logger logger = LoggerFactory.getLogger(NWChemParser.class);
+    private final static Logger logger = LoggerFactory.getLogger(MainNWChemParser.class);
     private final String outputFileName = "nwchem-output.json";
 
     @SuppressWarnings("unchecked")

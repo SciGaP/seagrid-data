@@ -18,7 +18,7 @@
  * under the License.
  *
 */
-package org.apache.airavata.datacat.worker.parsers.chem;
+package org.apache.airavata.datacat.worker.parsers.chem.gamess;
 
 import org.apache.airavata.datacat.worker.parsers.IParser;
 import org.apache.airavata.datacat.worker.parsers.ParserException;
@@ -33,11 +33,10 @@ import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.Map;
 
-public class GaussianParser implements IParser {
+public class MainGamessParser implements IParser {
+    private final static Logger logger = LoggerFactory.getLogger(MainGamessParser.class);
 
-    private final static Logger logger = LoggerFactory.getLogger(GaussianParser.class);
-
-    private final String outputFileName = "gaussian-output.json";
+    private final String outputFileName = "gamess-output.json";
 
     @SuppressWarnings("unchecked")
     public JSONObject parse(String dir, Map<String, Object> inputMetadata) throws Exception {
@@ -45,22 +44,13 @@ public class GaussianParser implements IParser {
             if(!dir.endsWith(File.separator)){
                 dir += File.separator;
             }
-            String gaussianOutputFile = null;
-            for(File file : (new File(dir).listFiles())){
-                if(file.getName().endsWith(".out")){
-                    gaussianOutputFile = file.getAbsolutePath();
-                }
-            }
-            if(gaussianOutputFile == null){
-                throw new Exception("Could not find the gaussian output file");
-            }
-
+            String inputFileName = dir + ".out";
             //FIXME Move the hardcoded script to some kind of configuration
             Process proc = Runtime.getRuntime().exec(
                     "docker run -t --env LD_LIBRARY_PATH=/usr/local/lib -v " +
-                            dir +":/datacat/working-dir scnakandala/datacat-chem python" +
-                            " /datacat/gaussian.py /datacat/working-dir/"
-                    + (new File(gaussianOutputFile)).getName() +" /datacat/working-dir/" + outputFileName);
+                            dir +":/datacat/working-dir scnakandala/datacat-chem python " +
+                            "/datacat/gamess.py /datacat/working-dir/"
+                            + inputFileName +" /datacat/working-dir/" + outputFileName);
 
 
             BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
@@ -162,24 +152,8 @@ public class GaussianParser implements IParser {
                     temp2.put("PDB", temp.get("PDB"));
                 finalObj.put("FinalMoleculeStructuralFormats", temp2);
 
-                temp2 = new JSONObject();
-                File baseDir = new File(dir);
-                for(File f : baseDir.listFiles()){
-                    if(f.getName().endsWith(".out")){
-                        temp2.put("GaussianOutputFile", f.getAbsolutePath());
-                    }else if(f.getName().endsWith(".com") || f.getName().endsWith(".in")){
-                        temp2.put("GaussianInputFile", f.getAbsolutePath());
-                    }else if(f.getName().endsWith(".chk")){
-                        temp2.put("GaussianCheckpointFile", f.getAbsolutePath());
-                    }else if(f.getName().endsWith(".fchk")){
-                        temp2.put("GaussianFCheckpointFile", f.getAbsolutePath());
-                    }
-                }
-                finalObj.put("Files", temp2);
-
                 return finalObj;
             }
-
             throw new Exception("Could not parse data");
         }catch (Exception ex){
             logger.error(ex.getMessage(), ex);
