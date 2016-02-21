@@ -1,9 +1,6 @@
 <?php
-    $results = json_decode(file_get_contents('http://gw127.iu.xsede.org:8000/query-api/select?q=sddslfnlsdf'), true);
-    if(!isset($results) || empty($results)){
-        $results = array();
-    }
-    $molecule = $results[2];
+    $molecule = json_decode(file_get_contents('http://gw127.iu.xsede.org:8000/query-api/get?id=ka5w.comet.sdsc.xsede.org.698757.150719'), true);
+    var_dump($molecule);
 ?>
 
 <html>
