@@ -147,10 +147,11 @@ public class MainGaussianParser implements IParser {
                     temp2.put("Homos", temp.get("Homos"));
                 try{
                     Double[][] gradientValues = getGradientValues(gaussianOutputFile);
+                    temp2.put("Iterations", gradientValues[0]);
                     temp2.put("MaximumGradientDistribution", gradientValues[1]);
                     temp2.put("RMSGradientDistribution", gradientValues[2]);
                 }catch (Exception ex){
-                    logger.warn("Failed calculating Gradient Data");
+                    logger.warn("Failed calculating Gradient Data :" + ex.getMessage());
                 }
                 finalObj.put("CalculatedProperties", temp2);
 
@@ -208,13 +209,15 @@ public class MainGaussianParser implements IParser {
             temp = reader.readLine();
         }
         ArrayList<Double> values = new ArrayList();
+        temp = reader.readLine();
         while(temp != null && !temp.isEmpty()){
             values.add(Double.parseDouble(temp.split(",")[1].trim()));
             temp = reader.readLine();
         }
 
         Double[][] returnArr = new Double[4][];
-        for(double d=1; d<values.size();d++){
+        returnArr[0] = new Double[values.size()];
+        for(double d=1; d<=values.size();d++){
             returnArr[0][(int)d-1] = d;
         }
         returnArr[1] = values.toArray(new Double[values.size()]);
@@ -226,6 +229,7 @@ public class MainGaussianParser implements IParser {
             temp = reader.readLine();
         }
         values = new ArrayList();
+        temp = reader.readLine();
         while(temp != null && !temp.isEmpty()){
             values.add(Double.parseDouble(temp.split(",")[1].trim()));
             temp = reader.readLine();
