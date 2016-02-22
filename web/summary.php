@@ -1,6 +1,5 @@
 <?php
     $id = $_GET['id'];
-    $id = 'ns1.trestles.sdsc.teragrid.org.2583495.150423';
     if(isset($id)){
         $molecule = json_decode(file_get_contents(
             'http://gw127.iu.xsede.org:8000/query-api/get?id=' . $id), true);
@@ -375,7 +374,7 @@
                         }
                     ]
                 };
-                var ctx2 = document.getElementById("gradientDistribution").getContext("2d");
+                var ctx2 = document.getElementById("energyDistribution").getContext("2d");
                 var options2 = {
                     legendTemplate : '<ul>'
                     +'<% for (var i=0; i<datasets.length; i++) { %>'
