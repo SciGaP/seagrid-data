@@ -1,5 +1,6 @@
 <?php
     $id = $_GET['id'];
+    $id = 'ns1.trestles.sdsc.teragrid.org.2583495.150423';
     if(isset($id)){
         $molecule = json_decode(file_get_contents(
             'http://gw127.iu.xsede.org:8000/query-api/get?id=' . $id), true);
@@ -8,7 +9,7 @@
     }
 ?>
 
-<?php if(isset($id)): ?>
+<?php if(isset($molecule)): ?>
 <html>
     <head>
         <!-- Latest compiled and minified CSS -->
@@ -274,7 +275,7 @@
                     <?php if(isset($molecule['CalculatedProperties']['MaximumGradientDistribution'])):?>
                         <br><br>
                         <canvas id="gradientDistribution" width="300" height="300" style="margin-left: 10%"></canvas>
-                        <div class="text-centered">Energy Gradient vs Iteration</div>
+                        <div class="text-centered">Gradient vs Iteration</div>
                     <?php endif; ?>
                 </div>
             </div>

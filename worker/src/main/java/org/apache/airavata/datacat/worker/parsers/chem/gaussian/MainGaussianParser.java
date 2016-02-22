@@ -145,15 +145,15 @@ public class MainGaussianParser implements IParser {
                 if(temp.has("Homos"))
                     temp2.put("Homos", temp.get("Homos"));
                 try{
-                    Double[][] gradientValues = getEnergyValues(gaussianOutputFile);
+                    Double[][] gradientValues = getDistributionValues(gaussianOutputFile);
                     if(gradientValues != null){
-                        if(gradientValues[0] != null)
+                        if(gradientValues[0] != null && gradientValues[0].length > 0)
                             temp2.put("Iterations", gradientValues[0]);
-                        if(gradientValues[1] != null)
+                        if(gradientValues[1] != null && gradientValues[1].length > 0)
                             temp2.put("MaximumGradientDistribution", gradientValues[1]);
-                        if(gradientValues[2] != null)
+                        if(gradientValues[2] != null && gradientValues[2].length > 0)
                             temp2.put("RMSGradientDistribution", gradientValues[2]);
-                        if(gradientValues[3] != null)
+                        if(gradientValues[3] != null && gradientValues[3].length > 0)
                             temp2.put("EnergyDistribution", gradientValues[3]);
                     }
                 }catch (Exception ex){
@@ -202,7 +202,7 @@ public class MainGaussianParser implements IParser {
         }
     }
 
-    private Double[][] getEnergyValues(String gaussianOutputFile) throws Exception{
+    private Double[][] getDistributionValues(String gaussianOutputFile) throws Exception{
         //First find the method
         MethodParser pp = new MethodParser(new MethodLexer(new FileReader(gaussianOutputFile)));
         pp.parse();
@@ -313,7 +313,7 @@ public class MainGaussianParser implements IParser {
 
     public static void main(String[] args) throws Exception {
         MainGaussianParser mainGaussianParser = new MainGaussianParser();
-        mainGaussianParser.getEnergyValues("/Users/supun/Downloads/default_job.out");
-
+        mainGaussianParser.getDistributionValues("/Users/supun/Downloads/default_job.out");
+//        mainGaussianParser.getDistributionValues("/Users/supun/ns1.out");
     }
 }
