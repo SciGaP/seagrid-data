@@ -1,6 +1,6 @@
 <?php
-    $molecule = json_decode(file_get_contents('http://gw127.iu.xsede.org:8000/query-api/get?id=ka5w.comet.sdsc.xsede.org.698757.150719'), true);
-    var_dump($molecule);
+    $molecule = json_decode(file_get_contents(
+        'http://gw127.iu.xsede.org:8000/query-api/get?id=mp10.trestles.sdsc.teragrid.org.2580173.150417'), true);
 ?>
 
 <html>
@@ -261,10 +261,15 @@
                     </textarea>
                     <div class="text-centered">Molecular Structure</div>
                     <br><br>
-                    <!--?php if(isset($molecule['CalculatedProperties']['MaximumGradientDistribution'])):?-->
+                    <?php if(isset($molecule['CalculatedProperties']['EnergyDistribution'])):?>
+                        <canvas id="energyDistribution" width="300" height="300" style="margin-left: 10%"></canvas>
+                        <div class="text-centered">Energy vs Iteration</div>
+                    <?php endif; ?>
+                    <?php if(isset($molecule['CalculatedProperties']['MaximumGradientDistribution'])):?>
+                        <br><br>
                         <canvas id="gradientDistribution" width="300" height="300" style="margin-left: 10%"></canvas>
-                        <div class="text-centered">Gradient vs Iteration</div>
-                    <!--?php endif; ?-->
+                        <div class="text-centered">Energy Gradient vs Iteration</div>
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -305,8 +310,9 @@
     </script>
         <script>
             $( document ).ready(function() {
-                var data = {
-                    labels: [1, 2, 3, 4, 5, 6, 7],
+                <?php if(isset($molecule['CalculatedProperties']['MaximumGradientDistribution'])):?>
+                var gradientData = {
+                    labels: <?php echo json_encode($molecule['CalculatedProperties']['Iterations'])?>,
                     datasets: [
                         {
                             label: "Maximum Gradient",
@@ -316,7 +322,7 @@
                             pointStrokeColor: "#fff",
                             pointHighlightFill: "#fff",
                             pointHighlightStroke: "rgba(220,220,220,1)",
-                            data: [65, 59, 80, 81, 56, 55, 40]
+                            data: <?php echo json_encode($molecule['CalculatedProperties']['MaximumGradientDistribution'])?>
                         },
                         {
                             label: "RMS Gradient",
@@ -326,12 +332,12 @@
                             pointStrokeColor: "#fff",
                             pointHighlightFill: "#fff",
                             pointHighlightStroke: "rgba(151,187,205,1)",
-                            data: [28, 48, 40, 19, 86, 27, 90]
+                            data: <?php echo json_encode($molecule['CalculatedProperties']['RMSGradientDistribution'])?>
                         }
                     ]
                 };
-                var ctx = document.getElementById("gradientDistribution").getContext("2d");
-                var options = {
+                var ctx1 = document.getElementById("gradientDistribution").getContext("2d");
+                var options1 = {
                     legendTemplate : '<ul>'
                     +'<% for (var i=0; i<datasets.length; i++) { %>'
                     +'<li>'
@@ -341,9 +347,42 @@
                     +'<% } %>'
                     +'</ul>'
                 }
-                var gradChart = new Chart(ctx).Line(data, {multiTooltipTemplate: "<%= datasetLabel %> - <%= value %>"});
-                var legend = lineChart.generateLegend();
-                $('#gradientDistribution').append(legend);
+                var gradChart = new Chart(ctx1, options1).Line(gradientData, {multiTooltipTemplate: "<%= datasetLabel %> - <%= value %>"});
+                var gradLegend = gradChart.generateLegend();
+                $('#gradientDistribution').append(gradLegend);
+                <?php endif; ?>
+
+                <?php if(isset($molecule['CalculatedProperties']['EnergyDistribution'])):?>
+                var energyData = {
+                    labels: <?php echo json_encode($molecule['CalculatedProperties']['Iterations'])?>,
+                    datasets: [
+                        {
+                            label: "Energy Distribution",
+                            fillColor: "rgba(220,220,220,0.2)",
+                            strokeColor: "rgba(220,220,220,1)",
+                            pointColor: "rgba(220,220,220,1)",
+                            pointStrokeColor: "#fff",
+                            pointHighlightFill: "#fff",
+                            pointHighlightStroke: "rgba(220,220,220,1)",
+                            data: <?php echo json_encode($molecule['CalculatedProperties']['EnergyDistribution'])?>
+                        }
+                    ]
+                };
+                var ctx2 = document.getElementById("gradientDistribution").getContext("2d");
+                var options2 = {
+                    legendTemplate : '<ul>'
+                    +'<% for (var i=0; i<datasets.length; i++) { %>'
+                    +'<li>'
+                    +'<span style=\"background-color:<%=datasets[i].lineColor%>\"></span>'
+                    +'<% if (datasets[i].label) { %><%= datasets[i].label %><% } %>'
+                    +'</li>'
+                    +'<% } %>'
+                    +'</ul>'
+                }
+                var energyChart = new Chart(ctx2, options2).Line(energyData, {multiTooltipTemplate: "<%= datasetLabel %> - <%= value %>"});
+                var energyLegend = energyChart.generateLegend();
+                $('#energyDistribution').append(energyLegend);
+                <?php endif; ?>
             });
         </script>
     </body>
