@@ -1,8 +1,14 @@
 <?php
-    $molecule = json_decode(file_get_contents(
-        'http://gw127.iu.xsede.org:8000/query-api/get?id=mp10.trestles.sdsc.teragrid.org.2580173.150417'), true);
+    $id = $_GET['id'];
+    if(isset($id)){
+        $molecule = json_decode(file_get_contents(
+            'http://gw127.iu.xsede.org:8000/query-api/get?id=' . $id), true);
+    }else{
+        echo 'Id not set !!!';
+    }
 ?>
 
+<?php if(isset($id)): ?>
 <html>
     <head>
         <!-- Latest compiled and minified CSS -->
@@ -387,3 +393,4 @@
         </script>
     </body>
 </html>
+<?php endif; ?>

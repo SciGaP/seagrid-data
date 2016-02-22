@@ -309,4 +309,11 @@ public class MainGaussianParser implements IParser {
 
         return null;
     }
+
+
+    public static void main(String[] args) throws Exception {
+        MainGaussianParser mainGaussianParser = new MainGaussianParser();
+        mainGaussianParser.getEnergyValues("/Users/supun/Downloads/default_job.out");
+
+    }
 }
