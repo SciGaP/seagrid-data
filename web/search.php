@@ -10,13 +10,13 @@
     if(isset($_POST['query'])){
         $q = $_POST['query'];
     }
-    if(isset($_POST['pageNo'])){
+    if(!isset($_POST['search']) && isset($_POST['pageNo'])){
         $pageNo = $_POST['pageNo'];
     }
-    if(isset($_POST['next'])){
+    if(!isset($_POST['search']) && isset($_POST['next'])){
         $pageNo = $pageNo + 1;
     }
-    if(isset($_POST['previous'])){
+    if(!isset($_POST['search']) && isset($_POST['previous'])){
         $pageNo = $pageNo - 1;
     }
     $offset = ($pageNo -1) * 50;
@@ -74,7 +74,7 @@
                                 <input type="hidden" name="pageNo" id="pageNo" value=<?php echo $pageNo; ?>>
                             </div>
 
-                            <button type="submit" class="btn btn-primary pull-right" value="Search"><span
+                            <button type="submit" class="btn btn-primary pull-right" name="search" value="Search"><span
                                     class="glyphicon glyphicon-search"></span> Search
                             </button>
 
