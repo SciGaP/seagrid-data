@@ -323,7 +323,20 @@
             $( document ).ready(function() {
                 <?php if(isset($molecule['CalculatedProperties']['MaximumGradientDistribution'])):?>
                 var gradientData = {
-                    labels: <?php echo json_encode($molecule['CalculatedProperties']['Iterations'])?>,
+                    labels: <?php
+                                if(sizeof($molecule['CalculatedProperties']['Iterations']) > 20){
+                                    $step = intval(ceil(sizeof($molecule['CalculatedProperties']['Iterations'])/20));
+                                    echo "[" . $molecule['CalculatedProperties']['Iterations'][0];
+                                    $i = $step;
+                                    while($i < sizeof($molecule['CalculatedProperties']['Iterations'])){
+                                        echo "," . $molecule['CalculatedProperties']['Iterations'][$i];
+                                        $i = $i + $step;
+                                    }
+                                    echo "]";
+                                }else{
+                                    echo json_encode($molecule['CalculatedProperties']['Iterations']);
+                                }
+                            ?>,
                     datasets: [
                         {
                             label: "Maximum Gradient",
@@ -333,7 +346,20 @@
                             pointStrokeColor: "#fff",
                             pointHighlightFill: "#fff",
                             pointHighlightStroke: "rgba(220,220,220,1)",
-                            data: <?php echo json_encode($molecule['CalculatedProperties']['MaximumGradientDistribution'])?>
+                            data: <?php
+                                        if(sizeof($molecule['CalculatedProperties']['MaximumGradientDistribution']) > 20){
+                                            $step = intval(ceil(sizeof($molecule['CalculatedProperties']['MaximumGradientDistribution'])/20));
+                                            echo "[" . $molecule['CalculatedProperties']['MaximumGradientDistribution'][0];
+                                            $i = $step;
+                                            while($i < sizeof($molecule['CalculatedProperties']['MaximumGradientDistribution'])){
+                                                echo "," . $molecule['CalculatedProperties']['MaximumGradientDistribution'][$i];
+                                                $i = $i + $step;
+                                            }
+                                            echo "]";
+                                        }else{
+                                            echo json_encode($molecule['CalculatedProperties']['MaximumGradientDistribution']);
+                                        }
+                                    ?>
                         },
                         {
                             label: "RMS Gradient",
@@ -343,7 +369,20 @@
                             pointStrokeColor: "#fff",
                             pointHighlightFill: "#fff",
                             pointHighlightStroke: "rgba(151,187,205,1)",
-                            data: <?php echo json_encode($molecule['CalculatedProperties']['RMSGradientDistribution'])?>
+                            data: <?php
+                                        if(sizeof($molecule['CalculatedProperties']['RMSGradientDistribution']) > 20){
+                                            $step = intval(ceil(sizeof($molecule['CalculatedProperties']['RMSGradientDistribution'])/20));
+                                            echo "[" . $molecule['CalculatedProperties']['RMSGradientDistribution'][0];
+                                            $i = $step;
+                                            while($i < sizeof($molecule['CalculatedProperties']['RMSGradientDistribution'])){
+                                                echo "," . $molecule['CalculatedProperties']['RMSGradientDistribution'][$i];
+                                                $i = $i + $step;
+                                            }
+                                            echo "]";
+                                        }else{
+                                            echo json_encode($molecule['CalculatedProperties']['RMSGradientDistribution']);
+                                        }
+                                    ?>
                         }
                     ]
                 };
@@ -363,9 +402,21 @@
                 $('#gradientDistribution').append(gradLegend);
                 <?php endif; ?>
 
-                <?php if(isset($molecule['CalculatedProperties']['EnergyDistribution'])):?>
                 var energyData = {
-                    labels: <?php echo json_encode($molecule['CalculatedProperties']['Iterations'])?>,
+                    labels: <?php
+                                if(sizeof($molecule['CalculatedProperties']['Iterations']) > 20){
+                                    $step = intval(ceil(sizeof($molecule['CalculatedProperties']['Iterations'])/20));
+                                    echo "[" . $molecule['CalculatedProperties']['Iterations'][0];
+                                    $i = $step;
+                                    while($i < sizeof($molecule['CalculatedProperties']['Iterations'])){
+                                        echo "," . $molecule['CalculatedProperties']['Iterations'][$i];
+                                        $i = $i + $step;
+                                    }
+                                    echo "]";
+                                }else{
+                                    echo json_encode($molecule['CalculatedProperties']['Iterations']);
+                                }
+                            ?>,
                     datasets: [
                         {
                             label: "Energy Distribution",
@@ -375,10 +426,24 @@
                             pointStrokeColor: "#fff",
                             pointHighlightFill: "#fff",
                             pointHighlightStroke: "rgba(220,220,220,1)",
-                            data: <?php echo json_encode($molecule['CalculatedProperties']['EnergyDistribution'])?>
+                            data: <?php
+                                        if(sizeof($molecule['CalculatedProperties']['EnergyDistribution']) > 20){
+                                            $step = intval(ceil(sizeof($molecule['CalculatedProperties']['EnergyDistribution'])/20));
+                                            echo "[" . $molecule['CalculatedProperties']['EnergyDistribution'][0];
+                                            $i = $step;
+                                            while($i < sizeof($molecule['CalculatedProperties']['EnergyDistribution'])){
+                                                echo "," . $molecule['CalculatedProperties']['EnergyDistribution'][$i];
+                                                $i = $i + $step;
+                                            }
+                                            echo "]";
+                                        }else{
+                                            echo json_encode($molecule['CalculatedProperties']['EnergyDistribution']);
+                                        }
+                                    ?>
                         }
                     ]
                 };
+                <?php if(isset($molecule['CalculatedProperties']['EnergyDistribution'])):?>
                 var ctx2 = document.getElementById("energyDistribution").getContext("2d");
                 var options2 = {
                     legendTemplate : '<ul>'
