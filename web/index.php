@@ -28,7 +28,9 @@ session_start();
                 </div>
                 <div id="navbar" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li><a href="./search.php">Search</a></li>
+                        <?php if(isset($_SESSION['username'])):?>
+                            <li><a href="./search.php">Search</a></li>
+                        <?php endif; ?>
                     </ul>
                     <ul class="nav navbar-nav pull-right">
                         <?php if(!isset($_SESSION['username'])):?>

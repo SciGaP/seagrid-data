@@ -1,4 +1,9 @@
 <?php
+    if(!isset($_SESSION['username'])){
+        $home_url = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/index.php';
+        header('Location: ' . $home_url);
+    }
+
     $id = $_GET['id'];
     if(isset($id)){
         $molecule = json_decode(file_get_contents(
