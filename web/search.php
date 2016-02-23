@@ -7,9 +7,15 @@
     if(isset($_POST['pageNo'])){
         $pageNo = $_POST['pageNo'];
     }
-    $offset = ($pageNo - 1) * 50;
+    if(isset($_POST['next'])){
+        $pageNo = $pageNo + 1;
+    }
+    if(isset($_POST['previous'])){
+        $pageNo = $pageNo - 1;
+    }
+    $offset = ($pageNo -1) * 50;
     $results = json_decode(file_get_contents('http://gw127.iu.xsede.org:8000/query-api/select?q='. urlencode($q)
-        .'&limit=50&offset=' . $pageNo), true);
+        .'&limit=50&offset=' . $offset), true);
     if(!isset($results) || empty($results)){
         $results = array();
     }
@@ -59,7 +65,7 @@
                             <div class="form-group search-text-block">
                                 <input type="search" class="form-control" name="query" id="query"
                                        value="<?php if (isset($_POST['query'])) echo $_POST['query'] ?>">
-                                <input type="hidden" name="pageNo" id="pageNo" value=<?php echo $pageNo + 1; ?>>
+                                <input type="hidden" name="pageNo" id="pageNo" value=<?php echo $pageNo; ?>>
                             </div>
 
                             <button type="submit" class="btn btn-primary pull-right" value="Search"><span
@@ -89,10 +95,10 @@
                     <div class="pull-right btn-toolbar" style="padding-bottom: 5px">
                         <?php
                             if (isset($pageNo) && $pageNo != 1) {
-                                echo '<input class="btn btn-primary btn-xs" type="submit" style="cursor: pointer" name="prev" value="Previous"/>';
+                                echo '<input class="btn btn-primary btn-xs" type="submit" style="cursor: pointer" name="previous" value="previous"/>';
                             }
                             if (sizeof($results) > 0) {
-                                echo '<input class="btn btn-primary btn-xs" type="submit" style="cursor: pointer" name="next" value="Next"/>';
+                                echo '<input class="btn btn-primary btn-xs" type="submit" style="cursor: pointer" name="next" value="next"/>';
                             }
                         ?>
                     </div>
