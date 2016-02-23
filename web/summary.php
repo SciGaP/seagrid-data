@@ -325,11 +325,11 @@
                 var gradientData = {
                     labels: <?php
                                 if(sizeof($molecule['CalculatedProperties']['Iterations']) > 20){
-                                    $step = intval(ceil(sizeof($molecule['CalculatedProperties']['Iterations'])/20));
+                                    $step = sizeof($molecule['CalculatedProperties']['Iterations'])/20;
                                     echo "[" . $molecule['CalculatedProperties']['Iterations'][0];
                                     $i = $step;
                                     while($i < sizeof($molecule['CalculatedProperties']['Iterations'])){
-                                        echo "," . $molecule['CalculatedProperties']['Iterations'][$i];
+                                        echo "," . $molecule['CalculatedProperties']['Iterations'][round($i)];
                                         $i = $i + $step;
                                     }
                                     echo "]";
@@ -348,11 +348,11 @@
                             pointHighlightStroke: "rgba(220,220,220,1)",
                             data: <?php
                                         if(sizeof($molecule['CalculatedProperties']['MaximumGradientDistribution']) > 20){
-                                            $step = intval(ceil(sizeof($molecule['CalculatedProperties']['MaximumGradientDistribution'])/20));
+                                            $step = sizeof($molecule['CalculatedProperties']['MaximumGradientDistribution'])/20;
                                             echo "[" . $molecule['CalculatedProperties']['MaximumGradientDistribution'][0];
                                             $i = $step;
                                             while($i < sizeof($molecule['CalculatedProperties']['MaximumGradientDistribution'])){
-                                                echo "," . $molecule['CalculatedProperties']['MaximumGradientDistribution'][$i];
+                                                echo "," . $molecule['CalculatedProperties']['MaximumGradientDistribution'][round($i)];
                                                 $i = $i + $step;
                                             }
                                             echo "]";
@@ -371,11 +371,11 @@
                             pointHighlightStroke: "rgba(151,187,205,1)",
                             data: <?php
                                         if(sizeof($molecule['CalculatedProperties']['RMSGradientDistribution']) > 20){
-                                            $step = intval(ceil(sizeof($molecule['CalculatedProperties']['RMSGradientDistribution'])/20));
+                                            $step = sizeof($molecule['CalculatedProperties']['RMSGradientDistribution'])/20;
                                             echo "[" . $molecule['CalculatedProperties']['RMSGradientDistribution'][0];
                                             $i = $step;
                                             while($i < sizeof($molecule['CalculatedProperties']['RMSGradientDistribution'])){
-                                                echo "," . $molecule['CalculatedProperties']['RMSGradientDistribution'][$i];
+                                                echo "," . $molecule['CalculatedProperties']['RMSGradientDistribution'][round($i)];
                                                 $i = $i + $step;
                                             }
                                             echo "]";
@@ -405,11 +405,11 @@
                 var energyData = {
                     labels: <?php
                                 if(sizeof($molecule['CalculatedProperties']['Iterations']) > 20){
-                                    $step = intval(ceil(sizeof($molecule['CalculatedProperties']['Iterations'])/20));
+                                    $step = sizeof($molecule['CalculatedProperties']['Iterations'])/20;
                                     echo "[" . $molecule['CalculatedProperties']['Iterations'][0];
                                     $i = $step;
-                                    while($i < sizeof($molecule['CalculatedProperties']['Iterations'])){
-                                        echo "," . $molecule['CalculatedProperties']['Iterations'][$i];
+                                    while(round($i) < sizeof($molecule['CalculatedProperties']['Iterations'])){
+                                        echo "," . $molecule['CalculatedProperties']['Iterations'][round($i)];
                                         $i = $i + $step;
                                     }
                                     echo "]";
@@ -428,11 +428,11 @@
                             pointHighlightStroke: "rgba(220,220,220,1)",
                             data: <?php
                                         if(sizeof($molecule['CalculatedProperties']['EnergyDistribution']) > 20){
-                                            $step = intval(ceil(sizeof($molecule['CalculatedProperties']['EnergyDistribution'])/20));
+                                            $step = sizeof($molecule['CalculatedProperties']['EnergyDistribution'])/20;
                                             echo "[" . $molecule['CalculatedProperties']['EnergyDistribution'][0];
                                             $i = $step;
-                                            while($i < sizeof($molecule['CalculatedProperties']['EnergyDistribution'])){
-                                                echo "," . $molecule['CalculatedProperties']['EnergyDistribution'][$i];
+                                            while(round($i) < sizeof($molecule['CalculatedProperties']['EnergyDistribution'])){
+                                                echo "," . $molecule['CalculatedProperties']['EnergyDistribution'][round($i)];
                                                 $i = $i + $step;
                                             }
                                             echo "]";
