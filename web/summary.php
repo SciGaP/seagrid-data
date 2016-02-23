@@ -263,6 +263,14 @@
                             </tr>
                         <?php endif; ?>
                     </table>
+                    <div class="btn-toolbar">
+                        <a href=""
+                           class="btn btn-primary"
+                           role="button"
+                           title="Publish the data and files to figshare" target="_blank">Publish to Figshare
+                        </a>
+                    </div>
+                    <br>
                 </div>
                 <div class="col-md-4">
                     <hr>
