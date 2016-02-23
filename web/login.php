@@ -1,8 +1,15 @@
 <?php
-    $results = json_decode(file_get_contents('http://gw127.iu.xsede.org:8000/query-api/select?q=sddslfnlsdf'), true);
-    if(!isset($results) || empty($results)){
-        $results = array();
-    }
+    if(isset($_POST['username']) && isset($_POST['password'])){
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+
+        //Todo verify login
+        session_start();
+
+        $_SESSION['username'] = $username;
+        $home_url = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/index.php';
+        header('Location: ' . $home_url);
+   }
 ?>
 
 <html>
@@ -42,13 +49,13 @@
 
         <div class="container">
 
-            <form class="form-signin" action="./login.php">
+            <form class="form-signin" action="./login.php" method="post">
                 <h2 class="form-signin-heading">Please sign in</h2>
-                <label for="inputEmail" class="sr-only">Email address</label>
-                <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+                <label for="username" class="sr-only">Username</label>
+                <input type="username" id="username" name="username" class="form-control" placeholder="Username" required autofocus>
                 <br>
                 <label for="inputPassword" class="sr-only">Password</label>
-                <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
                 <div class="checkbox">
                     <label>
                         <input type="checkbox" value="remember-me"> Remember me

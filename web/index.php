@@ -1,8 +1,5 @@
 <?php
-    $results = json_decode(file_get_contents('http://gw127.iu.xsede.org:8000/query-api/select?q=sddslfnlsdf'), true);
-    if(!isset($results) || empty($results)){
-        $results = array();
-    }
+session_start();
 ?>
 
 <html>
@@ -34,7 +31,12 @@
                         <li><a href="./search.php">Search</a></li>
                     </ul>
                     <ul class="nav navbar-nav pull-right">
+                        <?php if(!isset($_SESSION['username'])):?>
                         <li><a href="./login.php">Login</a></li>
+                        <?php endif; ?>
+                        <?php if(isset($_SESSION['username'])):?>
+                            <li><a href="./logout.php">Logout</a></li>
+                        <?php endif; ?>
                     </ul>
                 </div>
             </div>
