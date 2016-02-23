@@ -48,6 +48,5 @@ public class DataCatWorkerTest {
             ex.printStackTrace();
             Assert.fail();
         }
-
     }
 }

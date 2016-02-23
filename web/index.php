@@ -31,7 +31,6 @@
                 </div>
                 <div id="navbar" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li><a href="./browse.php">Browse</a></li>
                         <li><a href="./search.php">Search</a></li>
                     </ul>
                     <ul class="nav navbar-nav pull-right">

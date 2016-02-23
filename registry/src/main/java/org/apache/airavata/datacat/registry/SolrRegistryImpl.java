@@ -90,7 +90,7 @@ public class SolrRegistryImpl implements IRegistry {
     }
 
     @Override
-    public List<JSONObject> select(String q) throws RegistryException {
+    public List<JSONObject> select(String q, int offset, int limit) throws RegistryException {
         return null;
     }
 

@@ -9,3 +9,9 @@ body {
 .text-centered {
     text-align:center;
 }
+
+td {
+    word-wrap: break-word;
+    max-width: 500px;
+    min-width: 20%;
+}

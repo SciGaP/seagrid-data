@@ -56,7 +56,9 @@ class CUP$WavefunctionParser$actions {
             {
                 Object RESULT = null;
                 if (DEBUG) System.out.println("CUP:WFparser: gaussian:  found FOUNDITER ");
-                CUP$WavefunctionParser$result = new java_cup.runtime.Symbol(2/*scfintro*/, ((java_cup.runtime.Symbol)CUP$WavefunctionParser$stack.elementAt(CUP$WavefunctionParser$top-1)).left, ((java_cup.runtime.Symbol)CUP$WavefunctionParser$stack.elementAt(CUP$WavefunctionParser$top-0)).right, RESULT);
+                CUP$WavefunctionParser$result = new java_cup.runtime.Symbol(2/*scfintro*/,
+                        ((java_cup.runtime.Symbol)CUP$WavefunctionParser$stack.elementAt(CUP$WavefunctionParser$top-1)).left,
+                        ((java_cup.runtime.Symbol)CUP$WavefunctionParser$stack.elementAt(CUP$WavefunctionParser$top-0)).right, RESULT);
             }
             return CUP$WavefunctionParser$result;
 
@@ -68,7 +70,9 @@ class CUP$WavefunctionParser$actions {
                 int start_valright = ((java_cup.runtime.Symbol)CUP$WavefunctionParser$stack.elementAt(CUP$WavefunctionParser$top-1)).right;
                 Object start_val = (Object)((java_cup.runtime.Symbol) CUP$WavefunctionParser$stack.elementAt(CUP$WavefunctionParser$top-1)).value;
                 RESULT = start_val;
-                CUP$WavefunctionParser$result = new java_cup.runtime.Symbol(0/*$START*/, ((java_cup.runtime.Symbol)CUP$WavefunctionParser$stack.elementAt(CUP$WavefunctionParser$top-1)).left, ((java_cup.runtime.Symbol)CUP$WavefunctionParser$stack.elementAt(CUP$WavefunctionParser$top-0)).right, RESULT);
+                CUP$WavefunctionParser$result = new java_cup.runtime.Symbol(0/*$START*/,
+                        ((java_cup.runtime.Symbol)CUP$WavefunctionParser$stack.elementAt(CUP$WavefunctionParser$top-1)).left,
+                        ((java_cup.runtime.Symbol)CUP$WavefunctionParser$stack.elementAt(CUP$WavefunctionParser$top-0)).right, RESULT);
             }
           /* ACCEPT */
             CUP$WavefunctionParser$parser.done_parsing();
@@ -81,7 +85,9 @@ class CUP$WavefunctionParser$actions {
                 if (DEBUG) System.out.println("CUP:WFParser: gaussian:  end of parse tree ");
 
 
-                CUP$WavefunctionParser$result = new java_cup.runtime.Symbol(1/*startpt*/, ((java_cup.runtime.Symbol)CUP$WavefunctionParser$stack.elementAt(CUP$WavefunctionParser$top-0)).left, ((java_cup.runtime.Symbol)CUP$WavefunctionParser$stack.elementAt(CUP$WavefunctionParser$top-0)).right, RESULT);
+                CUP$WavefunctionParser$result = new java_cup.runtime.Symbol(1/*startpt*/,
+                        ((java_cup.runtime.Symbol)CUP$WavefunctionParser$stack.elementAt(CUP$WavefunctionParser$top-0)).left,
+                        ((java_cup.runtime.Symbol)CUP$WavefunctionParser$stack.elementAt(CUP$WavefunctionParser$top-0)).right, RESULT);
             }
             return CUP$WavefunctionParser$result;
 

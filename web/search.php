@@ -1,5 +1,15 @@
 <?php
-    $results = json_decode(file_get_contents('http://gw127.iu.xsede.org:8000/query-api/select?q=sddslfnlsdf'), true);
+    $q = "";
+    $pageNo = 1;
+    if(isset($_POST['query'])){
+        $q = $_POST['query'];
+    }
+    if(isset($_POST['pageNo'])){
+        $pageNo = $_POST['pageNo'];
+    }
+    $offset = ($pageNo - 1) * 50;
+    $results = json_decode(file_get_contents('http://gw127.iu.xsede.org:8000/query-api/select?q='. urlencode($q)
+        .'&limit=50&offset=' . $pageNo), true);
     if(!isset($results) || empty($results)){
         $results = array();
     }
@@ -31,8 +41,7 @@
                 </div>
                 <div id="navbar" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="./browse.php">Browse</a></li>
-                        <li><a href="./search.php">Search</a></li>
+                        <li class="active"><a href="./search.php">Search</a></li>
                     </ul>
                     <ul class="nav navbar-nav pull-right">
                         <li><a href="./logout.php">Logout</a></li>
@@ -44,10 +53,50 @@
         <div class="container">
 
             <div class="center-content">
-                <h1>Bootstrap starter template</h1>
-                <p class="lead">Use this document as a way to quickly start any new project.
-                    <br> All you get is this text and a mostly barebones HTML document.
-                </p>
+                <form action="./search.php" method="post">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="form-group search-text-block">
+                                <input type="search" class="form-control" name="query" id="query"
+                                       value="<?php if (isset($_POST['query'])) echo $_POST['query'] ?>">
+                                <input type="hidden" name="pageNo" id="pageNo" value=<?php echo $pageNo + 1; ?>>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary pull-right" value="Search"><span
+                                    class="glyphicon glyphicon-search"></span> Search
+                            </button>
+
+                        </div>
+                    </div>
+                    <hr>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th class="col-md-4">InChI</th>
+                            <th class="col-md-3">Experiment Name</th>
+                            <th class="col-md-2">Project Name</th>
+                            <th class="col-md-3">Application</th>
+                            <?php foreach ($results as $result): ?>
+                        <tr>
+                            <td><a href="./summary.php?id=<?php echo $result['ExperimentName']?>" target="_blank">
+                                    <?php echo $result['Identifiers']['InChI']?></a></td>
+                            <td><?php echo $result['ExperimentName']?></td>
+                            <td><?php echo $result['ProjectName']?></td>
+                            <td><?php echo $result['Calculation']['Package']?></td>
+                        </tr>
+                        <?php endforeach;?>
+                        </tr>
+                    </table>
+                    <div class="pull-right btn-toolbar" style="padding-bottom: 5px">
+                        <?php
+                            if (isset($pageNo) && $pageNo != 1) {
+                                echo '<input class="btn btn-primary btn-xs" type="submit" style="cursor: pointer" name="prev" value="Previous"/>';
+                            }
+                            if (sizeof($results) > 0) {
+                                echo '<input class="btn btn-primary btn-xs" type="submit" style="cursor: pointer" name="next" value="Next"/>';
+                            }
+                        ?>
+                    </div>
+                </form>
             </div>
 
         </div><!-- /.container -->
