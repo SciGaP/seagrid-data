@@ -57,6 +57,9 @@ session_start();
                         the data into your local machine after running a HPC application but select only the interesting
                         data based on the results of configured post processing steps in the system.
                     </p>
+                    <div align="middle">
+                        <img src="./images/data-catalog-overview.png" width="800" height="600">
+                    </div>
                     <p style="color: red">N.B: This data is automatically extracted using a set of configured parsers and may contain errors.
                         Please report any issues in the <a href="https://issues.apache.org/jira/browse/AIRAVATA/?
                     selectedTab=com.atlassian.jira.jira-projects-plugin:summary-panel" target="_blank">issue tracker</a></p>

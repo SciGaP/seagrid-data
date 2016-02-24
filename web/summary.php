@@ -264,7 +264,7 @@
                         <?php endif; ?>
                     </table>
                     <div class="btn-toolbar">
-                        <a href=""
+                        <a href="./figshare.php?id=<?php $molecule['ExperimentName']?>"
                            class="btn btn-primary"
                            role="button"
                            title="Publish the data and files to figshare" target="_blank">Publish to Figshare
