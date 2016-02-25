@@ -1,4 +1,8 @@
 <?php
+
+    //FIXME Time should be shown in locally
+    date_default_timezone_set('America/Indianapolis');
+
     session_start();
     if(!isset($_SESSION['username'])){
         $home_url = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/index.php';
@@ -96,8 +100,8 @@
                             <td>
                                 <?php
                                     $date = new DateTime();
-                                    $date->setTimestamp($record['IndexedTime']);
-                                    echo $date->format('U = Y-m-d H:i:s')
+                                    $date->setTimestamp($result['IndexedTime']/1000);
+                                    echo $date->format('Y-m-d H:i:s')
                                 ?>
                             </td>
                         </tr>
