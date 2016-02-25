@@ -48,7 +48,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['figshare-code'])){
             if(!isset($_GET['code']) && isset($_GET['id'])){
                 $key = "4ec77a6a3e1f6495690057fbca630441bca9a71b";
                 $authorizeUrl = "https://figshare.com/account/applications/authorize";
-                $redirectUrl = "https://localhost/web/figshare.php";
+                $redirectUrl = "https://gw127.iu.xsede.org/web/figshare.php";
                 $url = $authorizeUrl . "?client_id=" . $key . "&response_type=code&scope=all&state=" . urlencode($_GET['id'])
                     . "&redirect_uri=" . $redirectUrl;
                 header('Location: ' . $url);
