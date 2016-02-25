@@ -105,10 +105,10 @@ public class MainGaussianParser implements IParser {
                 temp2 = new JSONObject();
                 if(temp.has("CodeVersion"))
                     temp2.put("Package", temp.get("CodeVersion"));
-                if(temp.has("Method"))
-                    temp2.put("Method", temp.get("Method"));
-                if(temp.has("Keywords"))
-                    temp2.put("Keywords", temp.get("Keywords"));
+                if(temp.has("CalcType"))
+                    temp2.put("CalcType", temp.get("CalcType"));
+                if(temp.has("Methods"))
+                    temp2.put("Methods", temp.get("Methods"));
                 if(temp.has("Basis")) {
                     if(temp.get("Basis").toString().contains(";")){
                         temp2.put("Basis", temp.get("Basis").toString().split(";")[0]);
@@ -116,8 +116,8 @@ public class MainGaussianParser implements IParser {
                         temp2.put("Basis", temp.get("Basis"));
                     }
                 }
-                if(temp.has("CalcType"))
-                    temp2.put("CalcType", temp.get("CalcType"));
+                if(temp.has("Keywords"))
+                    temp2.put("Keywords", temp.get("Keywords"));
                 if(temp.has("NBasis"))
                     temp2.put("NBasis", temp.get("NBasis"));
                 if(temp.has("JobStatus")) {
