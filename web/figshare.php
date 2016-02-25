@@ -11,7 +11,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['figshare-code'])){
     $title = $_POST['title'];
     $description = $_POST['description'];
     $id = $_POST['id'];
-    $tags = json_encode($_POST['tags']);
+    $tags = explode(' ',$_POST['tags']);
     $publishUrl = "https://api.figshare.com/v2/account/articles";
     $headers = array("Authorization: token " . $code);
     $data = json_encode(array('title'=>$title, 'description'=>$description, 'defined_type'=>'fileset', 'tags'=> $tags));
