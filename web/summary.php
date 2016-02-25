@@ -62,6 +62,51 @@
                 <div class="col-md-8 text-centered">
                     <hr>
                     <table class="table table-bordered">
+
+                        <tr><td><h4>Molecule</h4></td><td></td></tr>
+                        <?php if(isset($record['Molecule']['Formula'])):?>
+                            <tr>
+                                <td>Formula</td>
+                                <td><?php echo $record['Molecule']['Formula'] ?></td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php if(isset($record['Molecule']['NAtom'])):?>
+                            <tr>
+                                <td>Number of Atoms</td>
+                                <td><?php echo $record['Molecule']['NAtom'] ?></td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php if(isset($record['Molecule']['NMo'])):?>
+                            <tr>
+                                <td>Molecular Mass</td>
+                                <td><?php echo $record['Molecule']['NMo'] ?></td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php if(isset($record['Molecule']['ElecSym'])):?>
+                            <tr>
+                                <td>Electron Symmetry</td>
+                                <td><?php echo $record['Molecule']['ElecSym'] ?></td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php if(isset($record['Molecule']['Multiplicity'])):?>
+                            <tr>
+                                <td>Multiplicity</td>
+                                <td><?php echo $record['Molecule']['Multiplicity'] ?></td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php if(isset($record['Molecule']['Charge'])):?>
+                            <tr>
+                                <td>Charge</td>
+                                <td><?php echo $record['Molecule']['Charge'] ?></td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php if(isset($record['Molecule']['OrbSym'])):?>
+                            <tr>
+                                <td>Orbital Symmetry</td>
+                                <td><?php echo $record['Molecule']['OrbSym'] ?></td>
+                            </tr>
+                        <?php endif; ?>
+
                         <tr><td><h4>Identifiers</h4></td><td></td></tr>
                         <?php if(isset($record['Identifiers']['InChI'])):?>
                         <tr>
@@ -158,50 +203,6 @@
                             </tr>
                         <?php endif; ?>
 
-                        <tr><td><h4>Molecule</h4></td><td></td></tr>
-                        <?php if(isset($record['Molecule']['Formula'])):?>
-                            <tr>
-                                <td>Formula</td>
-                                <td><?php echo $record['Molecule']['Formula'] ?></td>
-                            </tr>
-                        <?php endif; ?>
-                        <?php if(isset($record['Molecule']['NAtom'])):?>
-                            <tr>
-                                <td>Number of Atoms</td>
-                                <td><?php echo $record['Molecule']['NAtom'] ?></td>
-                            </tr>
-                        <?php endif; ?>
-                        <?php if(isset($record['Molecule']['NMo'])):?>
-                            <tr>
-                                <td>Molecular Mass</td>
-                                <td><?php echo $record['Molecule']['NMo'] ?></td>
-                            </tr>
-                        <?php endif; ?>
-                        <?php if(isset($record['Molecule']['ElecSym'])):?>
-                            <tr>
-                                <td>Electron Symmetry</td>
-                                <td><?php echo $record['Molecule']['ElecSym'] ?></td>
-                            </tr>
-                        <?php endif; ?>
-                        <?php if(isset($record['Molecule']['Multiplicity'])):?>
-                            <tr>
-                                <td>Multiplicity</td>
-                                <td><?php echo $record['Molecule']['Multiplicity'] ?></td>
-                            </tr>
-                        <?php endif; ?>
-                        <?php if(isset($record['Molecule']['Charge'])):?>
-                            <tr>
-                                <td>Charge</td>
-                                <td><?php echo $record['Molecule']['Charge'] ?></td>
-                            </tr>
-                        <?php endif; ?>
-                        <?php if(isset($record['Molecule']['OrbSym'])):?>
-                            <tr>
-                                <td>Orbital Symmetry</td>
-                                <td><?php echo $record['Molecule']['OrbSym'] ?></td>
-                            </tr>
-                        <?php endif; ?>
-
                         <tr><td><h4>Calculated Properties</h4></td><td></td></tr>
                         <?php if(isset($record['CalculatedProperties']['Energy'])):?>
                             <tr>
@@ -245,6 +246,24 @@
                             <tr>
                                 <td>Finished Time</td>
                                 <td><?php echo $record['ExecutionEnvironment']['FinTime']; ?></td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php if(isset($record['ExecutionEnvironment']['JobCPURunTime'])):?>
+                            <tr>
+                                <td>Job CPU Run Time</td>
+                                <td><?php echo $record['ExecutionEnvironment']['JobCPURunTime']; ?> &nbsp;seconds</td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php if(isset($record['ExecutionEnvironment']['Memory'])):?>
+                            <tr>
+                                <td>Memory</td>
+                                <td><?php echo $record['ExecutionEnvironment']['Memory']; ?></td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php if(isset($record['ExecutionEnvironment']['NProcShared'])):?>
+                            <tr>
+                                <td>Number of Shared Processors</td>
+                                <td><?php echo $record['ExecutionEnvironment']['NProcShared']; ?></td>
                             </tr>
                         <?php endif; ?>
 

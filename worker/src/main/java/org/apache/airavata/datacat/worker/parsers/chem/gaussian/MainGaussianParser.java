@@ -39,6 +39,8 @@ public class MainGaussianParser implements IParser {
 
     public final static int randomNum = (int) (Math.random() * 100000000);
 
+
+    //FIXME We Should Develop a Proper Parsing Library(Ideally Using Java)
     @SuppressWarnings("unchecked")
     public JSONObject parse(String dir, Map<String, Object> inputMetadata) throws Exception {
         try{
@@ -107,14 +109,24 @@ public class MainGaussianParser implements IParser {
                     temp2.put("Method", temp.get("Method"));
                 if(temp.has("Keywords"))
                     temp2.put("Keywords", temp.get("Keywords"));
-                if(temp.has("Basis"))
-                    temp2.put("Basis", temp.get("Basis"));
+                if(temp.has("Basis")) {
+                    if(temp.get("Basis").toString().contains(";")){
+                        temp2.put("Basis", temp.get("Basis").toString().split(";")[0]);
+                    }else{
+                        temp2.put("Basis", temp.get("Basis"));
+                    }
+                }
                 if(temp.has("CalcType"))
                     temp2.put("CalcType", temp.get("CalcType"));
                 if(temp.has("NBasis"))
                     temp2.put("NBasis", temp.get("NBasis"));
-                if(temp.has("JobStatus"))
-                    temp2.put("JobStatus", temp.get("JobStatus"));
+                if(temp.has("JobStatus")) {
+                    if(temp.get("JobStatus").toString().contains(";")){
+                        temp2.put("JobStatus", temp.get("JobStatus").toString().split(";")[0]);
+                    }else{
+                        temp2.put("JobStatus", temp.get("JobStatus"));
+                    }
+                }
                 finalObj.put("Calculation", temp2);
 
                 temp2 = new JSONObject();
@@ -163,12 +175,27 @@ public class MainGaussianParser implements IParser {
                 finalObj.put("CalculatedProperties", temp2);
 
                 temp2 = new JSONObject();
-                if(temp.has("CalcMachine"))
-                    temp2.put("CalcMachine", temp.get("CalcMachine"));
-                if(temp.has("FinTime"))
-                    temp2.put("FinTime", temp.get("FinTime"));
-                if(temp.has("CalcBy"))
-                    temp2.put("CalcBy", temp.get("CalcBy"));
+                if(temp.has("CalcMachine")) {
+                    if(temp.get("CalcMachine").toString().contains(";")){
+                        temp2.put("CalcMachine", temp.get("CalcMachine").toString().split(";")[0]);
+                    }else{
+                        temp2.put("CalcMachine", temp.get("CalcMachine"));
+                    }
+                }
+                if(temp.has("FinTime")) {
+                    if(temp.get("FinTime").toString().contains(";")){
+                        temp2.put("FinTime", temp.get("FinTime").toString().split(";")[0]);
+                    }else{
+                        temp2.put("FinTime", temp.get("FinTime"));
+                    }
+                }
+                if(temp.has("CalcBy")) {
+                    if(temp.get("CalcBy").toString().contains(";")){
+                        temp2.put("CalcBy", temp.get("CalcBy").toString().split(";")[0]);
+                    }else{
+                        temp2.put("CalcBy", temp.get("CalcBy"));
+                    }
+                }
                 finalObj.put("ExecutionEnvironment", temp2);
 
                 temp2 = new JSONObject();
@@ -217,6 +244,47 @@ public class MainGaussianParser implements IParser {
                 }
 
                 finalObj.put("Files", temp2);
+
+                //Extracting some fields which cannot be extracted from existing parsers
+                //    * Stoichiometry
+                //    * Job cpu time
+                //    * %mem
+                //    * %nprocshare
+                BufferedReader reader = new BufferedReader(new FileReader(gaussianOutputFile));
+                String line = reader.readLine();
+                while(line != null && !line.isEmpty()){
+                    if(line.toLowerCase().startsWith("stoichiometry")){
+                        String formula = line.replaceAll("Stoichiometry", "").trim();
+                        ((JSONObject)finalObj.get("Molecule")).put("Formula", formula);
+                    }else if(line.toLowerCase().startsWith("job cpu time")){
+                        String time = line.split(":")[1].trim();
+                        time = time.replaceAll("days","");
+                        time = time.replaceAll("hours", "");
+                        time = time.replaceAll("minutes", "");
+                        time = time.replaceAll("seconds.","");
+                        String[] timeArr = time.split(" ");
+                        double timeInSeconds  = 0.0;
+                        timeInSeconds += Double.parseDouble(timeArr[0]) * 86400;
+                        timeInSeconds += Double.parseDouble(timeArr[1]) * 3600;
+                        timeInSeconds += Double.parseDouble(timeArr[2]) * 60;
+                        timeInSeconds += Double.parseDouble(timeArr[3]);
+
+                        if(((JSONObject)finalObj.get("ExecutionEnvironment")).has("JobCPURunTime")){
+                            timeInSeconds += (Double)((JSONObject)finalObj.get("ExecutionEnvironment")).get("JobCPURunTime");
+                            ((JSONObject)finalObj.get("ExecutionEnvironment")).put("JobCPURunTime", timeInSeconds);
+                        }else{
+                            ((JSONObject)finalObj.get("ExecutionEnvironment")).put("JobCPURunTime", timeInSeconds);
+                        }
+                    }else if(line.toLowerCase().startsWith("%mem")){
+                        String mem = line.split("=")[1].trim();
+                        ((JSONObject)finalObj.get("ExecutionEnvironment")).put("Memory", mem);
+                    }else if(line.toLowerCase().startsWith("%nprocshare")){
+                        String nproc = line.split("=")[1].trim();
+                        ((JSONObject)finalObj.get("ExecutionEnvironment")).put("NProcShared", nproc);
+                    }
+
+                    line = reader.readLine();
+                }
 
                 return finalObj;
             }
@@ -334,12 +402,5 @@ public class MainGaussianParser implements IParser {
         }
 
         return null;
-    }
-
-
-    public static void main(String[] args) throws Exception {
-        MainGaussianParser mainGaussianParser = new MainGaussianParser();
-        mainGaussianParser.getDistributionValues("/Users/supun/Downloads/default_job.out");
-//        mainGaussianParser.getDistributionValues("/Users/supun/ns1.out");
     }
 }
