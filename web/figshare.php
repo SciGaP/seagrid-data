@@ -11,10 +11,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['figshare-code'])){
     $title = $_POST['title'];
     $description = $_POST['description'];
     $id = $_POST['id'];
-    $tags = explode(" ", $_POST['tags']);
+    $tags = json_encode($_POST['tags']);
     $publishUrl = "https://api.figshare.com/v2/account/articles";
     $headers = array("Authorization: token " . $code);
-    $data = json_encode(array('title'=>$title, 'description'=>$description, 'defined_type'=>'fileset'));
+    $data = json_encode(array('title'=>$title, 'description'=>$description, 'defined_type'=>'fileset', 'tags'=> $tags));
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $publishUrl);
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -29,10 +29,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['figshare-code'])){
     foreach($record['Files'] as $key=>$filePath){
         echo $filePath;
         $data = array($filePath, $articleId);
-        $response = shell_exec('python ./bin/figshare-workaround.py ' . escapeshellarg(json_encode($data)) . ' 2>&1');
-        var_dump($response);
+        shell_exec('python ./bin/figshare-workaround.py ' . escapeshellarg(json_encode($data)) . ' 2>&1');
     }
-    exit;
 
     $url = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/summary.php?id=' . $id;
     header('Location: ' . $url);
