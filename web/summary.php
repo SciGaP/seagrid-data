@@ -262,6 +262,34 @@
                                         <?php echo basename($record['Files']['GaussianFCheckpointFile']); ?></a></td>
                             </tr>
                         <?php endif; ?>
+                        <?php if(isset($record['Files']['SDFStructureFile'])):?>
+                            <tr>
+                                <td>SDF Structure File</td>
+                                <td><a href=./download.php?file=<?php echo $record['Files']['SDFStructureFile']; ?>>
+                                        <?php echo basename($record['Files']['SDFStructureFile']); ?></a></td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php if(isset($record['Files']['PDBStructureFile'])):?>
+                            <tr>
+                                <td>PDB Structure File</td>
+                                <td><a href=./download.php?file=<?php echo $record['Files']['PDBStructureFile']; ?>>
+                                        <?php echo basename($record['Files']['PDBStructureFile']); ?></a></td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php if(isset($record['Files']['InChIFile'])):?>
+                            <tr>
+                                <td>PDB Structure File</td>
+                                <td><a href=./download.php?file=<?php echo $record['Files']['InChIFile']; ?>>
+                                        <?php echo basename($record['Files']['InChIFile']); ?></a></td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php if(isset($record['Files']['SMILESFile'])):?>
+                            <tr>
+                                <td>SMILES File</td>
+                                <td><a href=./download.php?file=<?php echo $record['Files']['SMILESFile']; ?>>
+                                        <?php echo basename($record['Files']['SMILESFile']); ?></a></td>
+                            </tr>
+                        <?php endif; ?>
                     </table>
                     <div class="btn-toolbar">
                         <a href="./figshare.php?id=<?php echo $record['ExperimentName']?>" target="_self"

@@ -190,6 +190,31 @@ public class MainGaussianParser implements IParser {
                         temp2.put("GaussianFCheckpointFile", f.getAbsolutePath());
                     }
                 }
+                if(temp.has("SDF")){
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(dir+File.separator+"structure.sdf"));
+                    writer.write(temp.get("SDF").toString());
+                    writer.close();
+                    temp2.put("SDFStructureFile", dir+File.separator+"structure.sdf");
+                }
+                if(temp.has("PDB")){
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(dir+File.separator+"structure.pdb"));
+                    writer.write(temp.get("PDB").toString());
+                    writer.close();
+                    temp2.put("PDBStructureFile", dir+File.separator+"structure.pdb");
+                }
+                if(temp.has("InChI")){
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(dir+File.separator+"inchi.txt"));
+                    writer.write(temp.get("InChI").toString());
+                    writer.close();
+                    temp2.put("InChIFile", dir+File.separator+"inchi.txt");
+                }
+                if(temp.has("SMILES")){
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(dir+File.separator+"smiles.txt"));
+                    writer.write(temp.get("SMILES").toString());
+                    writer.close();
+                    temp2.put("SMILESFile", dir+File.separator+"smiles.txt");
+                }
+
                 finalObj.put("Files", temp2);
 
                 return finalObj;
