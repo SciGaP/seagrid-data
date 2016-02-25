@@ -40,6 +40,8 @@ public class DataCatWorkerTest {
             CatalogFileRequest catalogFileRequest = new CatalogFileRequest();
             HashMap<String, Object> ingestMetadata = new HashMap<>();
             ingestMetadata.put("Id", "test-000000-0000000-000000000-00000000000");
+            ingestMetadata.put("ExperimentName", "test-000000-0000000-000000000-00000000000");
+            ingestMetadata.put("ProjectName", "mvn_proj");
             catalogFileRequest.setIngestMetadata(ingestMetadata);
             catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAUSSIAN);
             catalogFileRequest.setDirUri(new URI("file://"+DataCatWorkerTest.class.getResource("/gaussian").getPath()));

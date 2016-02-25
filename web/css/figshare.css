@@ -1,0 +1,14 @@
+body {
+    padding-top: 50px;
+}
+
+.center-content {
+    padding: 40px 15px;
+    text-align: center;
+}
+
+.form-fighsare {
+    max-width: 600px;
+    padding: 15px;
+    margin: 0 auto;
+}

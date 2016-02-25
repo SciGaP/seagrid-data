@@ -7,14 +7,14 @@
 
     $id = $_GET['id'];
     if(isset($id)){
-        $molecule = json_decode(file_get_contents(
+        $record = json_decode(file_get_contents(
             'http://gw127.iu.xsede.org:8000/query-api/get?id=' . $id), true);
     }else{
         echo 'Id not set !!!';
     }
 ?>
 
-<?php if(isset($molecule)): ?>
+<?php if(isset($record)): ?>
 <html>
     <head>
         <!-- Latest compiled and minified CSS -->
@@ -60,214 +60,214 @@
                     <hr>
                     <table class="table table-bordered">
                         <tr><td><h4>Identifiers</h4></td><td></td></tr>
-                        <?php if(isset($molecule['Identifiers']['InChI'])):?>
+                        <?php if(isset($record['Identifiers']['InChI'])):?>
                         <tr>
                             <td>InChI</td>
-                            <td><?php echo $molecule['Identifiers']['InChI']?></td>
+                            <td><?php echo $record['Identifiers']['InChI']?></td>
                         </tr>
                         <?php endif; ?>
-                        <?php if(isset($molecule['Identifiers']['InChIKey'])):?>
+                        <?php if(isset($record['Identifiers']['InChIKey'])):?>
                             <tr>
                                 <td>InChI Key</td>
-                                <td><?php echo $molecule['Identifiers']['InChIKey']?></td>
+                                <td><?php echo $record['Identifiers']['InChIKey']?></td>
                             </tr>
                         <?php endif; ?>
-                        <?php if(isset($molecule['Identifiers']['SMILES'])):?>
+                        <?php if(isset($record['Identifiers']['SMILES'])):?>
                             <tr>
                                 <td>SMILES</td>
-                                <td><?php echo $molecule['Identifiers']['SMILES']?></td>
+                                <td><?php echo $record['Identifiers']['SMILES']?></td>
                             </tr>
                         <?php endif; ?>
-                        <?php if(isset($molecule['Identifiers']['CanonicalSMILES'])):?>
+                        <?php if(isset($record['Identifiers']['CanonicalSMILES'])):?>
                             <tr>
                                 <td>Canonical SMILES</td>
-                                <td><?php echo $molecule['Identifiers']['CanonicalSMILES']?></td>
+                                <td><?php echo $record['Identifiers']['CanonicalSMILES']?></td>
                             </tr>
                         <?php endif; ?>
 
                         <tr><td><h4>Organization</h4></td><td></td></tr>
-                        <?php if(isset($molecule['ExperimentName'])):?>
+                        <?php if(isset($record['ExperimentName'])):?>
                         <tr>
                             <td>Experiment</td>
-                            <td><?php echo $molecule['ExperimentName']?></td>
+                            <td><?php echo $record['ExperimentName']?></td>
                         </tr>
                         <?php endif; ?>
-                        <?php if(isset($molecule['ProjectName'])):?>
+                        <?php if(isset($record['ProjectName'])):?>
                             <tr>
                                 <td>Project</td>
-                                <td><?php echo $molecule['ProjectName']?></td>
+                                <td><?php echo $record['ProjectName']?></td>
                             </tr>
                         <?php endif; ?>
-                        <?php if(isset($molecule['Username'])):?>
+                        <?php if(isset($record['Username'])):?>
                             <tr>
                                 <td>Owner</td>
-                                <td><?php echo $molecule['Username']?></td>
+                                <td><?php echo $record['Username']?></td>
                             </tr>
                         <?php endif; ?>
 
                         <tr><td><h4>Calculation</h4></td><td></td></tr>
-                        <?php if(isset($molecule['Calculation']['Package'])):?>
+                        <?php if(isset($record['Calculation']['Package'])):?>
                         <tr>
                             <td>Package</td>
-                            <td><?php echo $molecule['Calculation']['Package'] ?></td>
+                            <td><?php echo $record['Calculation']['Package'] ?></td>
                         </tr>
                         <?php endif; ?>
-                        <?php if(isset($molecule['Calculation']['CalcType'])):?>
+                        <?php if(isset($record['Calculation']['CalcType'])):?>
                         <tr>
                             <td>Calculation Type</td>
-                            <td><?php echo $molecule['Calculation']['CalcType'] ?></td>
+                            <td><?php echo $record['Calculation']['CalcType'] ?></td>
                         </tr>
                         <?php endif; ?>
-                        <?php if(isset($molecule['Calculation']['Basis'])):?>
+                        <?php if(isset($record['Calculation']['Basis'])):?>
                             <tr>
                                 <td>Basis</td>
-                                <td><?php echo $molecule['Calculation']['Basis'] ?></td>
+                                <td><?php echo $record['Calculation']['Basis'] ?></td>
                             </tr>
                         <?php endif; ?>
-                        <?php if(isset($molecule['Calculation']['NBasis'])):?>
+                        <?php if(isset($record['Calculation']['NBasis'])):?>
                             <tr>
                                 <td>Number of Basis Functions</td>
-                                <td><?php echo $molecule['Calculation']['NBasis'] ?></td>
+                                <td><?php echo $record['Calculation']['NBasis'] ?></td>
                             </tr>
                         <?php endif; ?>
-                        <?php if(isset($molecule['Calculation']['Keywords'])):?>
+                        <?php if(isset($record['Calculation']['Keywords'])):?>
                             <tr>
                                 <td>Keywords</td>
-                                <td><?php echo $molecule['Calculation']['Keywords'] ?></td>
+                                <td><?php echo $record['Calculation']['Keywords'] ?></td>
                             </tr>
                         <?php endif; ?>
-                        <?php if(isset($molecule['Calculation']['JobStatus'])):?>
+                        <?php if(isset($record['Calculation']['JobStatus'])):?>
                             <tr>
                                 <td>Job Status</td>
-                                <td><?php echo $molecule['Calculation']['JobStatus'] ?></td>
+                                <td><?php echo $record['Calculation']['JobStatus'] ?></td>
                             </tr>
                         <?php endif; ?>
 
                         <tr><td><h4>Molecule</h4></td><td></td></tr>
-                        <?php if(isset($molecule['Molecule']['Formula'])):?>
+                        <?php if(isset($record['Molecule']['Formula'])):?>
                             <tr>
                                 <td>Formula</td>
-                                <td><?php echo $molecule['Molecule']['Formula'] ?></td>
+                                <td><?php echo $record['Molecule']['Formula'] ?></td>
                             </tr>
                         <?php endif; ?>
-                        <?php if(isset($molecule['Molecule']['NAtom'])):?>
+                        <?php if(isset($record['Molecule']['NAtom'])):?>
                             <tr>
                                 <td>Number of Atoms</td>
-                                <td><?php echo $molecule['Molecule']['NAtom'] ?></td>
+                                <td><?php echo $record['Molecule']['NAtom'] ?></td>
                             </tr>
                         <?php endif; ?>
-                        <?php if(isset($molecule['Molecule']['NMo'])):?>
+                        <?php if(isset($record['Molecule']['NMo'])):?>
                             <tr>
                                 <td>Molecular Mass</td>
-                                <td><?php echo $molecule['Molecule']['NMo'] ?></td>
+                                <td><?php echo $record['Molecule']['NMo'] ?></td>
                             </tr>
                         <?php endif; ?>
-                        <?php if(isset($molecule['Molecule']['ElecSym'])):?>
+                        <?php if(isset($record['Molecule']['ElecSym'])):?>
                             <tr>
                                 <td>Electron Symmetry</td>
-                                <td><?php echo $molecule['Molecule']['ElecSym'] ?></td>
+                                <td><?php echo $record['Molecule']['ElecSym'] ?></td>
                             </tr>
                         <?php endif; ?>
-                        <?php if(isset($molecule['Molecule']['Multiplicity'])):?>
+                        <?php if(isset($record['Molecule']['Multiplicity'])):?>
                             <tr>
                                 <td>Multiplicity</td>
-                                <td><?php echo $molecule['Molecule']['Multiplicity'] ?></td>
+                                <td><?php echo $record['Molecule']['Multiplicity'] ?></td>
                             </tr>
                         <?php endif; ?>
-                        <?php if(isset($molecule['Molecule']['Charge'])):?>
+                        <?php if(isset($record['Molecule']['Charge'])):?>
                             <tr>
                                 <td>Charge</td>
-                                <td><?php echo $molecule['Molecule']['Charge'] ?></td>
+                                <td><?php echo $record['Molecule']['Charge'] ?></td>
                             </tr>
                         <?php endif; ?>
-                        <?php if(isset($molecule['Molecule']['OrbSym'])):?>
+                        <?php if(isset($record['Molecule']['OrbSym'])):?>
                             <tr>
                                 <td>Orbital Symmetry</td>
-                                <td><?php echo $molecule['Molecule']['OrbSym'] ?></td>
+                                <td><?php echo $record['Molecule']['OrbSym'] ?></td>
                             </tr>
                         <?php endif; ?>
 
                         <tr><td><h4>Calculated Properties</h4></td><td></td></tr>
-                        <?php if(isset($molecule['CalculatedProperties']['Energy'])):?>
+                        <?php if(isset($record['CalculatedProperties']['Energy'])):?>
                             <tr>
                                 <td>Energy</td>
-                                <td><?php echo $molecule['CalculatedProperties']['Energy'] ?></td>
+                                <td><?php echo $record['CalculatedProperties']['Energy'] ?></td>
                             </tr>
                         <?php endif; ?>
-                        <?php if(isset($molecule['CalculatedProperties']['Dipole'])):?>
+                        <?php if(isset($record['CalculatedProperties']['Dipole'])):?>
                             <tr>
                                 <td>Dipole</td>
-                                <td><?php echo $molecule['CalculatedProperties']['Dipole'] ?></td>
+                                <td><?php echo $record['CalculatedProperties']['Dipole'] ?></td>
                             </tr>
                         <?php endif; ?>
-                        <?php if(isset($molecule['CalculatedProperties']['HF'])):?>
+                        <?php if(isset($record['CalculatedProperties']['HF'])):?>
                             <tr>
                                 <td>HF</td>
-                                <td><?php echo $molecule['CalculatedProperties']['HF'] ?></td>
+                                <td><?php echo $record['CalculatedProperties']['HF'] ?></td>
                             </tr>
                         <?php endif; ?>
-                        <?php if(isset($molecule['CalculatedProperties']['Homos'])):?>
+                        <?php if(isset($record['CalculatedProperties']['Homos'])):?>
                             <tr>
                                 <td>Homos</td>
-                                <td><?php echo json_encode($molecule['CalculatedProperties']['Homos']); ?></td>
+                                <td><?php echo json_encode($record['CalculatedProperties']['Homos']); ?></td>
                             </tr>
                         <?php endif; ?>
 
                         <tr><td><h4>Execution Environment</h4></td></tr>
-                        <?php if(isset($molecule['ExecutionEnvironment']['CalcBy'])):?>
+                        <?php if(isset($record['ExecutionEnvironment']['CalcBy'])):?>
                             <tr>
                                 <td>Calculated By</td>
-                                <td><?php echo $molecule['ExecutionEnvironment']['CalcBy']; ?></td>
+                                <td><?php echo $record['ExecutionEnvironment']['CalcBy']; ?></td>
                             </tr>
                         <?php endif; ?>
-                        <?php if(isset($molecule['ExecutionEnvironment']['CalcMachine'])):?>
+                        <?php if(isset($record['ExecutionEnvironment']['CalcMachine'])):?>
                             <tr>
                                 <td>Calculated Machine</td>
-                                <td><?php echo $molecule['ExecutionEnvironment']['CalcMachine']; ?></td>
+                                <td><?php echo $record['ExecutionEnvironment']['CalcMachine']; ?></td>
                             </tr>
                         <?php endif; ?>
-                        <?php if(isset($molecule['ExecutionEnvironment']['FinTime'])):?>
+                        <?php if(isset($record['ExecutionEnvironment']['FinTime'])):?>
                             <tr>
                                 <td>Finished Time</td>
-                                <td><?php echo $molecule['ExecutionEnvironment']['FinTime']; ?></td>
+                                <td><?php echo $record['ExecutionEnvironment']['FinTime']; ?></td>
                             </tr>
                         <?php endif; ?>
 
-                        <tr><td><h4>Result Files</h4></td></tr>
-                        <?php if(isset($molecule['Files']['GaussianInputFile'])):?>
+                        <tr><td><h4>File Set</h4></td></tr>
+                        <?php if(isset($record['Files']['GaussianInputFile'])):?>
                             <tr>
                                 <td>Gaussian Input File</td>
-                                <td><a href=./download.php?file=<?php echo $molecule['Files']['GaussianInputFile']; ?>>
-                                    <?php echo basename($molecule['Files']['GaussianInputFile']); ?></a></td>
+                                <td><a href=./download.php?file=<?php echo $record['Files']['GaussianInputFile']; ?>>
+                                    <?php echo basename($record['Files']['GaussianInputFile']); ?></a></td>
                             </tr>
                         <?php endif; ?>
-                        <?php if(isset($molecule['Files']['GaussianOutputFile'])):?>
+                        <?php if(isset($record['Files']['GaussianOutputFile'])):?>
                             <tr>
                                 <td>Gaussian Output File</td>
-                                <td><a href=./download.php?file=<?php echo $molecule['Files']['GaussianOutputFile']; ?>>
-                                        <?php echo basename($molecule['Files']['GaussianOutputFile']); ?></a></td>
+                                <td><a href=./download.php?file=<?php echo $record['Files']['GaussianOutputFile']; ?>>
+                                        <?php echo basename($record['Files']['GaussianOutputFile']); ?></a></td>
                             </tr>
                         <?php endif; ?>
-                        <?php if(isset($molecule['Files']['GaussianCheckpointFile'])):?>
+                        <?php if(isset($record['Files']['GaussianCheckpointFile'])):?>
                             <tr>
                                 <td>Gaussian Checkpoint File</td>
-                                <td><a href=./download.php?file=<?php echo $molecule['Files']['GaussianCheckpointFile']; ?>>
-                                        <?php echo basename($molecule['Files']['GaussianCheckpointFile']); ?></a></td>
+                                <td><a href=./download.php?file=<?php echo $record['Files']['GaussianCheckpointFile']; ?>>
+                                        <?php echo basename($record['Files']['GaussianCheckpointFile']); ?></a></td>
                             </tr>
                         <?php endif; ?>
-                        <?php if(isset($molecule['Files']['GaussianFCheckpointFile'])):?>
+                        <?php if(isset($record['Files']['GaussianFCheckpointFile'])):?>
                             <tr>
                                 <td>Gaussian Formatted Checkpoint File</td>
-                                <td><a href=./download.php?file=<?php echo $molecule['Files']['GaussianFCheckpointFile']; ?>>
-                                        <?php echo basename($molecule['Files']['GaussianFCheckpointFile']); ?></a></td>
+                                <td><a href=./download.php?file=<?php echo $record['Files']['GaussianFCheckpointFile']; ?>>
+                                        <?php echo basename($record['Files']['GaussianFCheckpointFile']); ?></a></td>
                             </tr>
                         <?php endif; ?>
                     </table>
                     <div class="btn-toolbar">
-                        <a href="./figshare.php?id=<?php $molecule['ExperimentName']?>"
+                        <a href="./figshare.php?id=<?php echo $record['ExperimentName']?>" target="_self"
                            class="btn btn-primary"
                            role="button"
-                           title="Publish the data and files to figshare" target="_blank">Publish to Figshare
+                           title="Publish the data and files to figshare" target="_blank">Upload Files to FigShare
                         </a>
                     </div>
                     <br>
@@ -276,15 +276,15 @@
                     <hr>
                     <div id="glmol01" style="width: 300px; height: 300px; background-color: black;margin-left: 10%"></div>
                     <textarea id="glmol01_src" style="display: none;">
-                        <?php var_dump($molecule['FinalMoleculeStructuralFormats']['SDF'])?>
+                        <?php var_dump($record['FinalMoleculeStructuralFormats']['SDF'])?>
                     </textarea>
                     <div class="text-centered">Molecular Structure</div>
                     <br><br>
-                    <?php if(isset($molecule['CalculatedProperties']['EnergyDistribution'])):?>
+                    <?php if(isset($record['CalculatedProperties']['EnergyDistribution'])):?>
                         <canvas id="energyDistribution" width="300" height="300" style="margin-left: 10%"></canvas>
                         <div class="text-centered">Energy vs Iteration</div>
                     <?php endif; ?>
-                    <?php if(isset($molecule['CalculatedProperties']['MaximumGradientDistribution'])):?>
+                    <?php if(isset($record['CalculatedProperties']['MaximumGradientDistribution'])):?>
                         <br><br>
                         <canvas id="gradientDistribution" width="300" height="300" style="margin-left: 10%"></canvas>
                         <div class="text-centered">Gradient vs Iteration</div>
@@ -329,20 +329,20 @@
     </script>
         <script>
             $( document ).ready(function() {
-                <?php if(isset($molecule['CalculatedProperties']['MaximumGradientDistribution'])):?>
+                <?php if(isset($record['CalculatedProperties']['MaximumGradientDistribution'])):?>
                 var gradientData = {
                     labels: <?php
-                                if(sizeof($molecule['CalculatedProperties']['Iterations']) > 20){
-                                    $step = sizeof($molecule['CalculatedProperties']['Iterations'])/20;
-                                    echo "[" . $molecule['CalculatedProperties']['Iterations'][0];
+                                if(sizeof($record['CalculatedProperties']['Iterations']) > 20){
+                                    $step = sizeof($record['CalculatedProperties']['Iterations'])/20;
+                                    echo "[" . $record['CalculatedProperties']['Iterations'][0];
                                     $i = $step;
-                                    while($i < sizeof($molecule['CalculatedProperties']['Iterations'])){
-                                        echo "," . $molecule['CalculatedProperties']['Iterations'][round($i)];
+                                    while($i < sizeof($record['CalculatedProperties']['Iterations'])){
+                                        echo "," . $record['CalculatedProperties']['Iterations'][round($i)];
                                         $i = $i + $step;
                                     }
                                     echo "]";
                                 }else{
-                                    echo json_encode($molecule['CalculatedProperties']['Iterations']);
+                                    echo json_encode($record['CalculatedProperties']['Iterations']);
                                 }
                             ?>,
                     datasets: [
@@ -355,17 +355,17 @@
                             pointHighlightFill: "#fff",
                             pointHighlightStroke: "rgba(220,220,220,1)",
                             data: <?php
-                                        if(sizeof($molecule['CalculatedProperties']['MaximumGradientDistribution']) > 20){
-                                            $step = sizeof($molecule['CalculatedProperties']['MaximumGradientDistribution'])/20;
-                                            echo "[" . $molecule['CalculatedProperties']['MaximumGradientDistribution'][0];
+                                        if(sizeof($record['CalculatedProperties']['MaximumGradientDistribution']) > 20){
+                                            $step = sizeof($record['CalculatedProperties']['MaximumGradientDistribution'])/20;
+                                            echo "[" . $record['CalculatedProperties']['MaximumGradientDistribution'][0];
                                             $i = $step;
-                                            while($i < sizeof($molecule['CalculatedProperties']['MaximumGradientDistribution'])){
-                                                echo "," . $molecule['CalculatedProperties']['MaximumGradientDistribution'][round($i)];
+                                            while($i < sizeof($record['CalculatedProperties']['MaximumGradientDistribution'])){
+                                                echo "," . $record['CalculatedProperties']['MaximumGradientDistribution'][round($i)];
                                                 $i = $i + $step;
                                             }
                                             echo "]";
                                         }else{
-                                            echo json_encode($molecule['CalculatedProperties']['MaximumGradientDistribution']);
+                                            echo json_encode($record['CalculatedProperties']['MaximumGradientDistribution']);
                                         }
                                     ?>
                         },
@@ -378,17 +378,17 @@
                             pointHighlightFill: "#fff",
                             pointHighlightStroke: "rgba(151,187,205,1)",
                             data: <?php
-                                        if(sizeof($molecule['CalculatedProperties']['RMSGradientDistribution']) > 20){
-                                            $step = sizeof($molecule['CalculatedProperties']['RMSGradientDistribution'])/20;
-                                            echo "[" . $molecule['CalculatedProperties']['RMSGradientDistribution'][0];
+                                        if(sizeof($record['CalculatedProperties']['RMSGradientDistribution']) > 20){
+                                            $step = sizeof($record['CalculatedProperties']['RMSGradientDistribution'])/20;
+                                            echo "[" . $record['CalculatedProperties']['RMSGradientDistribution'][0];
                                             $i = $step;
-                                            while($i < sizeof($molecule['CalculatedProperties']['RMSGradientDistribution'])){
-                                                echo "," . $molecule['CalculatedProperties']['RMSGradientDistribution'][round($i)];
+                                            while($i < sizeof($record['CalculatedProperties']['RMSGradientDistribution'])){
+                                                echo "," . $record['CalculatedProperties']['RMSGradientDistribution'][round($i)];
                                                 $i = $i + $step;
                                             }
                                             echo "]";
                                         }else{
-                                            echo json_encode($molecule['CalculatedProperties']['RMSGradientDistribution']);
+                                            echo json_encode($record['CalculatedProperties']['RMSGradientDistribution']);
                                         }
                                     ?>
                         }
@@ -412,17 +412,17 @@
 
                 var energyData = {
                     labels: <?php
-                                if(sizeof($molecule['CalculatedProperties']['Iterations']) > 20){
-                                    $step = sizeof($molecule['CalculatedProperties']['Iterations'])/20;
-                                    echo "[" . $molecule['CalculatedProperties']['Iterations'][0];
+                                if(sizeof($record['CalculatedProperties']['Iterations']) > 20){
+                                    $step = sizeof($record['CalculatedProperties']['Iterations'])/20;
+                                    echo "[" . $record['CalculatedProperties']['Iterations'][0];
                                     $i = $step;
-                                    while(round($i) < sizeof($molecule['CalculatedProperties']['Iterations'])){
-                                        echo "," . $molecule['CalculatedProperties']['Iterations'][round($i)];
+                                    while(round($i) < sizeof($record['CalculatedProperties']['Iterations'])){
+                                        echo "," . $record['CalculatedProperties']['Iterations'][round($i)];
                                         $i = $i + $step;
                                     }
                                     echo "]";
                                 }else{
-                                    echo json_encode($molecule['CalculatedProperties']['Iterations']);
+                                    echo json_encode($record['CalculatedProperties']['Iterations']);
                                 }
                             ?>,
                     datasets: [
@@ -435,23 +435,23 @@
                             pointHighlightFill: "#fff",
                             pointHighlightStroke: "rgba(220,220,220,1)",
                             data: <?php
-                                        if(sizeof($molecule['CalculatedProperties']['EnergyDistribution']) > 20){
-                                            $step = sizeof($molecule['CalculatedProperties']['EnergyDistribution'])/20;
-                                            echo "[" . $molecule['CalculatedProperties']['EnergyDistribution'][0];
+                                        if(sizeof($record['CalculatedProperties']['EnergyDistribution']) > 20){
+                                            $step = sizeof($record['CalculatedProperties']['EnergyDistribution'])/20;
+                                            echo "[" . $record['CalculatedProperties']['EnergyDistribution'][0];
                                             $i = $step;
-                                            while(round($i) < sizeof($molecule['CalculatedProperties']['EnergyDistribution'])){
-                                                echo "," . $molecule['CalculatedProperties']['EnergyDistribution'][round($i)];
+                                            while(round($i) < sizeof($record['CalculatedProperties']['EnergyDistribution'])){
+                                                echo "," . $record['CalculatedProperties']['EnergyDistribution'][round($i)];
                                                 $i = $i + $step;
                                             }
                                             echo "]";
                                         }else{
-                                            echo json_encode($molecule['CalculatedProperties']['EnergyDistribution']);
+                                            echo json_encode($record['CalculatedProperties']['EnergyDistribution']);
                                         }
                                     ?>
                         }
                     ]
                 };
-                <?php if(isset($molecule['CalculatedProperties']['EnergyDistribution'])):?>
+                <?php if(isset($record['CalculatedProperties']['EnergyDistribution'])):?>
                 var ctx2 = document.getElementById("energyDistribution").getContext("2d");
                 var options2 = {
                     legendTemplate : '<ul>'
