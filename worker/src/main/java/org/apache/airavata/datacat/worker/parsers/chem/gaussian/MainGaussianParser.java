@@ -252,16 +252,17 @@ public class MainGaussianParser implements IParser {
                 //    * %nprocshare
                 BufferedReader reader = new BufferedReader(new FileReader(gaussianOutputFile));
                 String line = reader.readLine();
-                while(line != null && !line.isEmpty()){
-                    if(line.toLowerCase().startsWith("stoichiometry")){
+                while(line != null){
+                    if(line.toLowerCase().startsWith(" stoichiometry")){
                         String formula = line.replaceAll("Stoichiometry", "").trim();
                         ((JSONObject)finalObj.get("Molecule")).put("Formula", formula);
-                    }else if(line.toLowerCase().startsWith("job cpu time")){
+                    }else if(line.toLowerCase().contains(" job cpu time")){
                         String time = line.split(":")[1].trim();
                         time = time.replaceAll("days","");
                         time = time.replaceAll("hours", "");
                         time = time.replaceAll("minutes", "");
                         time = time.replaceAll("seconds.","");
+                        time = time.replaceAll(" +"," ");
                         String[] timeArr = time.split(" ");
                         double timeInSeconds  = 0.0;
                         timeInSeconds += Double.parseDouble(timeArr[0]) * 86400;
@@ -275,10 +276,10 @@ public class MainGaussianParser implements IParser {
                         }else{
                             ((JSONObject)finalObj.get("ExecutionEnvironment")).put("JobCPURunTime", timeInSeconds);
                         }
-                    }else if(line.toLowerCase().startsWith("%mem")){
+                    }else if(line.toLowerCase().startsWith(" %mem")){
                         String mem = line.split("=")[1].trim();
                         ((JSONObject)finalObj.get("ExecutionEnvironment")).put("Memory", mem);
-                    }else if(line.toLowerCase().startsWith("%nprocshare")){
+                    }else if(line.toLowerCase().startsWith(" %nprocshared")){
                         String nproc = line.split("=")[1].trim();
                         ((JSONObject)finalObj.get("ExecutionEnvironment")).put("NProcShared", nproc);
                     }
