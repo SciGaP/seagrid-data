@@ -104,6 +104,18 @@
                                 <td><?php echo $record['Username']?></td>
                             </tr>
                         <?php endif; ?>
+                        <?php if(isset($record['IndexedTime'])):?>
+                            <tr>
+                                <td>Indexed Time</td>
+                                <td>
+                                    <?php
+                                        $date = new DateTime();
+                                        $date->setTimestamp($record['IndexedTime']);
+                                        echo $date->format('U = Y-m-d H:i:s')
+                                    ?>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
 
                         <tr><td><h4>Calculation</h4></td><td></td></tr>
                         <?php if(isset($record['Calculation']['Package'])):?>

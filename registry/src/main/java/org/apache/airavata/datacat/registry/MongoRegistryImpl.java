@@ -85,9 +85,13 @@ public class MongoRegistryImpl implements IRegistry {
     @Override
     public List<JSONObject> select(String q, int offset, int limit) throws RegistryException {
         List<JSONObject> result = new ArrayList<>();
+        //TODO query generation
         DBObject allQuery = new BasicDBObject();
         DBObject removeIdProjection = new BasicDBObject("_id", 0);
-        DBCursor cursor = collection.find(allQuery, removeIdProjection).skip(offset).limit(limit);
+        DBCursor cursor = collection.find(allQuery, removeIdProjection)
+                .skip(offset)
+                .limit(limit)
+                .sort(new BasicDBObject("IndexedTime", -1));
         for(DBObject document: cursor){
             result.add(new JSONObject(document.toString()));
         }

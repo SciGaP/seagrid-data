@@ -87,6 +87,7 @@ public class MainGaussianParser implements IParser {
                 finalObj.put("ExperimentName", inputMetadata.get("ExperimentName"));
                 finalObj.put("ProjectName", inputMetadata.get("ProjectName"));
                 finalObj.put("Username", inputMetadata.get("Username"));
+                finalObj.put("IndexedTime", System.currentTimeMillis());
 
                 JSONObject temp2 = new JSONObject();
                 if(temp.has("InChI"))
