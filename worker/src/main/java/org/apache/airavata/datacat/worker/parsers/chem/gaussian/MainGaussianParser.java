@@ -279,7 +279,7 @@ public class MainGaussianParser implements IParser {
                     }else if(line.toLowerCase().startsWith(" %mem")){
                         String mem = line.split("=")[1].trim();
                         ((JSONObject)finalObj.get("ExecutionEnvironment")).put("Memory", mem);
-                    }else if(line.toLowerCase().startsWith(" %nprocshared")){
+                    }else if(line.toLowerCase().startsWith(" %nproc")){
                         String nproc = line.split("=")[1].trim();
                         ((JSONObject)finalObj.get("ExecutionEnvironment")).put("NProcShared", nproc);
                     }
