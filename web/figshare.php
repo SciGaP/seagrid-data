@@ -41,11 +41,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['figshare-code'])){
         if(isset($_SESSION['figshare-code']) && isset($_GET['id'])){
             $showForm = true;
             $code = $_SESSION['figshare-code'];
-            if(isset($_GET['state'])){
-                $id = $_GET['state'];
-            }else{
-                $id = $_GET['id'];
-            }
+            $id = $_GET['id'];
             $record = json_decode(file_get_contents(
                 'http://gw127.iu.xsede.org:8000/query-api/get?id=' . $id), true);
         }else{
@@ -58,7 +54,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['figshare-code'])){
                 header('Location: ' . $url);
             }else if(isset($_GET['code']) && isset($_GET['state'])){
                 $showForm = true;
-                $id = $_GET['id'];
+                $id = $_GET['state'];
                 $code = $_GET['code'];
                 $_SESSION['figshare-code'] = $code;
                 $record = json_decode(file_get_contents(
