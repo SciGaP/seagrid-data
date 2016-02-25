@@ -178,9 +178,15 @@
                             <td><?php echo $record['Calculation']['CalcType'] ?></td>
                         </tr>
                         <?php endif; ?>
+                        <?php if(isset($record['Calculation']['Methods'])):?>
+                            <tr>
+                                <td>Methods</td>
+                                <td><?php echo $record['Calculation']['Methods'] ?></td>
+                            </tr>
+                        <?php endif; ?>
                         <?php if(isset($record['Calculation']['Basis'])):?>
                             <tr>
-                                <td>Basis</td>
+                                <td>Basis Set</td>
                                 <td><?php echo $record['Calculation']['Basis'] ?></td>
                             </tr>
                         <?php endif; ?>
