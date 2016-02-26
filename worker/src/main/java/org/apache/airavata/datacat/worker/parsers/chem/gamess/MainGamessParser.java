@@ -45,27 +45,35 @@ public class MainGamessParser implements IParser {
                 dir += File.separator;
             }
             String inputFileName = dir + ".out";
-            //FIXME Move the hardcoded script to some kind of configuration
-            Process proc = Runtime.getRuntime().exec(
-                    "docker run -t --env LD_LIBRARY_PATH=/usr/local/lib -v " +
-                            dir +":/datacat/working-dir scnakandala/datacat-chem python " +
-                            "/datacat/gamess.py /datacat/working-dir/"
-                            + inputFileName +" /datacat/working-dir/" + outputFileName);
 
+            int iteration = MAX_NUM_OF_RETRIES;
+            File outputFile = null;
+            while(iteration > 0){
+                iteration--;
 
-            BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-            String s;
-            // read any errors from the attempted command
-            String error = "";
-            while ((s = stdError.readLine()) != null) {
-                error += s;
+                //FIXME Move the hardcoded script to some kind of configuration
+                Process proc = Runtime.getRuntime().exec(
+                        "docker run -t --env LD_LIBRARY_PATH=/usr/local/lib -v " +
+                                dir +":/datacat/working-dir scnakandala/datacat-chem python " +
+                                "/datacat/gamess.py /datacat/working-dir/"
+                                + inputFileName +" /datacat/working-dir/" + outputFileName);
+                BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+                String s;
+                // read any errors from the attempted command
+                String error = "";
+                while ((s = stdError.readLine()) != null) {
+                    error += s;
+                }
+                if(error == null || !error.isEmpty()){
+                    logger.warn(error);
+                }
+
+                outputFile = new File(dir + outputFileName);
+                if(outputFile.exists())
+                    break;
             }
-            if(error == null || !error.isEmpty()){
-                logger.warn(error);
-            }
 
-            File outputFile = new File(dir + outputFileName);
-            if(outputFile.exists()){
+            if(outputFile!=null && outputFile.exists()){
                 JSONObject temp = new JSONObject(new JSONTokener(new FileReader(dir + outputFileName)));
 
                 inputMetadata.keySet().stream().forEach(key->{

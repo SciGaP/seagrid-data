@@ -26,6 +26,8 @@ import java.util.Map;
 
 public interface IParser {
 
+    public static final int MAX_NUM_OF_RETRIES = 3;
+
     /**
      * Input File should exist within the specified working directory
      * @param dir
