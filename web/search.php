@@ -207,6 +207,8 @@
                         $('#pageNo').val(1);
                         $('form#searchForm').submit();
                     }
+
+                    return false;
                 });
 
                 if($('#query').val() != ""){
