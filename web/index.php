@@ -24,7 +24,7 @@ session_start();
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="./index.php">GridChem Data Catalog</a>
+                    <a class="navbar-brand" href="./index.php">SEAGrid Data Catalog</a>
                 </div>
                 <div id="navbar" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
@@ -47,10 +47,10 @@ session_start();
         <div class="container">
 
             <div class="center-content">
-                <h1>Welcome to GridChem Data Catalog</h1>
+                <h1>Welcome to SEAGrid Data Catalog</h1>
                 <div style="text-align: justify;text-justify: inter-word">
-                    <p class="lead">GridChem Data Catalog provides a sleek web interface for you to browse and
-                        search through your GridChem data. Currently the system can index outputs of several computational
+                    <p class="lead">SEAGrid Data Catalog provides a sleek web interface for you to browse and
+                        search through your SEAGrid data. Currently the system can index outputs of several computational
                         chemistry applications including Gaussian, Gamess, Molpro and NWChem. Also it allows to publish your
                         data into research data publishing systems, do browser based visualization of molecular structure and
                         properties and to run complex search queries to filter the data. So now you don't need to download all

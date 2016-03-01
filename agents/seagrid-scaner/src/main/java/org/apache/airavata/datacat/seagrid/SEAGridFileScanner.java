@@ -18,7 +18,7 @@
  * under the License.
  *
 */
-package org.apache.airavata.datacat.gridchem;
+package org.apache.airavata.datacat.seagrid;
 
 import org.apache.airavata.datacat.commons.CatalogFileRequest;
 import org.apache.airavata.datacat.commons.FileTypes;
@@ -32,9 +32,9 @@ import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.HashMap;
 
-public class GridChemFileScanner {
+public class SEAGridFileScanner {
 
-    private final static Logger logger = LoggerFactory.getLogger(GridChemFileScanner.class);
+    private final static Logger logger = LoggerFactory.getLogger(SEAGridFileScanner.class);
 
     private static final String fileName = "output-files.txt";
 

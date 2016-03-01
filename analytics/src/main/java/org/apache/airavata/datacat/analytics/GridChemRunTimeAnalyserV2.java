@@ -32,8 +32,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-public class GridChemRunTimeAnalyserV2 {
-    private final static Logger logger = LoggerFactory.getLogger(GridChemRunTimeAnalyserV2.class);
+public class SEAGridRunTimeAnalyserV2 {
+    private final static Logger logger = LoggerFactory.getLogger(SEAGridRunTimeAnalyserV2.class);
 
     public static void main(String[] args) throws JSONException, IOException {
         MongoClient mongoClient = new MongoClient(new MongoClientURI("mongodb://gw62.iu.xsede.org:27017"));

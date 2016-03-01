@@ -33,7 +33,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.apache.airavata.datacat.gridchem.GridChemFileScanner</mainClass>
+                            <mainClass>org.apache.airavata.datacat.seagrid.SEAGridFileScanner</mainClass>
                             <addClasspath>true</addClasspath>
                         </manifest>
                     </archive>
@@ -45,7 +45,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.apache.airavata.datacat.gridchem.GridChemFileScanner</mainClass>
+                            <mainClass>org.apache.airavata.datacat.seagrid.SEAGridFileScanner</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

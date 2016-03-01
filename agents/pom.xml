@@ -13,7 +13,7 @@
     <artifactId>agents</artifactId>
     <modules>
         <module>airavata-listener</module>
-        <module>gridchem-scaner</module>
+        <module>seagrid-scaner</module>
     </modules>
 
 </project>

@@ -6,7 +6,7 @@ Chemistry and Computational Biology Group
 
 NCSA, University of Illinois at Urbana-Champaign
 
-http://ncsa.uiuc.edu/GridChem
+http://ncsa.uiuc.edu/SEAGrid
 
 Permission is hereby granted, free of charge, to any person 
 obtaining a copy of this software and associated documentation

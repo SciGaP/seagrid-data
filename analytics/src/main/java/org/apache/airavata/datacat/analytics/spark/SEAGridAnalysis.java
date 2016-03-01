@@ -40,7 +40,7 @@ import scala.Tuple2;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GridChemAnalysis {
+public class SEAGridAnalysis {
     private static String mongoInputUri = AnalyticsConstants.MONGO_INPUT_URI;
     private static String sparkMasterUrl = AnalyticsConstants.SPARK_MASTER_URL;
     private static String projectDir = AnalyticsConstants.PROJECT_DIR;
@@ -53,7 +53,7 @@ public class GridChemAnalysis {
         config.set("org.apache.airavata.datacat.analytics.input.mongo.uri", mongoInputUri);
 
         SparkConf sparkConf = new SparkConf()
-                .setAppName("GridChem-Analysis")
+                .setAppName("SEAGrid-Analysis")
                 .setMaster(sparkMasterUrl)
                 .set("spark.cores.max", "4")
                 .set("spark.executor.memory", "1G");
