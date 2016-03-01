@@ -18,9 +18,9 @@
  * under the License.
  *
 */
-package org.apache.airavata.datacat.analytics;
+package org.apache.airavata.datacat.analytics.spark;
 
-import org.apache.airavata.datacat.analytics.util.AnalyticsConstants;
+import org.apache.airavata.datacat.analytics.spark.util.AnalyticsConstants;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;

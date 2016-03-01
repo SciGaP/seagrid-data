@@ -18,24 +18,15 @@
  * under the License.
  *
 */
-package org.apache.airavata.datacat.analytics.input.chem;
+package org.apache.airavata.datacat.analytics.spark.chem;
 
-import org.openscience.cdk.interfaces.IAtomContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
+public class SignatureGenException extends Exception {
+    private final static Logger logger = LoggerFactory.getLogger(SignatureGenException.class);
 
-public class ChemObject implements Serializable{
-    private final static Logger logger = LoggerFactory.getLogger(ChemObject.class);
-
-    private IAtomContainer molecule;
-
-    public ChemObject(IAtomContainer molecule){
-        this.molecule = molecule;
-    }
-
-    public IAtomContainer getMolecule(){
-        return molecule;
+    public SignatureGenException(String s) {
+        super(s);
     }
 }

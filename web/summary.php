@@ -76,12 +76,6 @@
                                 <td><?php echo $record['Molecule']['NAtom'] ?></td>
                             </tr>
                         <?php endif; ?>
-                        <?php if(isset($record['Molecule']['NMo'])):?>
-                            <tr>
-                                <td>Molecular Mass</td>
-                                <td><?php echo $record['Molecule']['NMo'] ?></td>
-                            </tr>
-                        <?php endif; ?>
                         <?php if(isset($record['Molecule']['ElecSym'])):?>
                             <tr>
                                 <td>Electron Symmetry</td>
@@ -194,6 +188,13 @@
                             <tr>
                                 <td>Number of Basis Functions</td>
                                 <td><?php echo $record['Calculation']['NBasis'] ?></td>
+                            </tr>
+                        <?php endif; ?>
+
+                        <?php if(isset($record['Calculation']['NMO'])):?>
+                            <tr>
+                                <td>Number of Molecular Orbitals in the Calculation</td>
+                                <td><?php echo $record['Molecule']['NMO'] ?></td>
                             </tr>
                         <?php endif; ?>
                         <?php if(isset($record['Calculation']['Keywords'])):?>

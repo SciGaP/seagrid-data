@@ -18,7 +18,7 @@
  * under the License.
  *
 */
-package org.apache.airavata.datacat.analytics.input.chem;
+package org.apache.airavata.datacat.analytics.spark.chem;
 
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaPairRDD;

@@ -10,11 +10,9 @@ import requests
 data = json.loads(sys.argv[1])
 
 BASE_URL = 'https://api.figshare.com/v2/{endpoint}'
-TOKEN = '9a60beb20f4c58bc84b28c4f6774b151a3a9a1f548821d94a7a950b734dc03f05bca3ff1395787b7f7aa4683910d1bb1bb7a64ea27a13761dd68c29a9cfd9985'
-FILE_PATH = data[0]
-#FILE_PATH = '/Users/supun/Downloads/default_job.out';
-ARTICLE_ID = data[1]
-#ARTICLE_ID = '2782744';
+TOKEN = data[0]
+FILE_PATH = data[1]
+ARTICLE_ID = data[2]
 
 CHUNK_SIZE = 1048576
 

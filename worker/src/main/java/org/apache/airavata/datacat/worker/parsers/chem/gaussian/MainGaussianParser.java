@@ -123,6 +123,8 @@ public class MainGaussianParser implements IParser {
                         temp2.put("Basis", temp.get("Basis"));
                     }
                 }
+                if(temp.has("Nmo"))
+                    temp2.put("NMO", temp.get("Nmo"));
                 if(temp.has("Keywords"))
                     temp2.put("Keywords", temp.get("Keywords"));
                 if(temp.has("NBasis"))
@@ -141,8 +143,6 @@ public class MainGaussianParser implements IParser {
                     temp2.put("Formula", temp.get("Formula"));
                 if(temp.has("NAtom"))
                     temp2.put("NAtom", temp.get("NAtom"));
-                if(temp.has("Nmo"))
-                    temp2.put("NMo", temp.get("Nmo"));
                 if(temp.has("OrbSym"))
                     temp2.put("OrbSym", temp.get("OrbSym"));
                 if(temp.has("NAtom"))

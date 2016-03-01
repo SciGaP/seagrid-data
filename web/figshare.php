@@ -28,7 +28,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['figshare-code'])){
         'http://gw127.iu.xsede.org:8000/query-api/get?id=' . $id), true);
     foreach($record['Files'] as $key=>$filePath){
         echo $filePath;
-        $data = array($filePath, $articleId);
+        $data = array($code, $filePath, $articleId);
         shell_exec('python ./bin/figshare-workaround.py ' . escapeshellarg(json_encode($data)) . ' 2>&1');
     }
 

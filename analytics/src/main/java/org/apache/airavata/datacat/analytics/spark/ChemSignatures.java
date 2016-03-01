@@ -18,13 +18,13 @@
  * under the License.
  *
 */
-package org.apache.airavata.datacat.analytics;
+package org.apache.airavata.datacat.analytics.spark;
 
-import org.apache.airavata.datacat.analytics.input.chem.SGUtils;
-import org.apache.airavata.datacat.analytics.input.chem.Sig2IDMapping;
-import org.apache.airavata.datacat.analytics.input.chem.SignatureRecordDecision;
-import org.apache.airavata.datacat.analytics.input.chem.SignatureRecordDecisionID;
-import org.apache.airavata.datacat.analytics.util.AnalyticsConstants;
+import org.apache.airavata.datacat.analytics.spark.chem.SGUtils;
+import org.apache.airavata.datacat.analytics.spark.chem.Sig2IDMapping;
+import org.apache.airavata.datacat.analytics.spark.chem.SignatureRecordDecision;
+import org.apache.airavata.datacat.analytics.spark.chem.SignatureRecordDecisionID;
+import org.apache.airavata.datacat.analytics.spark.util.AnalyticsConstants;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;

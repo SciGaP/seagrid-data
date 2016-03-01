@@ -1,14 +1,27 @@
 <?php
+    include './lib/OAuthManager.php';
+
     if(isset($_POST['username']) && isset($_POST['password'])){
         $username = $_POST['username'];
         $password = $_POST['password'];
 
         //Todo verify login
-        session_start();
-
-        $_SESSION['username'] = $username;
-        $home_url = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/index.php';
-        header('Location: ' . $home_url);
+        $username = $username . '@prod.seagrid';
+        $oauthManager = new OAuthManager();
+        try{
+            $token = $oauthManager->getAccessTokenFromPasswordGrantType('y7xgdnNUx6ifOswJTPcqtzw4aOEa', 'CgfbuupAPhaOBSBPSScZUWHNANwa',
+                $username, $password);
+            if($token != null && isset($token->access_token)){
+                session_start();
+                $_SESSION['username'] = $username;
+                $home_url = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/index.php';
+                header('Location: ' . $home_url);
+            }else{
+                $loginFailed = true;
+            }
+        }catch (Exception $ex){
+            $loginFailed = true;
+        }
    }
 ?>
 
@@ -48,8 +61,13 @@
         </nav>
 
         <div class="container">
-
             <form class="form-signin" action="./login.php" method="post">
+                <?php if(isset($loginFailed) && $loginFailed): ?>
+                    <br>
+                    <div class="alert alert-warning">
+                        <strong>Failed!</strong> Provided username and password does not match.
+                    </div>
+                <?php endif; ?>
                 <h2 class="form-signin-heading">Please sign in</h2>
                 <label for="username" class="sr-only">Username</label>
                 <input type="username" id="username" name="username" class="form-control" placeholder="Username" required autofocus>

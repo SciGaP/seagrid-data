@@ -18,40 +18,24 @@
  * under the License.
  *
 */
-package org.apache.airavata.datacat.analytics.input.chem;
+package org.apache.airavata.datacat.analytics.spark.chem;
 
+import org.openscience.cdk.interfaces.IAtomContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 
-/**
- * SignatureRecordDecision = (Decision/Regression-value, Map[Signature, #occurrences]
- */
-public class SignatureRecordDecision implements Serializable{
-    private final static Logger logger = LoggerFactory.getLogger(SignatureRecordDecision.class);
-    private Double decision;
-    private SignatureRecord signatureRecord;
+public class ChemObject implements Serializable{
+    private final static Logger logger = LoggerFactory.getLogger(ChemObject.class);
 
-    public Double getDecision() {
-        return decision;
+    private IAtomContainer molecule;
+
+    public ChemObject(IAtomContainer molecule){
+        this.molecule = molecule;
     }
 
-    public void setDecision(Double decision) {
-        this.decision = decision;
-    }
-
-    public SignatureRecord getSignatureRecord() {
-        return signatureRecord;
-    }
-
-    public void setSignatureRecord(SignatureRecord signatureRecord) {
-        this.signatureRecord = signatureRecord;
-    }
-
-    public SignatureRecordDecision(Double decision, SignatureRecord signatureRecord) {
-
-        this.decision = decision;
-        this.signatureRecord = signatureRecord;
+    public IAtomContainer getMolecule(){
+        return molecule;
     }
 }
