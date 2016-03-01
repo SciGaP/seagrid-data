@@ -200,11 +200,13 @@
                     $('#builder').queryBuilder('setRules', rules_basic);
                 });
 
+                var fromBtn = false;
                 $('#btn-search').on('click', function() {
                     var result = $('#builder').queryBuilder('getMongo');
                     if(JSON.stringify(result, null, 2) != ""){
                         $('#query').val(JSON.stringify(result, null, 2));
                         $('#pageNo').val(1);
+                        fromBtn = true;
                         $('form#searchForm').submit();
                     }
 
@@ -217,7 +219,11 @@
                 }
 
                 $("form[name=searchForm]").bind('submit',function(){
-                    return false;
+                    if(fromBtn){
+                        return true;
+                    }else{
+                        return false;
+                    }
                 });
             });
         </script>
