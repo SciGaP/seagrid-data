@@ -84,7 +84,7 @@
                     <button id="btn-reset" class="btn btn-warning reset">Reset</button>
                     <button id="btn-search" class="btn btn-primary parse-json">Search</button>
                 </div>
-                <form id="searchForm" action="./search.php" method="post">
+                <form id="searchForm" name="searchForm" action="./search.php" method="post">
                     <div class="form-group search-text-block">
                         <input id="query" name="query" type="hidden" value='<?php if (isset($_POST['query'])) echo $_POST['query'] ?>'>
                         <input type="hidden" name="pageNo" id="pageNo" value=<?php echo $pageNo; ?>>
@@ -215,6 +215,10 @@
                     var result = $('#query').val();
                     $('#builder').queryBuilder('setRulesFromMongo', $.parseJSON(result));
                 }
+
+                $("form[name=searchForm]").bind('submit',function(){
+                    return false;
+                });
             });
         </script>
     </body>
