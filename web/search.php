@@ -202,7 +202,7 @@
 
                 $('#btn-search').on('click', function() {
                     var result = $('#builder').queryBuilder('getMongo');
-                    if(JSON.stringify(result, null, 2) != ""){
+                    if(JSON.stringify(result, null, 2) != "{}"){
                         $('#query').val(JSON.stringify(result, null, 2));
                         $('#pageNo').val(1);
                         $('form#searchForm').submit();
