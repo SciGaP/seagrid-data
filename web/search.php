@@ -3,6 +3,12 @@
     //FIXME Time should be shown in locally
     date_default_timezone_set('America/Indianapolis');
 
+    function convert_date($hit)
+    {
+        $hit[0] = substr($hit[0],1,-1);
+        return intval(strtotime($hit[0])*1000);
+    }
+
     session_start();
     if(!isset($_SESSION['username'])){
         $home_url = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/index.php';
@@ -13,6 +19,8 @@
     $pageNo = 1;
     if(isset($_POST['query'])){
         $q = $_POST['query'];
+        //converting time to unix timestamp
+        $q = preg_replace_callback('~("\\d{4}/\\d{2}/\\d{2}")~', convert_date, $q);
     }
     if(!isset($_POST['search']) && isset($_POST['pageNo'])){
         $pageNo = $_POST['pageNo'];
@@ -39,6 +47,9 @@
 
         <!-- Optional theme -->
         <link rel="stylesheet" href="css/search.css">
+        <!-- Query builder -->
+        <link rel="stylesheet" href="css/query-builder.default.min.css">
+        <link rel="stylesheet" href="css/bootstrap-datepicker.css">
 
     </head>
     <body>
@@ -67,29 +78,25 @@
         </nav>
 
         <div class="container">
-
             <div class="center-content">
-                <form action="./search.php" method="post">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <div class="form-group search-text-block">
-                                <input type="search" class="form-control" name="query" id="query"
-                                       value="<?php if (isset($_POST['query'])) echo $_POST['query'] ?>">
-                                <input type="hidden" name="pageNo" id="pageNo" value=<?php echo $pageNo; ?>>
-                            </div>
-
-                            <button type="submit" class="btn btn-primary pull-right" name="search" value="Search"><span
-                                    class="glyphicon glyphicon-search"></span> Search
-                            </button>
-
-                        </div>
+                <div id="builder"></div>
+                <div class="btn-group pull-right">
+                    <button id="btn-reset" class="btn btn-warning reset">Reset</button>
+                    <button id="btn-search" class="btn btn-primary parse-json">Search</button>
+                </div>
+                <form id="searchForm" action="./search.php" method="post">
+                    <div class="form-group search-text-block">
+                        <input id="query" name="query" type="hidden" value='<?php if (isset($_POST['query'])) echo $_POST['query'] ?>'>
+                        <input type="hidden" name="pageNo" id="pageNo" value=<?php echo $pageNo; ?>>
                     </div>
+                    <br>
                     <hr>
                     <table class="table table-bordered">
                         <tr>
                             <th class="col-md-3">Experiment Name</th>
                             <th class="col-md-2">Project Name</th>
-                            <th class="col-md-3">Application</th>
+                            <th class="col-md-2">Application</th>
+                            <th class="col-md-2">Formula</th>
                             <th class="col-md-3">Indexed Time</th>
                             <?php foreach ($results as $result): ?>
                         <tr>
@@ -97,6 +104,7 @@
                                     <?php echo $result['ExperimentName']?></a></td>
                             <td><?php echo $result['ProjectName']?></td>
                             <td><?php echo $result['Calculation']['Package']?></td>
+                            <td><?php echo $result['Molecule']['Formula']?></td>
                             <td>
                                 <?php
                                     $date = new DateTime();
@@ -128,5 +136,84 @@
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
                 integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+        <!-- Query builder-->
+        <script src="./js/query-builder.standalone.js"></script>
+        <script src="./js/moment.min.js"></script>
+        <script src="./js/bootstrap-datepicker.js"></script>
+
+        <script>
+            $( document ).ready(function() {
+                var rules_basic = {
+                    condition: 'AND',
+                    rules: [{
+                        id: 'ExperimentName',
+                        operator: 'contains',
+                        value: ''
+                    }]
+                };
+
+                $('#builder').queryBuilder({
+                    plugins: ['bt-tooltip-errors'],
+
+                    filters: [{
+                        id: 'ExperimentName',
+                        label: 'Experiment Name',
+                        type: 'string',
+                        operators: ['contains']
+                    }, {
+                        id: 'ProjectName',
+                        label: 'Project Name',
+                        type: 'string',
+                        operators: ['contains']
+                    }, {
+                        id: 'Calculation.Package',
+                        label: 'Application',
+                        type: 'string',
+                        operators: ['contains']
+                    }, {
+                        id: 'Molecule.Formula',
+                        label: 'Formula',
+                        type: 'string',
+                        operators: ['contains', 'equal']
+                    }, {
+                        id: 'IndexedTime',
+                        label: 'Indexed Time',
+                        type: 'date',
+                        operators: ['between'],
+                        validation: {
+                            format: 'YYYY/MM/DD'
+                        },
+                        plugin: 'datepicker',
+                        plugin_config: {
+                            format: 'yyyy/mm/dd',
+                            todayBtn: 'linked',
+                            todayHighlight: true,
+                            autoclose: true
+                        }
+                    }],
+
+                    rules: rules_basic
+                });
+
+                $('#btn-reset').on('click', function() {
+                    $('#builder').queryBuilder('reset');
+                    $('#builder').queryBuilder('setRules', rules_basic);
+                });
+
+                $('#btn-search').on('click', function() {
+                    var result = $('#builder').queryBuilder('getMongo');
+                    if(JSON.stringify(result, null, 2) != ""){
+                        $('#query').val(JSON.stringify(result, null, 2));
+                        $('#pageNo').val(1);
+                        $('form#searchForm').submit();
+                    }
+                });
+
+                if($('#query').val() != ""){
+                    var result = $('#query').val();
+                    $('#builder').queryBuilder('setRulesFromMongo', $.parseJSON(result));
+                }
+            });
+        </script>
     </body>
 </html>

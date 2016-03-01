@@ -27,7 +27,6 @@
         <!-- Optional theme -->
         <link rel="stylesheet" href="css/summary.css">
 
-
     </head>
     <body>
 
@@ -62,6 +61,38 @@
                 <div class="col-md-8 text-centered">
                     <hr>
                     <table class="table table-bordered">
+
+                        <tr><td><h4>Organization</h4></td><td></td></tr>
+                        <?php if(isset($record['ExperimentName'])):?>
+                            <tr>
+                                <td>Experiment</td>
+                                <td><?php echo $record['ExperimentName']?></td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php if(isset($record['ProjectName'])):?>
+                            <tr>
+                                <td>Project</td>
+                                <td><?php echo $record['ProjectName']?></td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php if(isset($record['Username'])):?>
+                            <tr>
+                                <td>Owner</td>
+                                <td><?php echo $record['Username']?></td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php if(isset($record['IndexedTime'])):?>
+                            <tr>
+                                <td>Indexed Time</td>
+                                <td>
+                                    <?php
+                                    $date = new DateTime();
+                                    $date->setTimestamp($record['IndexedTime']/1000);
+                                    echo $date->format('Y-m-d H:i:s')
+                                    ?>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
 
                         <tr><td><h4>Molecule</h4></td><td></td></tr>
                         <?php if(isset($record['Molecule']['Formula'])):?>
@@ -124,38 +155,6 @@
                             <tr>
                                 <td>Canonical SMILES</td>
                                 <td><?php echo $record['Identifiers']['CanonicalSMILES']?></td>
-                            </tr>
-                        <?php endif; ?>
-
-                        <tr><td><h4>Organization</h4></td><td></td></tr>
-                        <?php if(isset($record['ExperimentName'])):?>
-                        <tr>
-                            <td>Experiment</td>
-                            <td><?php echo $record['ExperimentName']?></td>
-                        </tr>
-                        <?php endif; ?>
-                        <?php if(isset($record['ProjectName'])):?>
-                            <tr>
-                                <td>Project</td>
-                                <td><?php echo $record['ProjectName']?></td>
-                            </tr>
-                        <?php endif; ?>
-                        <?php if(isset($record['Username'])):?>
-                            <tr>
-                                <td>Owner</td>
-                                <td><?php echo $record['Username']?></td>
-                            </tr>
-                        <?php endif; ?>
-                        <?php if(isset($record['IndexedTime'])):?>
-                            <tr>
-                                <td>Indexed Time</td>
-                                <td>
-                                    <?php
-                                        $date = new DateTime();
-                                        $date->setTimestamp($record['IndexedTime']/1000);
-                                        echo $date->format('Y-m-d H:i:s')
-                                    ?>
-                                </td>
                             </tr>
                         <?php endif; ?>
 
