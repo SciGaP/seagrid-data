@@ -47,7 +47,12 @@
                         <li><a href="./search.php">Search</a></li>
                     </ul>
                     <ul class="nav navbar-nav pull-right">
-                        <li><a href="./logout.php">Logout</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $_SESSION['username'] ?><span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="./logout.php"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             </div>

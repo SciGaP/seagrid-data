@@ -37,7 +37,12 @@ session_start();
                         <li><a href="./login.php">Login</a></li>
                         <?php endif; ?>
                         <?php if(isset($_SESSION['username'])):?>
-                            <li><a href="./logout.php">Logout</a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $_SESSION['username'] ?><span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="./logout.php"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
+                                </ul>
+                            </li>
                         <?php endif; ?>
                     </ul>
                 </div>

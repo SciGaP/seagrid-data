@@ -6,11 +6,11 @@
         $password = $_POST['password'];
 
         //Todo verify login
-        $username = $username . '@prod.seagrid';
+        $fullUsername = $username . '@prod.seagrid';
         $oauthManager = new OAuthManager();
         try{
             $token = $oauthManager->getAccessTokenFromPasswordGrantType('y7xgdnNUx6ifOswJTPcqtzw4aOEa', 'CgfbuupAPhaOBSBPSScZUWHNANwa',
-                $username, $password);
+                $fullUsername, $password);
             if($token != null && isset($token->access_token)){
                 session_start();
                 $_SESSION['username'] = $username;
