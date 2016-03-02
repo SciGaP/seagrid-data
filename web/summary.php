@@ -198,7 +198,7 @@
                         <?php if(isset($record['Calculation']['NMO'])):?>
                             <tr>
                                 <td>Number of Molecular Orbitals in the Calculation</td>
-                                <td><?php echo $record['Molecule']['NMO'] ?></td>
+                                <td><?php echo $record['Calculation']['NMO'] ?></td>
                             </tr>
                         <?php endif; ?>
                         <?php if(isset($record['Calculation']['Keywords'])):?>
