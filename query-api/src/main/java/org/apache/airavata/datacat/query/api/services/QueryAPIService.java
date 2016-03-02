@@ -67,7 +67,7 @@ public class QueryAPIService {
         }
     }
 
-    @POST
+    @GET
     @Path("/make-public")
     @Produces("application/json")
     public Response makePublic(@QueryParam("username") String username, @QueryParam("id") String id){
@@ -86,7 +86,7 @@ public class QueryAPIService {
         }
     }
 
-    @POST
+    @GET
     @Path("/make-private")
     @Produces("application/json")
     public Response makePrivate(@QueryParam("username") String username, @QueryParam("id") String id){
