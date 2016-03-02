@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>gridchem-scaner</artifactId>
+    <artifactId>seagrid-scaner</artifactId>
 
 
     <build>
