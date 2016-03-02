@@ -11,7 +11,7 @@
     $id = $_GET['id'];
     if(isset($id)){
         $record = json_decode(file_get_contents(
-            'http://gw127.iu.xsede.org:8000/query-api/get?id=' . $id), true);
+            'http://gw127.iu.xsede.org:8000/query-api/get?username=' . $_SESSION['username'] . '&id=' . $id), true);
     }else{
         echo 'Id not set !!!';
     }
@@ -46,7 +46,7 @@
                     <ul class="nav navbar-nav">
                         <li><a href="./search.php">Search</a></li>
                     </ul>
-                    <ul class="nav navbar-nav pull-right">
+                    <ul class=" nav navbar-nav pull-right">
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $_SESSION['username'] ?><span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
@@ -337,11 +337,28 @@
                         <?php endif; ?>
                     </table>
                     <div class="btn-toolbar">
-                        <a href="./figshare.php?id=<?php echo $record['ExperimentName']?>" target="_self"
+                        <?php if($record['Username'] == $_SESSION['username']): ?>
+                        <a href="./figshare.php?id=<?php echo $record['Id']?>" target="_self"
                            class="btn btn-primary"
                            role="button"
                            title="Publish the data and files to figshare" target="_blank">Upload Files to FigShare
                         </a>
+                        <?php endif; ?>
+                        <?php if($record['Username'] == $_SESSION['username'] && (!isset($record['Shared']) || $record['Shared'] == false)): ?>
+                        <a href="./make-public.php?id=<?php echo $record['Id']?>" target="_self"
+                           class="btn btn-primary"
+                           role="button"
+                           title="Make this data public to the gateway users" target="_blank">Make Public
+                        </a>
+                        <?php endif; ?>
+                        <?php if($record['Username'] == $_SESSION['username'] && (isset($record['Shared']) && $record['Shared'] == true)): ?>
+                        <a href="./make-private.php?id=<?php echo $record['Id']?>" target="_self"
+                           class="btn btn-primary"
+                           role="button"
+                           title="Make this data private from the gateway users" target="_blank">Make Private
+                        </a>
+                        <?php endif; ?>
+
                     </div>
                     <br>
                 </div>

@@ -27,10 +27,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
@@ -56,7 +53,8 @@ public class QueryAPIService {
     @GET
     @Path("/select")
     @Produces("application/json")
-    public Response select(@QueryParam("username") String username, @QueryParam("q") String queryString, @QueryParam("limit") int limit, @QueryParam("offset") int offset){
+    public Response select(@QueryParam("username") String username, @QueryParam("q") String queryString,
+                           @QueryParam("limit") int limit, @QueryParam("offset") int offset){
         try {
             if(limit == 0)
                 limit = 10;
@@ -69,13 +67,55 @@ public class QueryAPIService {
         }
     }
 
+    @POST
+    @Path("/make-public")
+    @Produces("application/json")
+    public Response makePublic(@QueryParam("username") String username, @QueryParam("id") String id){
+        try {
+            JSONObject result = registry.get(id);
+            if(result.get("Username").toString().equals(username)){
+                result.put("Shared", true);
+                registry.update(result);
+                return Response.status(200).entity(result.toString()).build();
+            }else{
+                return Response.status(401).build();
+            }
+        } catch (Exception e) {
+            logger.error(e.toString());
+            return Response.status(503).entity(e.toString()).build();
+        }
+    }
+
+    @POST
+    @Path("/make-private")
+    @Produces("application/json")
+    public Response makePrivate(@QueryParam("username") String username, @QueryParam("id") String id){
+        try {
+            JSONObject result = registry.get(id);
+            if(result.get("Username").toString().equals(username)){
+                result.put("Shared", false);
+                registry.update(result);
+                return Response.status(200).entity(result.toString()).build();
+            }else{
+                return Response.status(401).build();
+            }
+        } catch (Exception e) {
+            logger.error(e.toString());
+            return Response.status(503).entity(e.toString()).build();
+        }
+    }
+
     @GET
     @Path("/get")
     @Produces("application/json")
-    public Response get(@QueryParam("id") String queryString){
+    public Response get(@QueryParam("username") String username, @QueryParam("id") String id){
         try {
-            JSONObject result = registry.get(queryString);
-            return Response.status(200).entity(result.toString()).build();
+            JSONObject result = registry.get(id);
+            if(result.get("Username").toString().equals(username) || (result.has("Shared") && (boolean)result.get("Shared") == true)){
+                return Response.status(200).entity(result.toString()).build();
+            }else{
+                return Response.status(401).build();
+            }
         } catch (Exception e) {
             logger.error(e.toString());
             return Response.status(503).entity(e.toString()).build();

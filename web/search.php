@@ -106,7 +106,7 @@
                             <th class="col-md-2">Indexed Time</th>
                             <?php foreach ($results as $result): ?>
                         <tr>
-                            <td><a href="./summary.php?id=<?php echo $result['ExperimentName']?>" target="_blank">
+                            <td><a href="./summary.php?id=<?php echo $result['Id']?>" target="_blank">
                                     <?php echo $result['ExperimentName']?></a></td>
                             <td><?php echo $result['ProjectName']?></td>
                             <td><?php echo $result['Calculation']['Package']?></td>

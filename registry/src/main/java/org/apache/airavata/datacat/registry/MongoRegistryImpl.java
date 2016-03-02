@@ -84,6 +84,22 @@ public class MongoRegistryImpl implements IRegistry {
     }
 
     @Override
+    public boolean update(JSONObject jsonObject) throws RegistryException {
+        if(jsonObject.get(primaryKey) == null || jsonObject.get(primaryKey).toString().isEmpty()){
+            throw new RegistryException("Primary Key " + primaryKey + " not set");
+        }
+        //Default mongodb primary key
+        jsonObject.put("_id", jsonObject.get(primaryKey));
+        try {
+            collection.save((DBObject) JSON.parse(jsonObject.toString()));
+            logger.debug("Updated record " + primaryKey + ":" + jsonObject.get(primaryKey));
+        } catch (Exception e) {
+            throw new RegistryException(e);
+        }
+        return true;
+    }
+
+    @Override
     public List<JSONObject> select(String username, String q, int offset, int limit) throws RegistryException {
         List<JSONObject> result = new ArrayList<>();
         //TODO query generation
