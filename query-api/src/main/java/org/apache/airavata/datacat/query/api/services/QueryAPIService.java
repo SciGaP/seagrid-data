@@ -56,11 +56,11 @@ public class QueryAPIService {
     @GET
     @Path("/select")
     @Produces("application/json")
-    public Response select(@QueryParam("q") String queryString, @QueryParam("limit") int limit, @QueryParam("offset") int offset){
+    public Response select(@QueryParam("username") String username, @QueryParam("q") String queryString, @QueryParam("limit") int limit, @QueryParam("offset") int offset){
         try {
             if(limit == 0)
                 limit = 10;
-            List<JSONObject> result = registry.select(queryString,offset, limit);
+            List<JSONObject> result = registry.select(username, queryString, offset, limit);
             JSONArray jsonArray = new JSONArray(result);
             return Response.status(200).entity(jsonArray.toString()).build();
         } catch (Exception e) {

@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import static java.util.Arrays.asList;
 
 public class MongoRegistryImpl implements IRegistry {
     private final static Logger logger = LoggerFactory.getLogger(MongoRegistryImpl.class);
@@ -83,10 +84,20 @@ public class MongoRegistryImpl implements IRegistry {
     }
 
     @Override
-    public List<JSONObject> select(String q, int offset, int limit) throws RegistryException {
+    public List<JSONObject> select(String username, String q, int offset, int limit) throws RegistryException {
         List<JSONObject> result = new ArrayList<>();
         //TODO query generation
-        DBObject query = (DBObject) JSON.parse(q);
+        DBObject query;
+        if(q == null || q.isEmpty()){
+            query = new BasicDBObject("$or", asList(new BasicDBObject("Username", username),
+                    new BasicDBObject("Shared", true)));
+        }else{
+            query = (DBObject) JSON.parse(q);
+            query = new BasicDBObject("$and",asList(query, new BasicDBObject("$or",
+                    asList(new BasicDBObject("Username",username)
+                            ,new BasicDBObject("Shared", true)))));
+        }
+
         DBObject removeIdProjection = new BasicDBObject("_id", 0);
         DBCursor cursor = collection.find(query, removeIdProjection)
                 .skip(offset)

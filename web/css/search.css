@@ -5,3 +5,17 @@ body {
 .center-content {
     padding: 40px 15px;
 }
+
+/*.row .col-md-2 {*/
+    /*display: table-cell;*/
+    /*float: none;*/
+    /*text-overflow: ellipsis;*/
+    /*white-space: nowrap;*/
+/*}*/
+
+/*.row .col-md-3 {*/
+    /*display: table-cell;*/
+    /*float: none;*/
+    /*text-overflow: ellipsis;*/
+    /*white-space: nowrap;*/
+/*}*/

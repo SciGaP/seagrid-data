@@ -32,7 +32,8 @@
         $pageNo = $pageNo - 1;
     }
     $offset = ($pageNo -1) * 50;
-    $results = json_decode(file_get_contents('http://gw127.iu.xsede.org:8000/query-api/select?q='. urlencode($q)
+    $username = $_SESSION['username'];
+    $results = json_decode(file_get_contents('http://gw127.iu.xsede.org:8000/query-api/select?username='.$username.'&q='. urlencode($q)
         .'&limit=50&offset=' . $offset), true);
     if(!isset($results) || empty($results)){
         $results = array();
@@ -93,11 +94,11 @@
                     <hr>
                     <table class="table table-bordered">
                         <tr>
-                            <th class="col-md-3">Experiment Name</th>
+                            <th class="col-md-2">Experiment Name</th>
                             <th class="col-md-2">Project Name</th>
                             <th class="col-md-2">Application</th>
                             <th class="col-md-2">Formula</th>
-                            <th class="col-md-3">Indexed Time</th>
+                            <th class="col-md-2">Indexed Time</th>
                             <?php foreach ($results as $result): ?>
                         <tr>
                             <td><a href="./summary.php?id=<?php echo $result['ExperimentName']?>" target="_blank">
@@ -175,6 +176,16 @@
                         label: 'Formula',
                         type: 'string',
                         operators: ['contains', 'equal']
+                    }, {
+                        id: 'Identifiers.InChI',
+                        label: 'InChI',
+                        type: 'string',
+                        operators: ['contains']
+                    }, {
+                        id: 'Identifiers.SMILES',
+                        label: 'SMILES',
+                        type: 'string',
+                        operators: ['contains']
                     }, {
                         id: 'IndexedTime',
                         label: 'Indexed Time',

@@ -29,7 +29,7 @@ public interface IRegistry {
 
     boolean create(JSONObject jsonObject) throws RegistryException;
 
-    List<JSONObject> select(String q, int offset, int limit) throws RegistryException;
+    List<JSONObject> select(String username, String q, int offset, int limit) throws RegistryException;
 
     JSONObject get(String id) throws RegistryException;
 }
