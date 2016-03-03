@@ -45,6 +45,8 @@ public class DefaultMolproParser implements IParser {
             if(!dir.endsWith(File.separator)){
                 dir += File.separator;
             }
+
+            //FIXME
             String inputFileName = dir + ".out";
 
             File outputFile = null;

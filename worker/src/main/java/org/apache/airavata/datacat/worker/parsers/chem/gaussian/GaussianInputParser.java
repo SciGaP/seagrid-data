@@ -25,6 +25,9 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.Map;
 
 public class GaussianInputParser implements IParser{
@@ -40,7 +43,48 @@ public class GaussianInputParser implements IParser{
      */
     @Override
     public JSONObject parse(JSONObject finalObj, String dir, Map<String, Object> inputMetadata) throws Exception {
+        if(!dir.endsWith(File.separator)){
+            dir += File.separator;
+        }
+        String gaussianInputFile = null;
+        for(File file : (new File(dir).listFiles())){
+            if(file.getName().endsWith(".com") || file.getName().endsWith(".in")){
+                gaussianInputFile = file.getAbsolutePath();
+            }
+        }
+        if(gaussianInputFile == null){
+            logger.warn("Could not find the gaussian input file");
+            return finalObj;
+        }
 
+        String link0Commands = "";
+        String routeCommands = "";
+
+        try{
+            //Extracting actual job runtime
+            //    * %mem=4000mb
+            //    * #p opt
+            BufferedReader reader = new BufferedReader(new FileReader(gaussianInputFile));
+            String line = reader.readLine();
+            while(line != null){
+                if(line.startsWith("%")){
+                    link0Commands += (";" + line.trim());
+                }else if(line.startsWith("#")){
+                    routeCommands += (";" + line.trim());
+                }
+                line = reader.readLine();
+            }
+            if(finalObj.has("InputFileConfiguration")){
+                ((JSONObject)finalObj.get("InputFileConfiguration")).put("Link0Commands", link0Commands.substring(1))
+                        .put("RouteCommands", routeCommands.substring(1));
+            }else{
+                finalObj.put("InputFileConfiguration",new JSONObject().put("Link0Commands", link0Commands.substring(1))
+                        .put("RouteCommands", routeCommands.substring(1)));
+            }
+        }catch (Exception ex){
+            logger.error(ex.getMessage(), ex);
+            return finalObj;
+        }
         return finalObj;
     }
 }

@@ -55,7 +55,8 @@ public class DefaultGaussianParser implements IParser {
                 }
             }
             if(gaussianOutputFile == null){
-                throw new Exception("Could not find the gaussian output file");
+                logger.warn("Could not find the gaussian output file");
+                return finalObj;
             }
             File outputFile = null;
                 //FIXME Move the hardcoded script to some kind of configuration
@@ -176,9 +177,20 @@ public class DefaultGaussianParser implements IParser {
                 temp2 = new JSONObject();
                 if(temp.has("CalcMachine")) {
                     if(temp.get("CalcMachine").toString().contains(";")){
-                        temp2.put("CalcMachine", temp.get("CalcMachine").toString().split(";")[0]);
+                        String line = temp.get("CalcMachine").toString().split(";")[0];
+                        String[] bits =  line.split("-");
+                        if(bits.length == 4){
+                            temp2.put("CalcMachine", bits[1]);
+                        }else{
+                            temp2.put("CalcMachine", line);
+                        }
                     }else{
-                        temp2.put("CalcMachine", temp.get("CalcMachine"));
+                        String[] bits =  temp.get("CalcMachine").toString().split("-");
+                        if(bits.length == 4){
+                            temp2.put("CalcMachine", bits[1]);
+                        }else{
+                            temp2.put("CalcMachine", temp.get("CalcMachine"));
+                        }
                     }
                 }
                 if(temp.has("FinTime")) {
@@ -276,8 +288,19 @@ public class DefaultGaussianParser implements IParser {
                             ((JSONObject)finalObj.get("ExecutionEnvironment")).put("JobCPURunTime", timeInSeconds);
                         }
                     }else if(line.toLowerCase().startsWith(" %mem")){
-                        String mem = line.split("=")[1].trim();
-                        ((JSONObject)finalObj.get("ExecutionEnvironment")).put("Memory", mem);
+                        String memory = line.split("=")[1].trim().toLowerCase();
+                        //default memory is 256 MB
+                        int memoryInt = 256;
+                        if (memory.endsWith("gw")) {
+                            memoryInt = Integer.parseInt(memory.substring(0, memory.length() - 2)) * 1000 * 8;
+                        } else if (memory.endsWith("gb")) {
+                            memoryInt = Integer.parseInt(memory.substring(0, memory.length() - 2)) * 1000;
+                        } else if (memory.endsWith("mw")) {
+                            memoryInt = Integer.parseInt(memory.substring(0, memory.length() - 2)) * 8;
+                        } else if (memory.endsWith("mb")) {
+                            memoryInt = Integer.parseInt(memory.substring(0, memory.length() - 2));
+                        }
+                        ((JSONObject)finalObj.get("ExecutionEnvironment")).put("Memory", memoryInt);
                     }else if(line.toLowerCase().startsWith(" %nproc")){
                         String nproc = line.split("=")[1].trim();
                         ((JSONObject)finalObj.get("ExecutionEnvironment")).put("NProcShared", nproc);

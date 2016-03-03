@@ -22,6 +22,7 @@ data.parsers:
     parsers:
       - org.apache.airavata.datacat.worker.parsers.chem.gaussian.DefaultGaussianParser
       - org.apache.airavata.datacat.worker.parsers.chem.gaussian.GaussianInputParser
+      - org.apache.airavata.datacat.worker.parsers.chem.gaussian.GaussianActualRunTimeParser
 
   - data.type: application/nwchem
     data.detector: org.apache.airavata.datacat.worker.parsers.chem.nwchem.NWChemDataDetector

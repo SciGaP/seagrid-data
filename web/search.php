@@ -211,6 +211,11 @@
                         label: 'Number of Atoms',
                         type: 'integer',
                         operators: ['equal', 'less', 'greater']
+                    },{
+                        id: 'ExecutionEnvironment.ActualJobRunTime',
+                        label: 'Actual Job Run Time',
+                        type: 'integer',
+                        operators: ['equal', 'less', 'greater']
                     }, {
                         id: 'IndexedTime',
                         label: 'Indexed Time',

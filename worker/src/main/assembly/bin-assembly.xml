@@ -42,6 +42,7 @@
             <outputDirectory>conf</outputDirectory>
             <includes>
                 <include>*.properties</include>
+                <include>*.yaml</include>
             </includes>
         </fileSet>
         <fileSet>

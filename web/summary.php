@@ -265,10 +265,16 @@
                                 <td><?php echo $record['ExecutionEnvironment']['JobCPURunTime']; ?> &nbsp;seconds</td>
                             </tr>
                         <?php endif; ?>
+                        <?php if(isset($record['ExecutionEnvironment']['ActualJobRunTime'])):?>
+                            <tr>
+                                <td>Actual Job Run Time</td>
+                                <td><?php echo $record['ExecutionEnvironment']['ActualJobRunTime']; ?> &nbsp;seconds</td>
+                            </tr>
+                        <?php endif; ?>
                         <?php if(isset($record['ExecutionEnvironment']['Memory'])):?>
                             <tr>
                                 <td>Memory</td>
-                                <td><?php echo $record['ExecutionEnvironment']['Memory']; ?></td>
+                                <td><?php echo $record['ExecutionEnvironment']['Memory']; ?> &nbsp; MB</td>
                             </tr>
                         <?php endif; ?>
                         <?php if(isset($record['ExecutionEnvironment']['NProcShared'])):?>
@@ -277,6 +283,22 @@
                                 <td><?php echo $record['ExecutionEnvironment']['NProcShared']; ?></td>
                             </tr>
                         <?php endif; ?>
+
+                        <?php if(isset($record['InputFileConfiguration'])): ?>
+                            <tr><td><h4>Input File Configuration</h4></td></tr>
+                            <?php if(isset($record['InputFileConfiguration']['Link0Commands'])):?>
+                                <tr>
+                                    <td>Link 0 Commands</td>
+                                    <td><?php echo $record['InputFileConfiguration']['Link0Commands']; ?></td>
+                                </tr>
+                            <?php endif; ?>
+                            <?php if(isset($record['InputFileConfiguration']['RouteCommands'])):?>
+                                <tr>
+                                    <td>Route Commands</td>
+                                    <td><?php echo $record['InputFileConfiguration']['RouteCommands']; ?></td>
+                                </tr>
+                            <?php endif; ?>
+                        <?php endif;?>
 
                         <tr><td><h4>File Set</h4></td></tr>
                         <?php if(isset($record['Files']['GaussianInputFile'])):?>
@@ -368,7 +390,7 @@
                     <textarea id="glmol01_src" style="display: none;">
                         <?php var_dump($record['FinalMoleculeStructuralFormats']['SDF'])?>
                     </textarea>
-                    <div class="text-centered">Molecular Structure</div>
+                    <div class="text-centered">Final Molecular Structure</div>
                     <br><br>
                     <?php if(isset($record['CalculatedProperties']['EnergyDistribution'])):?>
                         <canvas id="energyDistribution" width="300" height="300" style="margin-left: 10%"></canvas>

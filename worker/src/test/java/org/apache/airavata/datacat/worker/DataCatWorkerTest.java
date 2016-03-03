@@ -42,6 +42,7 @@ public class DataCatWorkerTest {
             ingestMetadata.put("Id", "test-000000-0000000-000000000-00000000000");
             ingestMetadata.put("ExperimentName", "test-000000-0000000-000000000-00000000000");
             ingestMetadata.put("ProjectName", "mvn_proj");
+            ingestMetadata.put("Username", "scnakandala");
             catalogFileRequest.setIngestMetadata(ingestMetadata);
             catalogFileRequest.setMimeType(DataTypes.APPLICATION_GAUSSIAN);
             catalogFileRequest.setDirUri(new URI("file://"+DataCatWorkerTest.class.getResource("/gaussian").getPath()));
