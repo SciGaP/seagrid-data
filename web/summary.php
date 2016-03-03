@@ -323,7 +323,7 @@
                         <?php endif; ?>
                         <?php if(isset($record['Files']['InChIFile'])):?>
                             <tr>
-                                <td>PDB Structure File</td>
+                                <td>InChI File</td>
                                 <td><a href=./download.php?file=<?php echo $record['Files']['InChIFile']; ?>>
                                         <?php echo basename($record['Files']['InChIFile']); ?></a></td>
                             </tr>

@@ -101,7 +101,7 @@
                         <tr>
                             <th class="col-md-2">Experiment Name</th>
                             <th class="col-md-2">Project Name</th>
-                            <th class="col-md-2">Application</th>
+                            <th class="col-md-2">Package</th>
                             <th class="col-md-2">Formula</th>
                             <th class="col-md-2">Indexed Time</th>
                             <?php foreach ($results as $result): ?>
@@ -173,7 +173,7 @@
                         operators: ['contains']
                     }, {
                         id: 'Calculation.Package',
-                        label: 'Application',
+                        label: 'Package',
                         type: 'string',
                         operators: ['contains']
                     }, {
@@ -191,6 +191,26 @@
                         label: 'SMILES',
                         type: 'string',
                         operators: ['contains']
+                    },{
+                        id: 'Calculation.CalcType',
+                        label: 'Calculation Type',
+                        type: 'string',
+                        operators: ['contains']
+                    },{
+                        id: 'Calculation.Methods',
+                        label: 'Calculation Methods',
+                        type: 'string',
+                        operators: ['contains']
+                    },{
+                        id: 'Calculation.Basis',
+                        label: 'Basis Sets',
+                        type: 'string',
+                        operators: ['contains']
+                    },{
+                        id: 'Molecule.NAtom',
+                        label: 'Number of Atoms',
+                        type: 'integer',
+                        operators: ['equal', 'less', 'greater']
                     }, {
                         id: 'IndexedTime',
                         label: 'Indexed Time',
