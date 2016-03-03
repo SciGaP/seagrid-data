@@ -134,10 +134,10 @@ public class SEAGridFileScanner {
             CatalogFileRequest catalogFileRequest = new CatalogFileRequest();
             catalogFileRequest.setDirUri(temp);
             HashMap<String, Object> inputMetadata = new HashMap<>();
-            inputMetadata.put("Id", (Paths.get(new URI(temp)).getFileName()));
-            inputMetadata.put("Username", (Paths.get(new URI(temp)).getParent().getParent().getFileName()));
-            inputMetadata.put("ExperimentName", (Paths.get(new URI(temp)).getFileName()));
-            inputMetadata.put("ProjectName", (Paths.get(new URI(temp)).getParent().getFileName()));
+            inputMetadata.put("Id", (Paths.get(new URI(temp)).getFileName()).toString());
+            inputMetadata.put("Username", (Paths.get(new URI(temp)).getParent().getParent().getFileName()).toString());
+            inputMetadata.put("ExperimentName", (Paths.get(new URI(temp)).getFileName()).toString());
+            inputMetadata.put("ProjectName", (Paths.get(new URI(temp)).getParent().getFileName()).toString());
             catalogFileRequest.setIngestMetadata(inputMetadata);
             catalogFileRequest.setMimeType(DataTypes.APPLICATION_GAUSSIAN);
 
