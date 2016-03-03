@@ -22,7 +22,7 @@ package org.apache.airavata.datacat.agent.airavata.listner;
 
 import org.apache.airavata.common.utils.ThriftUtils;
 import org.apache.airavata.datacat.commons.CatalogFileRequest;
-import org.apache.airavata.datacat.commons.FileTypes;
+import org.apache.airavata.datacat.commons.DataTypes;
 import org.apache.airavata.datacat.commons.messaging.WorkQueuePublisher;
 import org.apache.airavata.datacat.agent.airavata.listner.util.ListenerProperties;
 import org.apache.airavata.messaging.core.MessageContext;
@@ -110,7 +110,7 @@ public class AiravataRabbitMQListener {
                                     inputMetadata.put("GatewayId", experimentModel.getGatewayId());
                                     inputMetadata.put("FullPath", "scp://gw54.iu.xsede.org:" + remoteFilePath);
                                     catalogFileRequest.setIngestMetadata(inputMetadata);
-                                    catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAUSSIAN);
+                                    catalogFileRequest.setMimeType(DataTypes.APPLICATION_GAUSSIAN);
 
                                     workQueuePublisher.publishMessage(catalogFileRequest);
                                 } else if (applicationName.toLowerCase().contains("gamess")) {
@@ -146,7 +146,7 @@ public class AiravataRabbitMQListener {
                                     inputMetadata.put("FullPath", "scp://gw54.iu.xsede.org:" + remoteFilePath);
 
                                     catalogFileRequest.setIngestMetadata(inputMetadata);
-                                    catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAMESS);
+                                    catalogFileRequest.setMimeType(DataTypes.APPLICATION_GAMESS);
 
                                     workQueuePublisher.publishMessage(catalogFileRequest);
                                 } else if (applicationName.toLowerCase().contains("nwchem")) {
@@ -171,7 +171,7 @@ public class AiravataRabbitMQListener {
                                     inputMetadata.put("GatewayId", experimentModel.getGatewayId());
                                     inputMetadata.put("FullPath", "scp://gw54.iu.xsede.org:" + remoteFilePath);
                                     catalogFileRequest.setIngestMetadata(inputMetadata);
-                                    catalogFileRequest.setMimeType(FileTypes.APPLICATION_NWCHEM);
+                                    catalogFileRequest.setMimeType(DataTypes.APPLICATION_NWCHEM);
 
                                     workQueuePublisher.publishMessage(catalogFileRequest);
                                 } else {

@@ -26,7 +26,6 @@ import org.apache.airavata.datacat.registry.RegistryFactory;
 import org.apache.airavata.datacat.worker.parsers.IParser;
 import org.apache.airavata.datacat.worker.parsers.IParserResolver;
 import org.apache.airavata.datacat.worker.util.FileHelper;
-import org.apache.airavata.datacat.worker.util.ParserProperties;
 import org.apache.airavata.datacat.worker.util.WorkerConstants;
 import org.apache.airavata.datacat.worker.util.WorkerProperties;
 import org.json.JSONObject;
@@ -35,54 +34,60 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URI;
+import java.util.List;
 
 public class DataCatWorker {
 
     private final static Logger logger = LoggerFactory.getLogger(DataCatWorker.class);
 
-    private static final String PARSER_RESOLVER_CLASS="parser.resolver.class";
+    private static final String PARSER_RESOLVER_CLASS = "parser.resolver.class";
 
     private final IParserResolver parserResolver;
     private final IRegistry registry;
     private final FileHelper fileHelper;
 
-    public DataCatWorker(){
-        String parserResolverClass = ParserProperties.getInstance().getProperty(PARSER_RESOLVER_CLASS, "");
+    public DataCatWorker() {
+        String parserResolverClass = WorkerProperties.getInstance().getProperty(PARSER_RESOLVER_CLASS, "");
         parserResolver = instantiate(parserResolverClass, IParserResolver.class);
         registry = RegistryFactory.getRegistryImpl();
         fileHelper = new FileHelper();
     }
 
-    public void handle(CatalogFileRequest catalogFileRequest){
-        IParser parser = parserResolver.resolveParser(catalogFileRequest);
-        if(parser != null){
-            String workingDir = null;
-            String localDirPath = null;
-            URI uri = catalogFileRequest.getDirUri();
-            try {
-                if(!uri.getScheme().contains("file")) {
-                    workingDir = WorkerProperties.getInstance().getProperty(WorkerConstants.WORKING_DIR, "/tmp");
-                    localDirPath = fileHelper.createLocalCopyOfDir(uri, workingDir);
-                }else{
-                    localDirPath = uri.getPath();
+    public void handle(CatalogFileRequest catalogFileRequest) throws Exception {
+        String workingDir = null;
+        String localDirPath = null;
+        URI uri = catalogFileRequest.getDirUri();
+        try {
+            //Copying data to the local directory
+            if (!uri.getScheme().contains("file")) {
+                workingDir = WorkerProperties.getInstance().getProperty(WorkerConstants.WORKING_DIR, "/tmp");
+                localDirPath = fileHelper.createLocalCopyOfDir(uri, workingDir);
+            } else {
+                localDirPath = uri.getPath();
+            }
+
+            List<IParser> parsers = parserResolver.resolveParser(localDirPath, catalogFileRequest);
+            if (parsers != null && parsers.size() > 0) {
+                JSONObject jsonObject = new JSONObject();
+                for (IParser parser : parsers) {
+                    jsonObject = parser.parse(jsonObject, localDirPath, catalogFileRequest.getIngestMetadata());
                 }
-                JSONObject jsonObject = parser.parse(localDirPath, catalogFileRequest.getIngestMetadata());
                 registry.create(jsonObject);
                 logger.info("Published data for directory : " + catalogFileRequest.getDirUri().toString());
-            } catch (Exception e) {
-                logger.error(e.getMessage(), e);
-                logger.error("Failed to publish data for directory : " + catalogFileRequest.getDirUri().toString());
-            } finally {
-                if(!uri.getScheme().contains("file") && localDirPath != null && !localDirPath.isEmpty()) {
-                    File file = new File(localDirPath);
-                    if(file.exists()){
-                        deleteDirectory(file);
-                    }
+            } else {
+                logger.warn("No suitable parser found for directory : " + catalogFileRequest.getDirUri().toString());
+            }
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            if (!uri.getScheme().contains("file") && localDirPath != null && !localDirPath.isEmpty()) {
+                File file = new File(localDirPath);
+                if (file.exists()) {
+                    deleteDirectory(file);
                 }
             }
-        }else{
-            logger.warn("No suitable parser found for directory : " + catalogFileRequest.getDirUri().toString());
         }
+
     }
 
     private boolean deleteDirectory(File path) {
@@ -99,14 +104,14 @@ public class DataCatWorker {
         return (path.delete());
     }
 
-    private  <T> T instantiate(final String className, final Class<T> type){
-        try{
+    private <T> T instantiate(final String className, final Class<T> type) {
+        try {
             return type.cast(Class.forName(className).newInstance());
-        } catch(final InstantiationException e){
+        } catch (final InstantiationException e) {
             throw new IllegalStateException(e);
-        } catch(final IllegalAccessException e){
+        } catch (final IllegalAccessException e) {
             throw new IllegalStateException(e);
-        } catch(final ClassNotFoundException e){
+        } catch (final ClassNotFoundException e) {
             throw new IllegalStateException(e);
         }
     }

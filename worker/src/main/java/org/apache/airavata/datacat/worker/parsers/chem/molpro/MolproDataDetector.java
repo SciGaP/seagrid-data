@@ -18,12 +18,18 @@
  * under the License.
  *
 */
-package org.apache.airavata.datacat.worker.parsers;
+package org.apache.airavata.datacat.worker.parsers.chem.molpro;
 
 import org.apache.airavata.datacat.commons.CatalogFileRequest;
+import org.apache.airavata.datacat.worker.parsers.IDataDetector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.List;
+public class MolproDataDetector implements IDataDetector {
+    private final static Logger logger = LoggerFactory.getLogger(MolproDataDetector.class);
 
-public interface IParserResolver {
-    List<IParser> resolveParser(String localDirPath, CatalogFileRequest catalogFileRequest) throws Exception;
+    @Override
+    public boolean detectData(String localDirPath, CatalogFileRequest catalogFileRequest) throws Exception {
+        return false;
+    }
 }

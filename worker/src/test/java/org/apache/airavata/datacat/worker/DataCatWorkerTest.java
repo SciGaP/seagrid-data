@@ -22,7 +22,7 @@ package org.apache.airavata.datacat.worker;
 
 import junit.framework.Assert;
 import org.apache.airavata.datacat.commons.CatalogFileRequest;
-import org.apache.airavata.datacat.commons.FileTypes;
+import org.apache.airavata.datacat.commons.DataTypes;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +43,7 @@ public class DataCatWorkerTest {
             ingestMetadata.put("ExperimentName", "test-000000-0000000-000000000-00000000000");
             ingestMetadata.put("ProjectName", "mvn_proj");
             catalogFileRequest.setIngestMetadata(ingestMetadata);
-            catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAUSSIAN);
+            catalogFileRequest.setMimeType(DataTypes.APPLICATION_GAUSSIAN);
             catalogFileRequest.setDirUri(new URI("file://"+DataCatWorkerTest.class.getResource("/gaussian").getPath()));
             datacatWorker.handle(catalogFileRequest);
         }catch (Exception ex){

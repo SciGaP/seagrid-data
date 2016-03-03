@@ -18,7 +18,7 @@
  * under the License.
  *
 */
-package org.apache.airavata.datacat.worker.parsers.chem.gaussian;
+package org.apache.airavata.datacat.worker.parsers.chem.gaussian.old;
 
 import java.util.Stack;
 

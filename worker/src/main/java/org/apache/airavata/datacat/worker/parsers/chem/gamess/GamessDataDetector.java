@@ -18,12 +18,18 @@
  * under the License.
  *
 */
-package org.apache.airavata.datacat.commons;
+package org.apache.airavata.datacat.worker.parsers.chem.gamess;
 
-public class FileTypes {
+import org.apache.airavata.datacat.commons.CatalogFileRequest;
+import org.apache.airavata.datacat.worker.parsers.IDataDetector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-    public static String APPLICATION_GAUSSIAN = "application/gaussian";
-    public static String APPLICATION_GAMESS = "application/gamess";
-    public static String APPLICATION_MOLPRO = "application/molpro";
-    public static String APPLICATION_NWCHEM = "application/nwchem";
+public class GamessDataDetector implements IDataDetector {
+    private final static Logger logger = LoggerFactory.getLogger(GamessDataDetector.class);
+
+    @Override
+    public boolean detectData(String localDirPath, CatalogFileRequest catalogFileRequest) throws Exception {
+        return false;
+    }
 }

@@ -25,9 +25,6 @@ import org.json.JSONObject;
 import java.util.Map;
 
 public interface IParser {
-
-    public static final int MAX_NUM_OF_RETRIES = 10;
-
     /**
      * Input File should exist within the specified working directory
      * @param dir
@@ -35,6 +32,6 @@ public interface IParser {
      * @return
      * @throws Exception
      */
-    public JSONObject parse(String dir, Map<String, Object> inputMetadata) throws Exception;
+    public JSONObject parse(JSONObject object, String dir, Map<String, Object> inputMetadata) throws Exception;
 
 }

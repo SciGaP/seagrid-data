@@ -18,7 +18,7 @@
  * under the License.
  *
 */
-package org.apache.airavata.datacat.worker.parsers.chem.gamess;
+package org.apache.airavata.datacat.worker.parsers.chem.molpro;
 
 import org.apache.airavata.datacat.worker.parsers.IParser;
 import org.apache.airavata.datacat.worker.parsers.ParserException;
@@ -33,29 +33,27 @@ import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.Map;
 
-public class MainGamessParser implements IParser {
-    private final static Logger logger = LoggerFactory.getLogger(MainGamessParser.class);
+public class DefaultMolproParser implements IParser {
 
-    private final String outputFileName = "gamess-output.json";
+    private final static Logger logger = LoggerFactory.getLogger(DefaultMolproParser.class);
+
+    private final String outputFileName = "molpro-output.json";
 
     @SuppressWarnings("unchecked")
-    public JSONObject parse(String dir, Map<String, Object> inputMetadata) throws Exception {
+    public JSONObject parse(JSONObject finalObj, String dir, Map<String, Object> inputMetadata) throws Exception {
         try{
             if(!dir.endsWith(File.separator)){
                 dir += File.separator;
             }
             String inputFileName = dir + ".out";
 
-            int iteration = MAX_NUM_OF_RETRIES;
             File outputFile = null;
-            while(iteration > 0){
-                iteration--;
 
                 //FIXME Move the hardcoded script to some kind of configuration
                 Process proc = Runtime.getRuntime().exec(
                         "docker run -t --env LD_LIBRARY_PATH=/usr/local/lib -v " +
-                                dir +":/datacat/working-dir scnakandala/datacat-chem python " +
-                                "/datacat/gamess.py /datacat/working-dir/"
+                                dir +":/datacat/working-dir scnakandala/datacat-chem python" +
+                                " /datacat/molpro.py /datacat/working-dir/"
                                 + inputFileName +" /datacat/working-dir/" + outputFileName);
                 BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
                 String s;
@@ -69,9 +67,7 @@ public class MainGamessParser implements IParser {
                 }
 
                 outputFile = new File(dir + outputFileName);
-                if(outputFile.exists())
-                    break;
-            }
+
 
             if(outputFile!=null && outputFile.exists()){
                 JSONObject temp = new JSONObject(new JSONTokener(new FileReader(dir + outputFileName)));
@@ -80,7 +76,6 @@ public class MainGamessParser implements IParser {
                     temp.put(key, inputMetadata.get(key));
                 });
 
-                JSONObject finalObj = new JSONObject();
                 finalObj.put("Id", inputMetadata.get("Id"));
                 finalObj.put("ExperimentName", inputMetadata.get("ExperimentName"));
                 finalObj.put("ProjectName", inputMetadata.get("ProjectName"));

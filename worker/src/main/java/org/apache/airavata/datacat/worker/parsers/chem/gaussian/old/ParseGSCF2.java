@@ -18,12 +18,42 @@
  * under the License.
  *
 */
-package org.apache.airavata.datacat.worker.parsers;
+package org.apache.airavata.datacat.worker.parsers.chem.gaussian.old;
 
-import org.apache.airavata.datacat.commons.CatalogFileRequest;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 
-import java.util.List;
+public class ParseGSCF2 {
 
-public interface IParserResolver {
-    List<IParser> resolveParser(String localDirPath, CatalogFileRequest catalogFileRequest) throws Exception;
+
+
+
+    public PrintStream temp; // contains epochs x fields
+
+
+
+
+    /** ----------------------------------------------
+     CONSTRUCTOR
+     */
+    public ParseGSCF2(String temporary) throws IOException {
+        temp = new PrintStream(new FileOutputStream(temporary));
+    }
+
+
+
+
+    /** --------------------------------------------------------
+     */
+    public void putField(String s) {
+        temp.print(s);
+    }
+    public void putField(int k) {
+        temp.print(k);
+    }
+    public void putField(float f) {
+        temp.println(f);
+    }
+
 }

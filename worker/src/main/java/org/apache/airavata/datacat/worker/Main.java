@@ -35,6 +35,7 @@ public class Main {
 
     private static final String DATACAT_RABBITMQ_BROKER_URL="datacat.rabbitmq.broker.url";
     private static final String DATACAT_RABBITMQ_WORKER_QUEUE_NAME="datacat.rabbitmq.worker.queue.name";
+    private static final int MAX_NUM_OF_RETRIES = 3;
 
     public static void main(String[] argv) throws Exception {
         String workQueueName = WorkerProperties.getInstance().getProperty(DATACAT_RABBITMQ_WORKER_QUEUE_NAME, "");
@@ -54,16 +55,25 @@ public class Main {
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties,
                                        byte[] body) throws IOException {
-                try {
-                    ByteArrayInputStream in = new ByteArrayInputStream(body);
-                    ObjectInputStream is = new ObjectInputStream(in);
-                    CatalogFileRequest catalogFileRequest = (CatalogFileRequest)is.readObject();
-                    dataCatWorker.handle(catalogFileRequest);
-                } catch (ClassNotFoundException e) {
-                    logger.error(e.getMessage(), e);
-                } finally {
-                    channel.basicAck(envelope.getDeliveryTag(), false);
+                boolean success = false;
+                int attemptNumber = MAX_NUM_OF_RETRIES;
+                while (!success && attemptNumber > 0) {
+                    CatalogFileRequest catalogFileRequest = null;
+                    try {
+                        ByteArrayInputStream in = new ByteArrayInputStream(body);
+                        ObjectInputStream is = new ObjectInputStream(in);
+                        catalogFileRequest = (CatalogFileRequest) is.readObject();
+                        dataCatWorker.handle(catalogFileRequest);
+                        success = true;
+                    } catch (Exception e) {
+                        logger.error(e.getMessage(), e);
+                        logger.error("Failed to publish data for directory : "
+                                + (catalogFileRequest!=null ? catalogFileRequest.getDirUri().toString():""));
+                    }finally {
+                        attemptNumber--;
+                    }
                 }
+                channel.basicAck(envelope.getDeliveryTag(), false);
             }
         };
         channel.basicConsume(workQueueName, false, consumer);

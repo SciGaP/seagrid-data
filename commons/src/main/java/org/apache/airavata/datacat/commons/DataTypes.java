@@ -18,42 +18,12 @@
  * under the License.
  *
 */
-package org.apache.airavata.datacat.worker.parsers.chem.gaussian;
+package org.apache.airavata.datacat.commons;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
+public class DataTypes {
 
-public class ParseGSCF2 {
-
-
-
-
-    public PrintStream temp; // contains epochs x fields
-
-
-
-
-    /** ----------------------------------------------
-     CONSTRUCTOR
-     */
-    public ParseGSCF2(String temporary) throws IOException {
-        temp = new PrintStream(new FileOutputStream(temporary));
-    }
-
-
-
-
-    /** --------------------------------------------------------
-     */
-    public void putField(String s) {
-        temp.print(s);
-    }
-    public void putField(int k) {
-        temp.print(k);
-    }
-    public void putField(float f) {
-        temp.println(f);
-    }
-
+    public static String APPLICATION_GAUSSIAN = "application/gaussian";
+    public static String APPLICATION_GAMESS = "application/gamess";
+    public static String APPLICATION_MOLPRO = "application/molpro";
+    public static String APPLICATION_NWCHEM = "application/nwchem";
 }

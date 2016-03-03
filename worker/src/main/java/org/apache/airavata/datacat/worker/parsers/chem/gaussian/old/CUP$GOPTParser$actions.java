@@ -18,7 +18,9 @@
  * under the License.
  *
 */
-package org.apache.airavata.datacat.worker.parsers.chem.gaussian;
+package org.apache.airavata.datacat.worker.parsers.chem.gaussian.old;
+
+import org.apache.airavata.datacat.worker.parsers.chem.gaussian.DefaultGaussianParser;
 
 import javax.swing.*;
 import java.io.File;
@@ -56,9 +58,9 @@ public class CUP$GOPTParser$actions {
      */
     CUP$GOPTParser$actions(GOPTParser parser) throws IOException {
         this.parser = parser;
-        temp1 = new ParseGSCF2(System.getProperty("java.io.tmpdir") + File.separator + MainGaussianParser.randomNum + "Energy_data");
-        temp2 = new ParseGSCF2(System.getProperty("java.io.tmpdir") + File.separator + MainGaussianParser.randomNum + "temporary2");
-        temp3 = new ParseGSCF2(System.getProperty("java.io.tmpdir") + File.separator + MainGaussianParser.randomNum + "temporary3");
+        temp1 = new ParseGSCF2(System.getProperty("java.io.tmpdir") + File.separator + DefaultGaussianParser.randomNum + "Energy_data");
+        temp2 = new ParseGSCF2(System.getProperty("java.io.tmpdir") + File.separator + DefaultGaussianParser.randomNum + "temporary2");
+        temp3 = new ParseGSCF2(System.getProperty("java.io.tmpdir") + File.separator + DefaultGaussianParser.randomNum + "temporary3");
 
         temp1.putField("TitleText: Energy versus Iteration" + "\n");
         temp1.putField("XLabel: Iteration\n YLabel: Energy\n");

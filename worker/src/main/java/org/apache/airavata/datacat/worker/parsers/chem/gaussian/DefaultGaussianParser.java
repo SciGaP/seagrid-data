@@ -22,6 +22,7 @@ package org.apache.airavata.datacat.worker.parsers.chem.gaussian;
 
 import org.apache.airavata.datacat.worker.parsers.IParser;
 import org.apache.airavata.datacat.worker.parsers.ParserException;
+import org.apache.airavata.datacat.worker.parsers.chem.gaussian.old.*;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.slf4j.Logger;
@@ -31,9 +32,9 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class MainGaussianParser implements IParser {
+public class DefaultGaussianParser implements IParser {
 
-    private final static Logger logger = LoggerFactory.getLogger(MainGaussianParser.class);
+    private final static Logger logger = LoggerFactory.getLogger(DefaultGaussianParser.class);
 
     private final String outputFileName = "gaussian-output.json";
 
@@ -42,7 +43,7 @@ public class MainGaussianParser implements IParser {
 
     //FIXME We Should Develop a Proper Parsing Library(Ideally Using Java)
     @SuppressWarnings("unchecked")
-    public JSONObject parse(String dir, Map<String, Object> inputMetadata) throws Exception {
+    public JSONObject parse(JSONObject finalObj, String dir, Map<String, Object> inputMetadata) throws Exception {
         try{
             if(!dir.endsWith(File.separator)){
                 dir += File.separator;
@@ -56,12 +57,7 @@ public class MainGaussianParser implements IParser {
             if(gaussianOutputFile == null){
                 throw new Exception("Could not find the gaussian output file");
             }
-
-            int iteration = MAX_NUM_OF_RETRIES;
             File outputFile = null;
-            while(iteration > 0){
-                iteration--;
-
                 //FIXME Move the hardcoded script to some kind of configuration
                 Process proc = Runtime.getRuntime().exec(
                         "docker run -t --env LD_LIBRARY_PATH=/usr/local/lib -v " +
@@ -80,9 +76,6 @@ public class MainGaussianParser implements IParser {
                 }
 
                 outputFile = new File(dir + outputFileName);
-                if(outputFile.exists())
-                    break;
-            }
 
             if(outputFile!=null && outputFile.exists()){
                 JSONObject temp = new JSONObject(new JSONTokener(new FileReader(dir + outputFileName)));
@@ -91,7 +84,6 @@ public class MainGaussianParser implements IParser {
                     temp.put(key, inputMetadata.get(key));
                 });
 
-                JSONObject finalObj = new JSONObject();
                 finalObj.put("Id", inputMetadata.get("Id"));
                 finalObj.put("ExperimentName", inputMetadata.get("ExperimentName"));
                 finalObj.put("ProjectName", inputMetadata.get("ProjectName"));
@@ -299,7 +291,6 @@ public class MainGaussianParser implements IParser {
 
             throw new Exception("Could not parse data");
         }catch (Exception ex){
-            logger.error(ex.getMessage(), ex);
             throw new ParserException(ex);
         }
     }
@@ -315,12 +306,12 @@ public class MainGaussianParser implements IParser {
 
         // concatenate runtyp1  and runtype2 into runtype
         InputStream mylist1a = new FileInputStream(System.getProperty("java.io.tmpdir")
-                + File.separator + MainGaussianParser.randomNum +"runtype1");
+                + File.separator + DefaultGaussianParser.randomNum +"runtype1");
         InputStream mylist2a = new FileInputStream(System.getProperty("java.io.tmpdir")
-                + File.separator + MainGaussianParser.randomNum +"runtype2");
+                + File.separator + DefaultGaussianParser.randomNum +"runtype2");
         SequenceInputStream str4a = new SequenceInputStream(mylist1a, mylist2a);
         PrintStream temp4a = new PrintStream(new FileOutputStream(System.getProperty("java.io.tmpdir")
-                + File.separator + MainGaussianParser.randomNum +"runtype"));
+                + File.separator + DefaultGaussianParser.randomNum +"runtype"));
 
         int ccc1;
         while ((ccc1 = str4a.read()) != -1)
@@ -328,7 +319,7 @@ public class MainGaussianParser implements IParser {
 
         // read the runtype file
         FileInputStream fis = new FileInputStream(System.getProperty("java.io.tmpdir")
-                + File.separator + MainGaussianParser.randomNum +"runtype");
+                + File.separator + DefaultGaussianParser.randomNum +"runtype");
         DataInputStream dis = new DataInputStream(new BufferedInputStream(fis));
         String record = dis.readLine();
         String record1 = String.valueOf(new char[]{'o', 'p', 't', 'R', 'H', 'F'});
@@ -353,7 +344,7 @@ public class MainGaussianParser implements IParser {
             goptParser.parse();
 
             BufferedReader reader = new BufferedReader(new FileReader(System.getProperty("java.io.tmpdir") + File.separator
-                    + MainGaussianParser.randomNum+"temporary2"));
+                    + DefaultGaussianParser.randomNum+"temporary2"));
             String temp = reader.readLine();
             while(!temp.startsWith("DataSet:")){
                 temp = reader.readLine();
@@ -373,7 +364,7 @@ public class MainGaussianParser implements IParser {
             returnArr[1] = values.toArray(new Double[values.size()]);
 
             reader = new BufferedReader(new FileReader(System.getProperty("java.io.tmpdir") + File.separator
-                    + MainGaussianParser.randomNum+"temporary3"));
+                    + DefaultGaussianParser.randomNum+"temporary3"));
             temp = reader.readLine();
             while(!temp.startsWith("DataSet:")){
                 temp = reader.readLine();
@@ -387,7 +378,7 @@ public class MainGaussianParser implements IParser {
             returnArr[2] = values.toArray(new Double[values.size()]);
 
             reader = new BufferedReader(new FileReader(System.getProperty("java.io.tmpdir") + File.separator
-                    + MainGaussianParser.randomNum+"Energy_data"));
+                    + DefaultGaussianParser.randomNum+"Energy_data"));
             temp = reader.readLine();
             while(!temp.startsWith("DataSet:")){
                 temp = reader.readLine();

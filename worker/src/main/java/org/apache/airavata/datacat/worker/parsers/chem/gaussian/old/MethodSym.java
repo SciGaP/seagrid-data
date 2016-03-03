@@ -1,4 +1,4 @@
-package org.apache.airavata.datacat.worker.parsers.chem.gaussian;
+package org.apache.airavata.datacat.worker.parsers.chem.gaussian.old;
 /*Copyright (c) 2004,University of Illinois at Urbana-Champaign.  All rights reserved.
 
 Developed by:

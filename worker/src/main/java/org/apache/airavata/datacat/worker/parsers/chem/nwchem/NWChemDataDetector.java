@@ -18,12 +18,18 @@
  * under the License.
  *
 */
-package org.apache.airavata.datacat.worker.parsers;
+package org.apache.airavata.datacat.worker.parsers.chem.nwchem;
 
 import org.apache.airavata.datacat.commons.CatalogFileRequest;
+import org.apache.airavata.datacat.worker.parsers.IDataDetector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.List;
+public class NWChemDataDetector implements IDataDetector {
+    private final static Logger logger = LoggerFactory.getLogger(NWChemDataDetector.class);
 
-public interface IParserResolver {
-    List<IParser> resolveParser(String localDirPath, CatalogFileRequest catalogFileRequest) throws Exception;
+    @Override
+    public boolean detectData(String localDirPath, CatalogFileRequest catalogFileRequest) throws Exception {
+        return false;
+    }
 }

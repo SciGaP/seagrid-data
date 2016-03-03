@@ -18,12 +18,29 @@
  * under the License.
  *
 */
-package org.apache.airavata.datacat.worker.parsers;
+package org.apache.airavata.datacat.worker.parsers.chem.gaussian;
 
-import org.apache.airavata.datacat.commons.CatalogFileRequest;
+import org.apache.airavata.datacat.worker.parsers.IParser;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.List;
+import java.util.Map;
 
-public interface IParserResolver {
-    List<IParser> resolveParser(String localDirPath, CatalogFileRequest catalogFileRequest) throws Exception;
+public class GaussianInputParser implements IParser{
+    private final static Logger logger = LoggerFactory.getLogger(GaussianInputParser.class);
+
+    /**
+     * Input File should exist within the specified working directory
+     *
+     * @param dir
+     * @param inputMetadata
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public JSONObject parse(JSONObject finalObj, String dir, Map<String, Object> inputMetadata) throws Exception {
+
+        return finalObj;
+    }
 }

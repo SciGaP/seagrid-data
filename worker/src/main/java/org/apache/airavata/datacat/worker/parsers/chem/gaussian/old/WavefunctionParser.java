@@ -4,7 +4,7 @@
 // Tue Oct 03 11:18:10 CDT 2006
 //----------------------------------------------------
 
-package org.apache.airavata.datacat.worker.parsers.chem.gaussian;
+package org.apache.airavata.datacat.worker.parsers.chem.gaussian.old;
 
 import java.util.Stack;
 

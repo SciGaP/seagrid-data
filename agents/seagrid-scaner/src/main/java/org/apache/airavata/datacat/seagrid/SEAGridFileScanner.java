@@ -21,7 +21,7 @@
 package org.apache.airavata.datacat.seagrid;
 
 import org.apache.airavata.datacat.commons.CatalogFileRequest;
-import org.apache.airavata.datacat.commons.FileTypes;
+import org.apache.airavata.datacat.commons.DataTypes;
 import org.apache.airavata.datacat.commons.messaging.WorkQueuePublisher;
 import org.apache.airavata.datacat.seagrid.util.SEAGridFileScanerProperties;
 import org.slf4j.Logger;
@@ -139,7 +139,7 @@ public class SEAGridFileScanner {
             inputMetadata.put("ExperimentName", (Paths.get(new URI(temp)).getFileName()));
             inputMetadata.put("ProjectName", (Paths.get(new URI(temp)).getParent().getFileName()));
             catalogFileRequest.setIngestMetadata(inputMetadata);
-            catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAUSSIAN);
+            catalogFileRequest.setMimeType(DataTypes.APPLICATION_GAUSSIAN);
 
             workQueuePublisher.publishMessage(catalogFileRequest);
             temp = reader.readLine();
