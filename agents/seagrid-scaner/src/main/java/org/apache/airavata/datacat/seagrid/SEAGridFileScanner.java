@@ -22,13 +22,13 @@ package org.apache.airavata.datacat.seagrid;
 
 import org.apache.airavata.datacat.commons.CatalogFileRequest;
 import org.apache.airavata.datacat.commons.FileTypes;
-import org.apache.airavata.datacat.worker.DataCatWorker;
+import org.apache.airavata.datacat.commons.messaging.WorkQueuePublisher;
+import org.apache.airavata.datacat.seagrid.util.SEAGridFileScanerProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.HashMap;
 
@@ -38,10 +38,18 @@ public class SEAGridFileScanner {
 
     private static final String fileName = "output-files.txt";
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
+    public static final String DATACAT_RABBITMQ_BROKER_URL = "datacat.rabbitmq.broker.url";
+    public static final String DATACAT_RABBITMQ_WORK_QUEUE_NAME = "datacat.rabbitmq.work.queue.name";
+
+    private static final String datacatBrokerUrl = SEAGridFileScanerProperties.getInstance().getProperty(DATACAT_RABBITMQ_BROKER_URL, "");
+    private static final String datacatWorkQueueName = SEAGridFileScanerProperties.getInstance().getProperty(DATACAT_RABBITMQ_WORK_QUEUE_NAME, "");
+
+    public static void main(String[] args) throws Exception {
         int skipLinesCount = 0;
         String filePathProtocol = "file://";
         String dataRootPath = "/home/datacat/data";
+
+        WorkQueuePublisher workQueuePublisher = new WorkQueuePublisher(datacatBrokerUrl, datacatWorkQueueName);
         if(args.length >0 ) {
             String arg0 = args[0];
             if (arg0 != null && !arg0.isEmpty()) {
@@ -118,7 +126,6 @@ public class SEAGridFileScanner {
             reader.readLine();
             skipLinesCount--;
         }
-        DataCatWorker worker = new DataCatWorker();
         String temp = reader.readLine();
         while(temp != null && !temp.isEmpty()){
             logger.info("Publishing metadata for " + temp);
@@ -133,7 +140,8 @@ public class SEAGridFileScanner {
             inputMetadata.put("ProjectName", (Paths.get(new URI(temp)).getParent().getFileName()));
             catalogFileRequest.setIngestMetadata(inputMetadata);
             catalogFileRequest.setMimeType(FileTypes.APPLICATION_GAUSSIAN);
-            worker.handle(catalogFileRequest);
+
+            workQueuePublisher.publishMessage(catalogFileRequest);
             temp = reader.readLine();
         }
     }

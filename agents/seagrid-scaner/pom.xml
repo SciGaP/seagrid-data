@@ -68,13 +68,13 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.airavata.datacat</groupId>
-            <artifactId>worker</artifactId>
+            <artifactId>commons</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.airavata.datacat</groupId>
-            <artifactId>commons</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <version>3.5.1</version>
         </dependency>
     </dependencies>
 </project>
