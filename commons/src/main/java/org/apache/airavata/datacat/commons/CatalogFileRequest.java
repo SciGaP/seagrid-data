@@ -21,12 +21,11 @@
 package org.apache.airavata.datacat.commons;
 
 import java.io.Serializable;
-import java.net.URI;
 import java.util.HashMap;
 
 public class CatalogFileRequest implements Serializable{
     private HashMap<String, Object> ingestMetadata;
-    private URI dirUri;
+    private String dirUri;
     private String mimeType;
 
     public HashMap<String, Object> getIngestMetadata() {
@@ -37,11 +36,11 @@ public class CatalogFileRequest implements Serializable{
         this.ingestMetadata = ingestMetadata;
     }
 
-    public URI getDirUri() {
+    public String getDirUri() {
         return dirUri;
     }
 
-    public void setDirUri(URI dirUri) {
+    public void setDirUri(String dirUri) {
         this.dirUri = dirUri;
     }
 

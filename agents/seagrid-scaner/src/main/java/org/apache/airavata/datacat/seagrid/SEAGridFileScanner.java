@@ -132,7 +132,7 @@ public class SEAGridFileScanner {
             temp = temp.split(" ")[1];
 
             CatalogFileRequest catalogFileRequest = new CatalogFileRequest();
-            catalogFileRequest.setDirUri(new URI(temp));
+            catalogFileRequest.setDirUri(temp);
             HashMap<String, Object> inputMetadata = new HashMap<>();
             inputMetadata.put("Id", (Paths.get(new URI(temp)).getFileName()));
             inputMetadata.put("Username", (Paths.get(new URI(temp)).getParent().getParent().getFileName()));

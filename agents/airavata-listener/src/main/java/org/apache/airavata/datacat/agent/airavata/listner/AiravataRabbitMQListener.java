@@ -21,10 +21,10 @@
 package org.apache.airavata.datacat.agent.airavata.listner;
 
 import org.apache.airavata.common.utils.ThriftUtils;
+import org.apache.airavata.datacat.agent.airavata.listner.util.ListenerProperties;
 import org.apache.airavata.datacat.commons.CatalogFileRequest;
 import org.apache.airavata.datacat.commons.DataTypes;
 import org.apache.airavata.datacat.commons.messaging.WorkQueuePublisher;
-import org.apache.airavata.datacat.agent.airavata.listner.util.ListenerProperties;
 import org.apache.airavata.messaging.core.MessageContext;
 import org.apache.airavata.messaging.core.MessageHandler;
 import org.apache.airavata.messaging.core.MessagingConstants;
@@ -37,7 +37,6 @@ import org.apache.thrift.TBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -101,8 +100,8 @@ public class AiravataRabbitMQListener {
                                     }
                                     CatalogFileRequest catalogFileRequest = new CatalogFileRequest();
                                     //FIXME
-                                    catalogFileRequest.setDirUri(new URI("scp://gw54.iu.xsede.org:"
-                                            + remoteFilePath));
+                                    catalogFileRequest.setDirUri("scp://gw54.iu.xsede.org:"
+                                            + remoteFilePath);
                                     HashMap<String, Object> inputMetadata = new HashMap<>();
                                     inputMetadata.put("Id", experimentModel.getExperimentId());
                                     inputMetadata.put("ExperimentId", experimentModel.getExperimentId());
@@ -136,8 +135,8 @@ public class AiravataRabbitMQListener {
                                     }
                                     CatalogFileRequest catalogFileRequest = new CatalogFileRequest();
                                     //FIXME
-                                    catalogFileRequest.setDirUri(new URI("scp://gw54.iu.xsede.org:"
-                                            + remoteFilePath));
+                                    catalogFileRequest.setDirUri("scp://gw54.iu.xsede.org:"
+                                            + remoteFilePath);
                                     HashMap<String, Object> inputMetadata = new HashMap<>();
                                     inputMetadata.put("Id", experimentModel.getExperimentId());
                                     inputMetadata.put("ExperimentId", experimentModel.getExperimentId());
@@ -162,8 +161,8 @@ public class AiravataRabbitMQListener {
                                     }
                                     CatalogFileRequest catalogFileRequest = new CatalogFileRequest();
                                     //FIXME
-                                    catalogFileRequest.setDirUri(new URI("scp://gw54.iu.xsede.org:"
-                                            + remoteFilePath));
+                                    catalogFileRequest.setDirUri("scp://gw54.iu.xsede.org:"
+                                            + remoteFilePath);
                                     HashMap<String, Object> inputMetadata = new HashMap<>();
                                     inputMetadata.put("Id", experimentModel.getExperimentId());
                                     inputMetadata.put("ExperimentId", experimentModel.getExperimentId());

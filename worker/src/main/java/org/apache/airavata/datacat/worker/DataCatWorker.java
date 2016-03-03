@@ -56,7 +56,7 @@ public class DataCatWorker {
     public void handle(CatalogFileRequest catalogFileRequest) throws Exception {
         String workingDir = null;
         String localDirPath = null;
-        URI uri = catalogFileRequest.getDirUri();
+        URI uri = new URI(catalogFileRequest.getDirUri());
         try {
             //Copying data to the local directory
             if (!uri.getScheme().contains("file")) {
