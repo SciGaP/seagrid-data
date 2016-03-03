@@ -27,7 +27,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URI;
 import java.util.HashMap;
 
 public class DataCatWorkerTest {
@@ -45,7 +44,7 @@ public class DataCatWorkerTest {
             ingestMetadata.put("Username", "scnakandala");
             catalogFileRequest.setIngestMetadata(ingestMetadata);
             catalogFileRequest.setMimeType(DataTypes.APPLICATION_GAUSSIAN);
-            catalogFileRequest.setDirUri(new URI("file://"+DataCatWorkerTest.class.getResource("/gaussian").getPath()));
+            catalogFileRequest.setDirUri("file://"+DataCatWorkerTest.class.getResource("/gaussian").getPath());
             datacatWorker.handle(catalogFileRequest);
         }catch (Exception ex){
             ex.printStackTrace();
