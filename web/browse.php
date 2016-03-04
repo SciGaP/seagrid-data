@@ -46,7 +46,6 @@
                 <div id="navbar" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li><a href="./search.php">Search</a></li>
-                        <li class="active"><a href="./browse.php">Directory Browser</a></li>
                     </ul>
                     <ul class="nav navbar-nav pull-right">
                         <li class="dropdown">
@@ -66,9 +65,14 @@
                 <div class="well-sm" id="tools">
                     <a class="btn btn-default" id="refresh-button"><i class="icon-refresh"></i> Refresh</a>
                 </div>
+
                 <!-- breadcrumb -->
                 <ol class="breadcrumb" id="breadcrumb"></ol>
                 <!-- file manager view -->
+                <div class="input-group"> <span class="input-group-addon">Filter</span>
+                    <input id="filter-text" type="text" class="form-control" placeholder="Search Here...">
+                </div>
+                <br/>
                 <table class="table table-hover table-condensed" id="filemanager"></table>
 
                 <!-- message box -->

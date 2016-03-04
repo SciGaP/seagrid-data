@@ -4,4 +4,4 @@
 /**
  * Data Repository Root Location
  */
-define("DATA_ROOT","/home/datacat/data/");
+define("DATA_ROOT","/Users/supun/");

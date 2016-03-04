@@ -77,6 +77,7 @@ function dir_click(path){
 function show_content(path, files) {
     PATH = path;
     set_breadcrumb();
+    $('#filter-text').val('');
 
     $('table#filemanager').empty();
 
@@ -86,11 +87,7 @@ function show_content(path, files) {
 
         if (f.folder) {
             f.icon = 'icon-folder-close';
-            f.name = '<a href="#" onclick=dir_click("' + f.link + '")>&nbsp;' + f.name + "</a>"
-            //f.name = $('<a />').attr('href', f.link).text(f.name).click(function (e) {
-            //    e.preventDefault();
-            //    browse($(e.target).attr('href'));
-            //});
+            f.name = '<a href="#" onclick=dir_click("' + f.link + '")>&nbsp;' + f.name + "</a>";
         } else {
             f.icon = 'icon-file';
             f.name = '<a href="./download.php?file=' + f.link + '">&nbsp;' + f.name + '</a>';
@@ -102,23 +99,28 @@ function show_content(path, files) {
             + '<td>' + f.date + '</td>'
             + '<td>' + f.perm + '</td>'
             + '</tr>';
-
-        //$('table#filemanager').append(
-        //    $('<tr />').append(
-        //        $('<td />').append('<i class="' + f.icon + '"></i> ', f.name),
-        //        $('<td />').text(f.size),
-        //        $('<td />').text(f.date),
-        //        $('<td />').text(f.perm)
-        //    )
-        //);
     }
     $('table#filemanager').html(html);
 }
 
 $('div#tools a#refresh-button').click(function (e) {
     browse(PATH);
+    $('#filter-text').val('');
 });
 
 $('div#tools a#clear-msgbox-button').click(function (e) {
     $('div#msgbox').empty();
+    $('#filter-text').val('');
+});
+
+$('#filter-text').keyup(function() {
+    var that = this;
+    $.each($('tr'),
+        function(i, val) {
+            if ($(val).text().indexOf($(that).val()) == -1) {
+                $('tr').eq(i).hide();
+            } else {
+                $('tr').eq(i).show();
+            }
+    });
 });
