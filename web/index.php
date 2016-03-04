@@ -30,6 +30,7 @@ session_start();
                     <ul class="nav navbar-nav">
                         <?php if(isset($_SESSION['username'])):?>
                             <li><a href="./search.php">Search</a></li>
+                            <li><a href="./browse.php">Directory Browser</a></li>
                         <?php endif; ?>
                     </ul>
                     <ul class="nav navbar-nav pull-right">
