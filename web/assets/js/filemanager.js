@@ -1,3 +1,5 @@
+var FILES;
+
 // -------------------------------------------------- MESSAGE BOX
 /**
  * add a message to the message box. context and type can be omitted.
@@ -78,23 +80,27 @@ function show_content(path, files) {
     PATH = path;
     set_breadcrumb();
     $('#filter-text').val('');
+    FILES = files;
+    show_table(files);
+}
 
+function show_table(files){
     $('table#filemanager').empty();
 
     html = "";
     for (var i = 0; i < files.length; i++) {
         var f = files[i];
-
+        var icon_class, name_link;
         if (f.folder) {
-            f.icon = 'icon-folder-close';
-            f.name = '<a href="#" onclick=dir_click("' + f.link + '")>&nbsp;' + f.name + "</a>";
+            icon_class = 'icon-folder-close';
+            name_link = '<a href="#" onclick=dir_click("' + f.link + '")>&nbsp;' + f.name + "</a>";
         } else {
-            f.icon = 'icon-file';
-            f.name = '<a href="./download.php?file=' + f.link + '">&nbsp;' + f.name + '</a>';
+            icon_class = 'icon-file';
+            name_link = '<a href="./download.php?file=' + f.link + '">&nbsp;' + f.name + '</a>';
         }
 
         html += '<tr>'
-            + '<td><i class="' + f.icon + '"></i>' + f.name + '</td>'
+            + '<td><i class="' + icon_class + '"></i>' + name_link + '</td>'
             + '<td>' + f.size + '</td>'
             + '<td>' + f.date + '</td>'
             + '<td>' + f.perm + '</td>'
@@ -113,14 +119,24 @@ $('div#tools a#clear-msgbox-button').click(function (e) {
     $('#filter-text').val('');
 });
 
+function file_filter(file){
+    var text = $('#filter-text').val();
+    if(file.link.indexOf(text) !== -1){
+        return true;
+    }
+    return false;
+}
+
 $('#filter-text').keyup(function() {
-    var that = this;
-    $.each($('tr'),
-        function(i, val) {
-            if ($(val).text().indexOf($(that).val()) == -1) {
-                $('tr').eq(i).hide();
-            } else {
-                $('tr').eq(i).show();
-            }
-    });
+    var files = FILES.filter(file_filter);
+    show_table(files);
+    //var that = this;
+    //$.each($('tr'),
+    //    function(i, val) {
+    //        if ($(val).text().indexOf($(that).val()) == -1) {
+    //            $('tr').eq(i).hide();
+    //        } else {
+    //            $('tr').eq(i).show();
+    //        }
+    //});
 });
