@@ -127,16 +127,10 @@ function file_filter(file){
     return false;
 }
 
-$('#filter-text').keyup(function() {
-    var files = FILES.filter(file_filter);
-    show_table(files);
-    //var that = this;
-    //$.each($('tr'),
-    //    function(i, val) {
-    //        if ($(val).text().indexOf($(that).val()) == -1) {
-    //            $('tr').eq(i).hide();
-    //        } else {
-    //            $('tr').eq(i).show();
-    //        }
-    //});
+$('#filter-text').on("keypress", function(e) {
+    if (e.keyCode == 13) {
+        var files = FILES.filter(file_filter);
+        show_table(files);
+        return false;
+    }
 });
