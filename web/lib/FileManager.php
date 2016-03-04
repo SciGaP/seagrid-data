@@ -14,8 +14,8 @@ class FileManager {
     /**
      * Takes a given path and prints the content in json format.
      */
-    public static function get_content($path) {
-
+    public static function get_content($dataRoot, $path) {
+        $path = $dataRoot . $path;
         $path = rtrim($path, '/');
 
         // get dir content
@@ -51,7 +51,7 @@ class FileManager {
                 );
             }
 
-            $files[$k]['link'] = str_replace('/Users/supun/', '', $v['path']);
+            $files[$k]['link'] = str_replace($dataRoot, '', $v['path']);
         }
 
         return json_encode(array('status' => 'ok', 'files' => $files));

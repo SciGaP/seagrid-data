@@ -15,12 +15,10 @@ if( $path == null || (0 !== strpos($path, $_SESSION['username']))){
     header('HTTP/1.0 403 Forbidden');
 }
 
-$path = DATA_ROOT . $path;
-
-if (!file_exists($path))
+if (!file_exists(DATA_ROOT . $path))
     echo FileManager::msg(False, "$path does not exist");
 
-if (is_dir($path))
-    echo FileManager::get_content($path);
+if (is_dir(DATA_ROOT . $path))
+    echo FileManager::get_content(DATA_ROOT, $path);
 else
-    echo file_get_contents($path);
+    echo file_get_contents(DATA_ROOT . $path);
