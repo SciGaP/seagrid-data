@@ -60,6 +60,17 @@ function browse(path) {
     });
 }
 
+
+/**
+ * handles click on anchor to a directory
+ * @param e
+ * @param path
+ */
+function dir_click(path){
+    browse(path);
+    return false;
+}
+
 /**
  * ajax success callback, set path and add content to table.
  */
@@ -69,30 +80,39 @@ function show_content(path, files) {
 
     $('table#filemanager').empty();
 
+    html = "";
     for (var i = 0; i < files.length; i++) {
         var f = files[i];
 
         if (f.folder) {
             f.icon = 'icon-folder-close';
-            f.name = $('<a />').attr('href', f.link).text(f.name).click(function (e) {
-                e.preventDefault();
-                browse($(e.target).attr('href'));
-            });
-            f.edit = '';
+            f.name = '<a href="#" onclick=dir_click("' + f.link + '")>&nbsp;' + f.name + "</a>"
+            //f.name = $('<a />').attr('href', f.link).text(f.name).click(function (e) {
+            //    e.preventDefault();
+            //    browse($(e.target).attr('href'));
+            //});
         } else {
             f.icon = 'icon-file';
-            f.name = '<a href="./download.php?file=' + f.link + '">' + f.name + '</a>';
+            f.name = '<a href="./download.php?file=' + f.link + '">&nbsp;' + f.name + '</a>';
         }
 
-        $('table#filemanager').append(
-            $('<tr />').append(
-                $('<td />').append('<i class="' + f.icon + '"></i> ', f.name),
-                $('<td />').text(f.size),
-                $('<td />').text(f.date),
-                $('<td />').text(f.perm)
-            )
-        );
+        html += '<tr>'
+            + '<td><i class="' + f.icon + '"></i>' + f.name + '</td>'
+            + '<td>' + f.size + '</td>'
+            + '<td>' + f.date + '</td>'
+            + '<td>' + f.perm + '</td>'
+            + '</tr>';
+
+        //$('table#filemanager').append(
+        //    $('<tr />').append(
+        //        $('<td />').append('<i class="' + f.icon + '"></i> ', f.name),
+        //        $('<td />').text(f.size),
+        //        $('<td />').text(f.date),
+        //        $('<td />').text(f.perm)
+        //    )
+        //);
     }
+    $('table#filemanager').html(html);
 }
 
 $('div#tools a#refresh-button').click(function (e) {
