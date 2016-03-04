@@ -1,4 +1,5 @@
 <?php
+    include 'config.php';
 
     //FIXME Time should be shown in locally
     date_default_timezone_set('America/Indianapolis');
@@ -24,10 +25,8 @@
               integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
         <!-- Optional theme -->
-        <link rel="stylesheet" href="css/search.css">
-        <!-- Query builder -->
-        <link rel="stylesheet" href="css/query-builder.default.min.css">
-        <link rel="stylesheet" href="css/bootstrap-datepicker.css">
+        <link rel="stylesheet" href="assets/css/browse.css" />
+
 
     </head>
     <body>
@@ -63,6 +62,17 @@
 
         <div class="container">
             <div class="center-content">
+                <br><br><br>
+                <div class="well-sm" id="tools">
+                    <a class="btn btn-default" id="refresh-button"><i class="icon-refresh"></i> Refresh</a>
+                </div>
+                <!-- breadcrumb -->
+                <ol class="breadcrumb" id="breadcrumb"></ol>
+                <!-- file manager view -->
+                <table class="table table-hover table-condensed" id="filemanager"></table>
+
+                <!-- message box -->
+                <div id="msgbox"></div>
 
             </div>
         </div><!-- /.container -->
@@ -72,5 +82,10 @@
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
                 integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+        <script src="assets/js/filemanager.js"></script>
+        <script type="text/javascript">
+            var PATH = '<?php echo $_SESSION['username']; ?>';
+            browse(PATH);
+        </script>
     </body>
 </html>

@@ -1,4 +1,6 @@
 <?php
+    include 'config.php';
+
     //FIXME Time should be shown in locally
     date_default_timezone_set('America/Indianapolis');
 
@@ -25,7 +27,7 @@
               integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
         <!-- Optional theme -->
-        <link rel="stylesheet" href="css/summary.css">
+        <link rel="stylesheet" href="assets/css/summary.css">
 
     </head>
     <body>
@@ -305,56 +307,56 @@
                         <?php if(isset($record['Files']['GaussianInputFile'])):?>
                             <tr>
                                 <td>Gaussian Input File</td>
-                                <td><a href=./download.php?file=<?php echo $record['Files']['GaussianInputFile']; ?>>
+                                <td><a href=./download.php?file=<?php echo str_replace(DATA_ROOT,'',$record['Files']['GaussianInputFile']); ?>>
                                     <?php echo basename($record['Files']['GaussianInputFile']); ?></a></td>
                             </tr>
                         <?php endif; ?>
                         <?php if(isset($record['Files']['GaussianOutputFile'])):?>
                             <tr>
                                 <td>Gaussian Output File</td>
-                                <td><a href=./download.php?file=<?php echo $record['Files']['GaussianOutputFile']; ?>>
+                                <td><a href=./download.php?file=<?php echo str_replace(DATA_ROOT,'',$record['Files']['GaussianOutputFile']); ?>>
                                         <?php echo basename($record['Files']['GaussianOutputFile']); ?></a></td>
                             </tr>
                         <?php endif; ?>
                         <?php if(isset($record['Files']['GaussianCheckpointFile'])):?>
                             <tr>
                                 <td>Gaussian Checkpoint File</td>
-                                <td><a href=./download.php?file=<?php echo $record['Files']['GaussianCheckpointFile']; ?>>
+                                <td><a href=./download.php?file=<?php echo str_replace(DATA_ROOT,'',$record['Files']['GaussianCheckpointFile']); ?>>
                                         <?php echo basename($record['Files']['GaussianCheckpointFile']); ?></a></td>
                             </tr>
                         <?php endif; ?>
                         <?php if(isset($record['Files']['GaussianFCheckpointFile'])):?>
                             <tr>
                                 <td>Gaussian Formatted Checkpoint File</td>
-                                <td><a href=./download.php?file=<?php echo $record['Files']['GaussianFCheckpointFile']; ?>>
+                                <td><a href=./download.php?file=<?php echo str_replace(DATA_ROOT,'',$record['Files']['GaussianFCheckpointFile']); ?>>
                                         <?php echo basename($record['Files']['GaussianFCheckpointFile']); ?></a></td>
                             </tr>
                         <?php endif; ?>
                         <?php if(isset($record['Files']['SDFStructureFile'])):?>
                             <tr>
                                 <td>SDF Structure File</td>
-                                <td><a href=./download.php?file=<?php echo $record['Files']['SDFStructureFile']; ?>>
+                                <td><a href=./download.php?file=<?php echo str_replace(DATA_ROOT,'',$record['Files']['SDFStructureFile']); ?>>
                                         <?php echo basename($record['Files']['SDFStructureFile']); ?></a></td>
                             </tr>
                         <?php endif; ?>
                         <?php if(isset($record['Files']['PDBStructureFile'])):?>
                             <tr>
                                 <td>PDB Structure File</td>
-                                <td><a href=./download.php?file=<?php echo $record['Files']['PDBStructureFile']; ?>>
+                                <td><a href=./download.php?file=<?php echo str_replace(DATA_ROOT,'',$record['Files']['PDBStructureFile']); ?>>
                                         <?php echo basename($record['Files']['PDBStructureFile']); ?></a></td>
                             </tr>
                         <?php endif; ?>
                         <?php if(isset($record['Files']['InChIFile'])):?>
                             <tr>
                                 <td>InChI File</td>
-                                <td><a href=./download.php?file=<?php echo $record['Files']['InChIFile']; ?>>
+                                <td><a href=./download.php?file=<?php echo str_replace(DATA_ROOT,'',$record['Files']['InChIFile']); ?>>
                                         <?php echo basename($record['Files']['InChIFile']); ?></a></td>
                             </tr>
                         <?php endif; ?>
                         <?php if(isset($record['Files']['SMILESFile'])):?>
                             <tr>
                                 <td>SMILES File</td>
-                                <td><a href=./download.php?file=<?php echo $record['Files']['SMILESFile']; ?>>
+                                <td><a href=./download.php?file=<?php echo str_replace(DATA_ROOT,'',$record['Files']['SMILESFile']); ?>>
                                         <?php echo basename($record['Files']['SMILESFile']); ?></a></td>
                             </tr>
                         <?php endif; ?>
@@ -408,8 +410,8 @@
         </div><!-- /.container -->
 
         <!--JSMol-->
-        <script src="./js/Three.js"></script>
-        <script src="./js/GLmol.js"></script>
+        <script src="assets/js/Three.js"></script>
+        <script src="assets/js/GLmol.js"></script>
         <!--JQuery MinJS-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <!-- Latest compiled and minified JavaScript -->

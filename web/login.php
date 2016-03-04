@@ -1,4 +1,5 @@
 <?php
+    include 'config.php';
     include './lib/OAuthManager.php';
 
     if(isset($_POST['username']) && isset($_POST['password'])){
@@ -32,7 +33,7 @@
               integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
         <!-- Optional theme -->
-        <link rel="stylesheet" href="css/login.css">
+        <link rel="stylesheet" href="assets/css/login.css">
 
     </head>
     <body>

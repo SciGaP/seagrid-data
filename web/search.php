@@ -1,5 +1,5 @@
 <?php
-
+    include 'config.php';
     //FIXME Time should be shown in locally
     date_default_timezone_set('America/Indianapolis');
 
@@ -47,10 +47,10 @@
               integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
         <!-- Optional theme -->
-        <link rel="stylesheet" href="css/search.css">
+        <link rel="stylesheet" href="assets/css/search.css">
         <!-- Query builder -->
-        <link rel="stylesheet" href="css/query-builder.default.min.css">
-        <link rel="stylesheet" href="css/bootstrap-datepicker.css">
+        <link rel="stylesheet" href="assets/css/query-builder.default.min.css">
+        <link rel="stylesheet" href="assets/css/bootstrap-datepicker.css">
 
     </head>
     <body>
@@ -144,9 +144,9 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
                 integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
         <!-- Query builder-->
-        <script src="./js/query-builder.standalone.js"></script>
-        <script src="./js/moment.min.js"></script>
-        <script src="./js/bootstrap-datepicker.js"></script>
+        <script src="assets/js/query-builder.standalone.js"></script>
+        <script src="assets/js/moment.min.js"></script>
+        <script src="assets/js/bootstrap-datepicker.js"></script>
 
         <script>
             $( document ).ready(function() {

@@ -1,4 +1,5 @@
 <?php
+include 'config.php';
 session_start();
 if(!isset($_SESSION['username'])){
     $home_url = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/index.php';
@@ -81,7 +82,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['figshare-code'])){
           integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
     <!-- Optional theme -->
-    <link rel="stylesheet" href="css/figshare.css">
+    <link rel="stylesheet" href="assets/css/figshare.css">
 
 </head>
 <body>

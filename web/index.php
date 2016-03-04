@@ -1,4 +1,5 @@
 <?php
+include 'config.php';
 session_start();
 ?>
 
@@ -9,7 +10,7 @@ session_start();
               integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
         <!-- Optional theme -->
-        <link rel="stylesheet" href="css/index.css">
+        <link rel="stylesheet" href="assets/css/index.css">
 
     </head>
     <body>
@@ -64,7 +65,7 @@ session_start();
                         data based on the results of configured post processing steps in the system.
                     </p>
                     <div align="middle">
-                        <img src="./images/data-catalog-overview.png" width="800" height="600">
+                        <img src="assets/img/data-catalog-overview.png" width="800" height="600">
                     </div>
                     <p style="color: red">N.B: This data is automatically extracted using a set of configured parsers and may contain errors.
                         Please report any issues in the <a href="https://issues.apache.org/jira/browse/AIRAVATA/?

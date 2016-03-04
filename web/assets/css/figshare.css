@@ -1,6 +1,11 @@
+@charset "UTF-8";
+
+/* -------------------------------------------------- MAIN */
 body {
+    background: #fff url(../img/bg.png);
     padding-top: 50px;
 }
+
 
 .center-content {
     padding: 40px 15px;
