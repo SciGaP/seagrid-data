@@ -124,62 +124,53 @@ public class SEAGridRunTimeAnalyserV2 {
                 calcTypeString = calcTypeString.toLowerCase().trim();
                 String[] t1 = calcTypeString.split(";");
                 for (String t2 : t1) {
-                    String[] t3 = t2.split(" ");
-                    for (String t4 : t3) {
-                        if(!t4.trim().isEmpty()) {
-                            if (uniqueKeywordMap.get(t4) != null) {
-                                uniqueKeywordMap.put(t4,
-                                        new AbstractMap.SimpleEntry<>(object.get("Id").toString(), uniqueKeywordMap.get(t4).getValue() + 1));
-                            } else {
-                                uniqueKeywordMap.put(t4, new AbstractMap.SimpleEntry<>(object.get("Id").toString(), 1));
-                            }
+                    if(!t2.trim().isEmpty()) {
+                        if (uniqueKeywordMap.get(t2) != null) {
+                            uniqueKeywordMap.put(t2,
+                                    new AbstractMap.SimpleEntry<>(object.get("Id").toString(), uniqueKeywordMap.get(t2).getValue() + 1));
+                        } else {
+                            uniqueKeywordMap.put(t2, new AbstractMap.SimpleEntry<>(object.get("Id").toString(), 1));
                         }
                     }
                 }
             }
         }
-//
-//        if (object.has("Calculation") && ((JSONObject) object.get("Calculation")).has("Methods")) {
-//            String methodsString = ((JSONObject) object.get("Calculation")).get("Methods").toString();
-//            if (methodsString != null && !methodsString.isEmpty()) {
-//                methodsString = methodsString.toLowerCase().trim();
-//                String[] t1 = methodsString.split(";");
-//                for (String t2 : t1) {
-//                    String[] t3 = t2.split(" ");
-//                    for (String t4 : t3) {
-//                        if(!t4.trim().isEmpty()) {
-//                            if (uniqueKeywordMap.get(t4) != null) {
-//                                uniqueKeywordMap.put(t4,
-//                                        new AbstractMap.SimpleEntry<>(object.get("Id").toString(), uniqueKeywordMap.get(t4).getValue() + 1));
-//                            } else {
-//                                uniqueKeywordMap.put(t4, new AbstractMap.SimpleEntry<>(object.get("Id").toString(), 1));
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
 
-//        if (object.has("Calculation") && ((JSONObject) object.get("Calculation")).has("Basis")) {
-//            String basisSetString = ((JSONObject) object.get("Calculation")).get("Basis").toString();
-//            if (basisSetString != null && !basisSetString.isEmpty()) {
-//                basisSetString = basisSetString.toLowerCase().trim();
-//                String[] t1 = basisSetString.split(";");
-//                for (String t2 : t1) {
-//                    String[] t3 = t2.split(" ");
-//                    for (String t4 : t3) {
-//                        if(!t4.trim().isEmpty()) {
-//                            if (uniqueKeywordMap.get(t4) != null) {
-//                                uniqueKeywordMap.put(t4,
-//                                        new AbstractMap.SimpleEntry<>(object.get("Id").toString(), uniqueKeywordMap.get(t4).getValue() + 1));
-//                            } else {
-//                                uniqueKeywordMap.put(t4, new AbstractMap.SimpleEntry<>(object.get("Id").toString(), 1));
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
+        if (object.has("Calculation") && ((JSONObject) object.get("Calculation")).has("Methods")) {
+            String methodsString = ((JSONObject) object.get("Calculation")).get("Methods").toString();
+            if (methodsString != null && !methodsString.isEmpty()) {
+                methodsString = methodsString.toLowerCase().trim();
+                String[] t1 = methodsString.split(";");
+                for (String t2 : t1) {
+                    if(!t2.trim().isEmpty()) {
+                        if (uniqueKeywordMap.get(t2) != null) {
+                            uniqueKeywordMap.put(t2,
+                                    new AbstractMap.SimpleEntry<>(object.get("Id").toString(), uniqueKeywordMap.get(t2).getValue() + 1));
+                        } else {
+                            uniqueKeywordMap.put(t2, new AbstractMap.SimpleEntry<>(object.get("Id").toString(), 1));
+                        }
+                    }
+                }
+            }
+        }
+
+        if (object.has("Calculation") && ((JSONObject) object.get("Calculation")).has("Basis")) {
+            String basisSetString = ((JSONObject) object.get("Calculation")).get("Basis").toString();
+            if (basisSetString != null && !basisSetString.isEmpty()) {
+                basisSetString = basisSetString.toLowerCase().trim();
+                String[] t1 = basisSetString.split(";");
+                for (String t2 : t1) {
+                    if(!t2.trim().isEmpty()) {
+                        if (uniqueKeywordMap.get(t2) != null) {
+                            uniqueKeywordMap.put(t2,
+                                    new AbstractMap.SimpleEntry<>(object.get("Id").toString(), uniqueKeywordMap.get(t2).getValue() + 1));
+                        } else {
+                            uniqueKeywordMap.put(t2, new AbstractMap.SimpleEntry<>(object.get("Id").toString(), 1));
+                        }
+                    }
+                }
+            }
+        }
 
         if (object.has("Calculation") && ((JSONObject) object.get("Calculation")).has("NBasis")) {
             String nBasisString = ((JSONObject) object.get("Calculation")).get("NBasis").toString();
@@ -218,26 +209,7 @@ public class SEAGridRunTimeAnalyserV2 {
             String memory = ((JSONObject) object.get("ExecutionEnvironment")).get("Memory").toString();
             if (memory != null && !memory.isEmpty()) {
                 memory = memory.toLowerCase();
-                if (memory.endsWith("gw")) {
-                    uniqueKeywordMap.put("memory",
-                            new AbstractMap.SimpleEntry<>(object.get("Id").toString(),
-                                    Integer.parseInt(memory.substring(0, memory.length() - 2)) * 1000 * 8));
-                } else if (memory.endsWith("gb")) {
-                    uniqueKeywordMap.put("memory",
-                            new AbstractMap.SimpleEntry<>(object.get("Id").toString(),
-                                    Integer.parseInt(memory.substring(0, memory.length() - 2)) * 1000));
-                } else if (memory.endsWith("mw")) {
-                    uniqueKeywordMap.put("memory",
-                            new AbstractMap.SimpleEntry<>(object.get("Id").toString(),
-                                    Integer.parseInt(memory.substring(0, memory.length() - 2)) * 8));
-                } else if (memory.endsWith("mb")) {
-                    uniqueKeywordMap.put("memory",
-                            new AbstractMap.SimpleEntry<>(object.get("Id").toString(),
-                                    Integer.parseInt(memory.substring(0, memory.length() - 2))));
-                }else{
-                    uniqueKeywordMap.put("memory",
-                            new AbstractMap.SimpleEntry<>(object.get("Id").toString(), 256));
-                }
+                uniqueKeywordMap.put("memory", new AbstractMap.SimpleEntry<>(object.get("Id").toString(), Integer.parseInt(memory.trim())));
             }
         }
 
@@ -249,8 +221,8 @@ public class SEAGridRunTimeAnalyserV2 {
             }
         }
 
-        if (object.has("ExecutionEnvironment") && ((JSONObject) object.get("ExecutionEnvironment")).has("JobCPURunTime")) {
-            String jobRunTime = ((JSONObject) object.get("ExecutionEnvironment")).get("JobCPURunTime").toString();
+        if (object.has("ExecutionEnvironment") && ((JSONObject) object.get("ExecutionEnvironment")).has("ActualJobRunTime")) {
+            String jobRunTime = ((JSONObject) object.get("ExecutionEnvironment")).get("ActualJobRunTime").toString();
             if (jobRunTime != null && !jobRunTime.isEmpty()) {
                 uniqueKeywordMap.put("runtime",
                         new AbstractMap.SimpleEntry<>(object.get("Id").toString(), (int) Double.parseDouble(jobRunTime.trim())));
