@@ -72,10 +72,4 @@ public class FileHelper {private final static Logger logger = LoggerFactory.getL
             throw new Exception("Unsupported file protocol");
         }
     }
-
-    public static void main(String[] args) throws Exception {
-        FileHelper fileHelper = new FileHelper();
-        fileHelper.createLocalCopyOfDir(new URI("scp://root@gw127.iu.xsede.org:/home/datacat/data/diaoyiju/" +
-                "diaoyiju_proj/CaCO3_Asp_pH11_14H2O_37out.comet.sdsc.xsede.org.1103012.151006/input.com"), "/Users/supun/Desktop");
-    }
 }

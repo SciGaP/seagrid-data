@@ -13,7 +13,7 @@
     $id = $_GET['id'];
     if(isset($id)){
         $record = json_decode(file_get_contents(
-            'http://gw127.iu.xsede.org:8000/query-api/get?username=' . $_SESSION['username'] . '&id=' . $id), true);
+            'http://' . SERVER_HOST . ':8000/query-api/get?username=' . $_SESSION['username'] . '&id=' . $id), true);
     }else{
         echo 'Id not set !!!';
     }

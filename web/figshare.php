@@ -30,7 +30,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['figshare-code'])){
     $temp = explode("/",json_decode($response)->location);
     $articleId = $temp[sizeof($temp)-1];
     $record = json_decode(file_get_contents(
-        'http://gw127.iu.xsede.org:8000/query-api/get?id=' . $id), true);
+        'http://' . SERVER_HOST . ':8000/query-api/get?id=' . $id), true);
     foreach($record['Files'] as $key=>$filePath){
         echo $filePath;
         $data = array($code, $filePath, $articleId);
@@ -51,7 +51,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['figshare-code'])){
             if(!isset($_GET['code']) && isset($_GET['id'])){
                 $key = "4ec77a6a3e1f6495690057fbca630441bca9a71b";
                 $authorizeUrl = "https://figshare.com/account/applications/authorize";
-                $redirectUrl = "https://gw127.iu.xsede.org/web/figshare.php";
+                $redirectUrl = "https://" . SERVER_HOST . "/web/figshare.php";
                 $url = $authorizeUrl . "?client_id=" . $key . "&response_type=code&scope=all&state=" . urlencode($_GET['id'])
                     . "&redirect_uri=" . $redirectUrl;
                 header('Location: ' . $url);

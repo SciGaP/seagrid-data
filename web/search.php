@@ -33,7 +33,7 @@
     }
     $offset = ($pageNo -1) * 50;
     $username = $_SESSION['username'];
-    $results = json_decode(file_get_contents('http://gw127.iu.xsede.org:8000/query-api/select?username='.$username.'&q='. urlencode($q)
+    $results = json_decode(file_get_contents('http://' . SERVER_HOST . ':8000/query-api/select?username='.$username.'&q='. urlencode($q)
         .'&limit=50&offset=' . $offset), true);
     if(!isset($results) || empty($results)){
         $results = array();

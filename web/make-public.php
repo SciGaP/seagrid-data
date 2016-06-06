@@ -9,7 +9,7 @@ $username = $_SESSION['username'];
 $id = $_GET['id'];
 $data ='username='. $username . '&id='. $id;
 $record = json_decode(file_get_contents(
-    'http://gw127.iu.xsede.org:8000/query-api/make-public?'.$data), true);
+    'http://' . SERVER_HOST . ':8000/query-api/make-public?'.$data), true);
 if($record != null) {
     $summary_url = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/summary.php?id=' . $id;
     header('Location: ' . $summary_url);
