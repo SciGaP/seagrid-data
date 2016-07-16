@@ -20,18 +20,13 @@
 */
 package org.apache.airavata.datacat.agent.airavata.listner;
 
-import org.apache.airavata.api.Airavata;
-import org.apache.airavata.datacat.agent.airavata.listner.util.ListenerProperties;
 import org.apache.airavata.model.error.AiravataClientException;
-import org.apache.airavata.model.error.AiravataErrorType;
 import org.apache.airavata.model.experiment.ExperimentModel;
-import org.apache.airavata.model.security.AuthzToken;
+import org.apache.airavata.registry.core.experiment.catalog.impl.RegistryFactory;
+import org.apache.airavata.registry.cpi.ExperimentCatalog;
+import org.apache.airavata.registry.cpi.ExperimentCatalogModelType;
+import org.apache.airavata.registry.cpi.RegistryException;
 import org.apache.thrift.TException;
-import org.apache.thrift.protocol.TBinaryProtocol;
-import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.transport.TSocket;
-import org.apache.thrift.transport.TTransport;
-import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,19 +34,7 @@ public class AiravataAPIClient {
 
     private final static Logger logger = LoggerFactory.getLogger(AiravataAPIClient.class);
 
-    public static final String AIRAVATA_HOST = "airavata.host";
-    public static final String AIRAVATA_PORT = "airavata.port";
-
     private static AiravataAPIClient instance;
-    private Airavata.Client airavataClient;
-
-    private AiravataAPIClient() throws AiravataClientException {
-        try {
-            this.airavataClient = createAiravataClient();
-        } catch (Exception e) {
-            throw new AiravataClientException(AiravataErrorType.UNKNOWN);
-        }
-    }
 
     public static AiravataAPIClient getInstance() throws AiravataClientException {
         if (AiravataAPIClient.instance == null) {
@@ -60,30 +43,14 @@ public class AiravataAPIClient {
         return AiravataAPIClient.instance;
     }
 
-    private Airavata.Client createAiravataClient() throws TTransportException {
-        String host = ListenerProperties.getInstance().getProperty(AIRAVATA_HOST, "");
-        int port = Integer.parseInt(ListenerProperties.getInstance().getProperty(AIRAVATA_PORT, ""));
-        TTransport transport = new TSocket(host, port);
-        transport.open();
-        TProtocol protocol = new TBinaryProtocol(transport);
-        return new Airavata.Client(protocol);
+    public ExperimentModel getExperiment(String experimentId) throws TException, RegistryException {
+        ExperimentCatalog experimentCatalog = RegistryFactory.getExperimentCatalog("seagrid");
+        return (ExperimentModel)experimentCatalog.get(ExperimentCatalogModelType.EXPERIMENT, experimentId);
     }
 
-    private Airavata.Client getClient() throws AiravataClientException, TTransportException {
-        try{
-            airavataClient.getAPIVersion(getAuthzToken());
-        } catch (Exception e) {
-            airavataClient = createAiravataClient();
-        }
-        return airavataClient;
+    public static void main(String[] args) throws TException, RegistryException {
+        AiravataAPIClient airavataAPIClient = new AiravataAPIClient();
+        airavataAPIClient.getExperiment("gdfsdfsd_e6c92acd-acc2-4b14-82c7-7221899d19ed");
     }
 
-    //FIXME
-    private AuthzToken getAuthzToken() {
-        return new AuthzToken(new AuthzToken("empty-token"));
-    }
-
-    public ExperimentModel getExperiment(String experimentId) throws TException {
-        return getClient().getExperiment(getAuthzToken(), experimentId);
-    }
 }

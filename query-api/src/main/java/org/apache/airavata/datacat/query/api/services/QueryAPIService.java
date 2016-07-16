@@ -37,11 +37,7 @@ public class QueryAPIService {
     private final static Logger logger = LoggerFactory.getLogger(QueryAPIService.class);
     public static final String QUERY_SERVER_VERSION = "0.1-SNAPSHOT";
 
-    private final IRegistry registry;
-
-    public QueryAPIService(){
-        registry = RegistryFactory.getRegistryImpl();
-    }
+    private static final IRegistry registry = RegistryFactory.getRegistryImpl();
 
     @GET
     @Path("/getAPIVersion")

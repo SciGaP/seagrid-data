@@ -363,11 +363,11 @@
                     </table>
                     <div class="btn-toolbar">
                         <?php if($record['Username'] == $_SESSION['username']): ?>
-                        <a href="./figshare.php?id=<?php echo $record['Id']?>" target="_self"
+                        <!--a href="./figshare.php?id=<?php echo $record['Id']?>" target="_self"
                            class="btn btn-primary"
                            role="button"
                            title="Publish the data and files to figshare" target="_blank">Upload Files to FigShare
-                        </a>
+                        </a-->
                         <?php endif; ?>
                         <?php if($record['Username'] == $_SESSION['username'] && (!isset($record['Shared']) || $record['Shared'] == false)): ?>
                         <a href="./make-public.php?id=<?php echo $record['Id']?>" target="_self"
