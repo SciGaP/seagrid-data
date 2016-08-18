@@ -101,7 +101,7 @@
                     <table class="table table-bordered">
                         <tr>
                             <th class="col-md-2">Experiment Name</th>
-                            <th class="col-md-2">Project Name</th>
+                            <th class="col-md-2">Owner Name</th>
                             <th class="col-md-2">Package</th>
                             <th class="col-md-2">Formula</th>
                             <th class="col-md-2">Indexed Time</th>
@@ -109,7 +109,7 @@
                         <tr>
                             <td><a href="./summary.php?id=<?php echo $result['Id']?>" target="_blank">
                                     <?php echo $result['ExperimentName']?></a></td>
-                            <td><?php echo $result['ProjectName']?></td>
+                            <td><?php echo $result['Username']?></td>
                             <td><?php echo $result['Calculation']['Package']?></td>
                             <td><?php echo $result['Molecule']['Formula']?></td>
                             <td>

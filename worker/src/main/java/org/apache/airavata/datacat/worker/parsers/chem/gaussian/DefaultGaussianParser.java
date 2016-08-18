@@ -129,6 +129,8 @@ public class DefaultGaussianParser implements IParser {
                         temp2.put("JobStatus", temp.get("JobStatus"));
                     }
                 }
+                if(temp.has("MoEnergies"))
+                    temp2.put("MoEnergies", temp.get("MoEnergies"));
                 finalObj.put("Calculation", temp2);
 
                 temp2 = new JSONObject();
