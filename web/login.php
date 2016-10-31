@@ -23,7 +23,14 @@
         }catch (Exception $ex){
             $loginFailed = true;
         }
-   }
+    }elseif(isset($_GET['code']) && !empty($_GET['code'])){
+            $oauthManager = new OAuthManager();
+            $profile = $oauthManager->getUserProfile($_GET['code']);
+            session_start();
+            $_SESSION['username'] = $profile->sub;
+            $home_url = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/index.php';
+            header('Location: ' . $home_url);
+    }
 ?>
 
 <html>
