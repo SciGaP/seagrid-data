@@ -40,6 +40,7 @@ public class SEAGridFileScanner {
 
     public static final String DATACAT_RABBITMQ_BROKER_URL = "datacat.rabbitmq.broker.url";
     public static final String DATACAT_RABBITMQ_WORK_QUEUE_NAME = "datacat.rabbitmq.work.queue.name";
+    public static final String DATA_ROOT_PATH = "data.root.path";
 
     private static final String datacatBrokerUrl = SEAGridFileScanerProperties.getInstance().getProperty(DATACAT_RABBITMQ_BROKER_URL, "");
     private static final String datacatWorkQueueName = SEAGridFileScanerProperties.getInstance().getProperty(DATACAT_RABBITMQ_WORK_QUEUE_NAME, "");
@@ -47,7 +48,7 @@ public class SEAGridFileScanner {
     public static void main(String[] args) throws Exception {
         int skipLinesCount = 0;
         String filePathProtocol = "file://";
-        String dataRootPath = "/home/datacat/data";
+        String dataRootPath = SEAGridFileScanerProperties.getInstance().getProperty(DATA_ROOT_PATH, "");
 
         WorkQueuePublisher workQueuePublisher = new WorkQueuePublisher(datacatBrokerUrl, datacatWorkQueueName);
         if(args.length >0 ) {
