@@ -83,7 +83,8 @@ public class SEAGridFileScanner {
                         String experimentDirName = expDir.getName();
 
                         for(File outputFile : expDir.listFiles()){
-                            if(outputFile.getName().endsWith(".out")){
+                            if(outputFile.getName().endsWith(".out")
+                                    || outputFile.getName().endsWith(".log")){
                                 try {
                                     BufferedReader reader = new BufferedReader(new FileReader(outputFile));
                                     String temp = reader.readLine();

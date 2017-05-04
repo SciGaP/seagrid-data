@@ -20,14 +20,9 @@
 */
 package org.apache.airavata.datacat.seagrid.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.*;
 
 public class SEAGridFileScanerProperties {
-
-    private final static Logger logger = LoggerFactory.getLogger(SEAGridFileScanerProperties.class);
 
     public static final String LISTENER_SCANNER_FILE = "../conf/seagrid-scanner.properties";
     public static final String DEFAULT_SCANNER_PROPERTY_FILE = "conf/seagrid-scanner.properties";
@@ -41,9 +36,9 @@ public class SEAGridFileScanerProperties {
             InputStream fileInput;
             if (new File(LISTENER_SCANNER_FILE).exists()) {
                 fileInput = new FileInputStream(LISTENER_SCANNER_FILE);
-                logger.info("Using configured seagrid scaner (seagrid-scanner.properties) file");
+                System.out.println("Using configured seagrid scaner (seagrid-scanner.properties) file");
             } else {
-                logger.info("Using default seagrid scaner property (seagrid-scaner) file");
+                System.out.println("Using default seagrid scaner property (seagrid-scaner) file");
                 fileInput = ClassLoader.getSystemResource(DEFAULT_SCANNER_PROPERTY_FILE).openStream();
             }
             java.util.Properties properties = new java.util.Properties();
