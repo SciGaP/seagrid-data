@@ -1,4 +1,6 @@
 <?php
+include '../config.php';
+
 class OAuthManager
 {
 
@@ -13,8 +15,8 @@ class OAuthManager
 
     public function __construct()
     {
-        $serverUrl = 'https://idp.scigap.org:9443/';
-        $this->_AuthorizeUrl  = $serverUrl . "oauth2/authorize";
+        $serverUrl = ;
+        $this->_AuthorizeUrl  = WSO2_IS_URL;
         $this->_LogoutUrl  = $serverUrl . "commonauth?commonAuthLogout=true&type=oidc2&sessionDataKey=7fa50562-2d0f-4234-8e39-8a7271b9b273";
         $this->_AccessTokenUrl  = $serverUrl . "oauth2/token";
         $this->_UserInfoUrl = $serverUrl . "oauth2/userinfo?schema=openid";

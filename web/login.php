@@ -7,10 +7,10 @@
         $password = $_POST['password'];
 
         //Todo verify login
-        $fullUsername = $username . '@prod.seagrid';
+        $fullUsername = $username . '@' . WSO2_IS_TENANT;
         $oauthManager = new OAuthManager();
         try{
-            $token = $oauthManager->getAccessTokenFromPasswordGrantType('y7xgdnNUx6ifOswJTPcqtzw4aOEa', 'CgfbuupAPhaOBSBPSScZUWHNANwa',
+            $token = $oauthManager->getAccessTokenFromPasswordGrantType( WSO2_IS_OAUTH_CLIENT_ID, WSO2_IS_OAUTH_CLIENT_SECRET,
                 $fullUsername, $password);
             if($token != null && isset($token->access_token)){
                 session_start();
