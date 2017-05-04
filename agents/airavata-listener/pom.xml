@@ -18,8 +18,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.airavata</groupId>
-            <artifactId>airavata-registry-core</artifactId>
-            <version>0.17-SNAPSHOT</version>
+            <artifactId>registry-api-stubs</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.airavata</groupId>

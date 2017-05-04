@@ -44,6 +44,21 @@
                 <version>${airavata.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.airavata</groupId>
+                <artifactId>airavata-registry-core</artifactId>
+                <version>${airavata.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.airavata</groupId>
+                <artifactId>airavata-commons</artifactId>
+                <version>${airavata.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.airavata</groupId>
+                <artifactId>registry-api-stubs</artifactId>
+                <version>${airavata.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.json</groupId>
                 <artifactId>json</artifactId>
                 <version>20151123</version>

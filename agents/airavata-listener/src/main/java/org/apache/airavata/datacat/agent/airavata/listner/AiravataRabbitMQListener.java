@@ -43,7 +43,7 @@ import java.util.Map;
 
 public class AiravataRabbitMQListener {
     private final static Logger logger = LoggerFactory.getLogger(AiravataRabbitMQListener.class);
-    public static final String AIRAVATA_RABBITMQ_BROKER_URL = "airavata,rabbitmq.broker.url";
+    public static final String AIRAVATA_RABBITMQ_BROKER_URL = "airavata.rabbitmq.broker.url";
     public static final String AIRAVATA_RABBITMQ_EXCHANGE_NAME = "airavata.rabbitmq.exchange.name";
     private static final String EXPERIMENT_COMPLETED_STATE = "COMPLETED";
 
