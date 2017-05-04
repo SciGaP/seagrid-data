@@ -46,6 +46,13 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>../registry/src/main/resources/conf</directory>
+            <outputDirectory>conf</outputDirectory>
+            <includes>
+                <include>datacat-registry.properties</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>src/main/resources</directory>
             <outputDirectory>conf</outputDirectory>
             <includes>
