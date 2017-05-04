@@ -14,10 +14,6 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.airavata</groupId>
-            <artifactId>airavata-messaging-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.airavata</groupId>
             <artifactId>airavata-data-models</artifactId>
         </dependency>
         <dependency>

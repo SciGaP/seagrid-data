@@ -21,14 +21,14 @@
 package org.apache.airavata.datacat.agent.airavata.listner;
 
 import org.apache.airavata.common.utils.ThriftUtils;
+import org.apache.airavata.datacat.agent.airavata.listner.rabbitmq.MessageContext;
+import org.apache.airavata.datacat.agent.airavata.listner.rabbitmq.MessageHandler;
+import org.apache.airavata.datacat.agent.airavata.listner.rabbitmq.MessagingConstants;
+import org.apache.airavata.datacat.agent.airavata.listner.rabbitmq.RabbitMQStatusConsumer;
 import org.apache.airavata.datacat.agent.airavata.listner.util.ListenerProperties;
 import org.apache.airavata.datacat.commons.CatalogFileRequest;
 import org.apache.airavata.datacat.commons.DataTypes;
 import org.apache.airavata.datacat.commons.messaging.WorkQueuePublisher;
-import org.apache.airavata.messaging.core.MessageContext;
-import org.apache.airavata.messaging.core.MessageHandler;
-import org.apache.airavata.messaging.core.MessagingConstants;
-import org.apache.airavata.messaging.core.impl.RabbitMQStatusConsumer;
 import org.apache.airavata.model.experiment.ExperimentModel;
 import org.apache.airavata.model.messaging.event.ExperimentStatusChangeEvent;
 import org.apache.airavata.model.messaging.event.MessageType;
@@ -64,6 +64,7 @@ public class AiravataRabbitMQListener {
             RabbitMQStatusConsumer consumer = new RabbitMQStatusConsumer(airavataBrokerUrl, exchangeName);
 
             WorkQueuePublisher workQueuePublisher = new WorkQueuePublisher(datacatBrokerUrl, datacatWorkQueueName);
+
             consumer.listen(new MessageHandler() {
                 @Override
                 public Map<String, Object> getProperties() {
@@ -80,6 +81,7 @@ public class AiravataRabbitMQListener {
                     props.put(MessagingConstants.RABBIT_ROUTING_KEY, routingKeys);
                     return props;
                 }
+
 
                 @Override
                 public void onMessage(MessageContext message) {
