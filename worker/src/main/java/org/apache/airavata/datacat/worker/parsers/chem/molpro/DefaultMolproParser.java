@@ -53,7 +53,7 @@ public class DefaultMolproParser implements IParser {
 
                 //FIXME Move the hardcoded script to some kind of configuration
                 Process proc = Runtime.getRuntime().exec(
-                        "docker run -t --env LD_LIBRARY_PATH=/usr/local/lib -v " +
+                        "docker run -t --rm=true --env LD_LIBRARY_PATH=/usr/local/lib -v " +
                                 dir +":/datacat/working-dir scnakandala/datacat-chem python" +
                                 " /datacat/molpro.py /datacat/working-dir/"
                                 + inputFileName +" /datacat/working-dir/" + outputFileName);
