@@ -7,10 +7,10 @@
         $password = $_POST['password'];
 
         //Todo verify login
-        $fullUsername = $username . '@' . WSO2_IS_TENANT;
+        $fullUsername = $username;
         $oauthManager = new OAuthManager();
         try{
-            $token = $oauthManager->getAccessTokenFromPasswordGrantType( WSO2_IS_OAUTH_CLIENT_ID, WSO2_IS_OAUTH_CLIENT_SECRET,
+            $token = $oauthManager->getAccessTokenFromPasswordGrantType( IS_OAUTH_CLIENT_ID, IS_OAUTH_CLIENT_SECRET,
                 $fullUsername, $password);
             if($token != null && isset($token->access_token)){
                 session_start();
@@ -26,10 +26,13 @@
     }elseif(isset($_GET['code']) && !empty($_GET['code'])){
             $oauthManager = new OAuthManager();
             $profile = $oauthManager->getUserProfile($_GET['code']);
-            session_start();
-            $_SESSION['username'] = $profile->sub;
-            $home_url = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/index.php';
-            header('Location: ' . $home_url);
+            if(isset($profile->preferred_username)){
+                session_start();
+                $_SESSION['username'] = $profile->preferred_username;
+                $home_url = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/index.php';
+                header('Location: ' . $home_url);
+            }
+            $loginFailed = true;
     }
 ?>
 

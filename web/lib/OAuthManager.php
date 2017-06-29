@@ -1,5 +1,5 @@
 <?php
-include '../config.php';
+include_once __DIR__ . '/../config.php';
 
 class OAuthManager
 {
@@ -15,19 +15,14 @@ class OAuthManager
 
     public function __construct()
     {
-        $serverUrl = ;
-        $this->_AuthorizeUrl  = WSO2_IS_URL;
-        $this->_LogoutUrl  = $serverUrl . "commonauth?commonAuthLogout=true&type=oidc2&sessionDataKey=7fa50562-2d0f-4234-8e39-8a7271b9b273";
-        $this->_AccessTokenUrl  = $serverUrl . "oauth2/token";
-        $this->_UserInfoUrl = $serverUrl . "oauth2/userinfo?schema=openid";
+        $serverUrl = IS_URL;
+        $this->_AuthorizeUrl  = IS_URL;
+        $this->_LogoutUrl  = $serverUrl . "/auth/realms/" . IS_TENANT . "/protocol/openid-connect/logout";
+        $this->_AccessTokenUrl  = $serverUrl . "/auth/realms/" . IS_TENANT . "/protocol/openid-connect/token";
+        $this->_UserInfoUrl = $serverUrl . "/auth/realms/" . IS_TENANT . "/protocol/openid-connect/userinfo";
         $this->_verifyPeer = false;
         $this->CurlHeaders = array();
         $this->ResponseCode = 0;
-    }
-
-    public function requestAccessCode($client_id, $redirect_url)
-    {
-        return ($this->_AuthorizeUrl . "?client_id=" . $client_id . "&response_type=code&scope=openid&redirect_uri=" . $redirect_url);
     }
 
     // Convert an authorization code from callback into an access token.

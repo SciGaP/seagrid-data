@@ -8,10 +8,10 @@ define("DATA_ROOT","/home/datacat/data/");
 
 define("SERVER_HOST", "data.seagrid.org");
 
-define("WSO2_IS_URL", "https://idp.scigap.org:9443/")
+define("IS_URL", "https://iamdev.scigap.org");
 
-define("WSO2_IS_TENANT", "prod.seagrid")
+define("IS_TENANT", "seagrid");
 
-define("WSO2_IS_OAUTH_CLIENT_ID", "y7xgdnNUx6ifOswJTPcqtzw4aOEa");
+define("IS_OAUTH_CLIENT_ID", "pga");
 
-define("WSO2_IS_OAUTH_CLIENT_SECRET", "CgfbuupAPhaOBSBPSScZUWHNANwa");
+define("IS_OAUTH_CLIENT_SECRET", "5d2dc66a-f54e-4fa9-b78f-80d33aa862c1");
