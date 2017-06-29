@@ -14,7 +14,7 @@
                 $fullUsername, $password);
             if($token != null && isset($token->access_token)){
                 session_start();
-                $_SESSION['username'] = $username;
+                $_SESSION['username'] = strtolower($username);
                 $home_url = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/index.php';
                 header('Location: ' . $home_url);
             }else{
