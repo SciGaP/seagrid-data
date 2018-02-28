@@ -66,6 +66,7 @@ public class DataCatWorker {
                 localDirPath = uri.getPath();
             }
 
+            logger.info("Parsing file " + localDirPath);
             List<IParser> parsers = parserResolver.resolveParser(localDirPath, catalogFileRequest);
             if (parsers != null && parsers.size() > 0) {
                 JSONObject jsonObject = new JSONObject();
@@ -78,6 +79,7 @@ public class DataCatWorker {
                 logger.warn("No suitable parser found for directory : " + catalogFileRequest.getDirUri().toString());
             }
         } catch (Exception e) {
+            logger.error("Error occurred while processing file " + localDirPath, e);
             throw e;
         } finally {
             if (!uri.getScheme().contains("file") && localDirPath != null && !localDirPath.isEmpty()) {
