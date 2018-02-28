@@ -23,6 +23,7 @@ package org.apache.airavata.datacat.worker.parsers.chem.gaussian;
 import org.apache.airavata.datacat.worker.parsers.IParser;
 import org.apache.airavata.datacat.worker.parsers.ParserException;
 import org.apache.airavata.datacat.worker.parsers.chem.gaussian.old.*;
+import org.apache.airavata.datacat.worker.util.ParserUtils;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.slf4j.Logger;
@@ -59,26 +60,29 @@ public class DefaultGaussianParser implements IParser {
                 return finalObj;
             }
             File outputFile = null;
+
+            logger.info("Running the docker based parser to parse directory " + dir);
+            String dockerCommand = "docker run -t --rm=true --env LD_LIBRARY_PATH=/usr/local/lib -v " +
+                    dir +":/datacat/working-dir:Z scnakandala/datacat-chem python" +
+                    " /datacat/gaussian.py /datacat/working-dir/"
+                    + (new File(gaussianOutputFile)).getName() +" /datacat/working-dir/" + outputFileName;
                 //FIXME Move the hardcoded script to some kind of configuration
-                Process proc = Runtime.getRuntime().exec(
-                        "docker run -t --rm=true --env LD_LIBRARY_PATH=/usr/local/lib -v " +
-                                dir +":/datacat/working-dir scnakandala/datacat-chem python" +
-                                " /datacat/gaussian.py /datacat/working-dir/"
-                                + (new File(gaussianOutputFile)).getName() +" /datacat/working-dir/" + outputFileName);
-                BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-                String s;
-                // read any errors from the attempted command
-                String error = "";
-                while ((s = stdError.readLine()) != null) {
-                    error += s;
-                }
-                if(error == null || !error.isEmpty()){
-                    logger.warn(error);
-                }
+            logger.info("Docker command : " + dockerCommand);
+            Process proc = Runtime.getRuntime().exec(dockerCommand);
+            BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+            String s;
+            // read any errors from the attempted command
+            String error = "";
+            while ((s = stdError.readLine()) != null) {
+                error += s;
+            }
+            if(error == null || !error.isEmpty()){
+                logger.warn("Error running docker command "  + error);
+            }
 
-                outputFile = new File(dir + outputFileName);
+            outputFile = new File(dir + outputFileName);
 
-            if(outputFile!=null && outputFile.exists()){
+            if(outputFile!=null && outputFile.exists()) {
                 JSONObject temp = new JSONObject(new JSONTokener(new FileReader(dir + outputFileName)));
 
                 inputMetadata.keySet().stream().forEach(key->{
@@ -201,6 +205,8 @@ public class DefaultGaussianParser implements IParser {
                     }else{
                         temp2.put("FinTime", temp.get("FinTime"));
                     }
+                    temp2.put("FinTimeStamp", ParserUtils.convertDateToTimestamp(temp2.getString("FinTime")));
+
                 }
                 if(temp.has("CalcBy")) {
                     if(temp.get("CalcBy").toString().contains(";")){
