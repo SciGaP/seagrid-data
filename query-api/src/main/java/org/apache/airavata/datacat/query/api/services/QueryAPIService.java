@@ -69,7 +69,7 @@ public class QueryAPIService {
     public Response makePublic(@QueryParam("username") String username, @QueryParam("id") String id){
         try {
             JSONObject result = registry.get(id);
-            if(result.get("Username").toString().equals(username)){
+            if(result.get("Username").toString().toLowerCase().equals(username.toLowerCase())){
                 result.put("Shared", true);
                 registry.update(result);
                 return Response.status(200).entity(result.toString()).build();
@@ -107,7 +107,7 @@ public class QueryAPIService {
     public Response get(@QueryParam("username") String username, @QueryParam("id") String id){
         try {
             JSONObject result = registry.get(id);
-            if(result.get("Username").toString().equals(username) || (result.has("Shared") && (boolean)result.get("Shared") == true)){
+            if(result.get("Username").toString().toLowerCase().equals(username.toLowerCase()) || (result.has("Shared") && (boolean)result.get("Shared") == true)){
                 return Response.status(200).entity(result.toString()).build();
             }else{
                 return Response.status(401).build();

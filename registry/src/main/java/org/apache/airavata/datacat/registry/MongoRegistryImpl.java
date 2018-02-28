@@ -118,7 +118,7 @@ public class MongoRegistryImpl implements IRegistry {
         DBCursor cursor = collection.find(query, removeIdProjection)
                 .skip(offset)
                 .limit(limit)
-                .sort(new BasicDBObject("IndexedTime", -1));
+                .sort(new BasicDBObject("ExecutionEnvironment.FinTimeStamp", -1));
         for(DBObject document: cursor){
             result.add(new JSONObject(document.toString()));
         }
