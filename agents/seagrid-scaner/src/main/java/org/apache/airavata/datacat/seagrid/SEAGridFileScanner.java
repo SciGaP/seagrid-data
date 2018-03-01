@@ -46,7 +46,8 @@ public class SEAGridFileScanner {
     private static final String datacatWorkQueueName = SEAGridFileScanerProperties.getInstance().getProperty(DATACAT_RABBITMQ_WORK_QUEUE_NAME, "");
 
     public static void main(String[] args) throws Exception {
-        int skipLinesCount = 0;
+        System.out.println("Starting scanner");
+	    int skipLinesCount = 0;
         String filePathProtocol = "file://";
         String dataRootPath = SEAGridFileScanerProperties.getInstance().getProperty(DATA_ROOT_PATH, "");
 
@@ -83,23 +84,28 @@ public class SEAGridFileScanner {
                         String experimentDirName = expDir.getName();
 
                         for(File outputFile : expDir.listFiles()){
+                            logger.info("Candidate file " + outputFile.getPath());
                             if(outputFile.getName().endsWith(".out")
                                     || outputFile.getName().endsWith(".log")){
+                                logger.info("File selected " + outputFile.getPath());
                                 try {
                                     BufferedReader reader = new BufferedReader(new FileReader(outputFile));
                                     String temp = reader.readLine();
                                     if(temp!=null && !temp.isEmpty() && temp.toLowerCase().contains("gaussian")){
+                                        logger.info("File contains gaussian " + outputFile.getPath());
                                         boolean failed = true;
                                         temp = reader.readLine();
                                         while (temp != null){
                                             //Omitting failed experiments
                                             if(temp.contains("Normal termination")){
+                                                logger.info("File contains Normal termination " + outputFile.getPath());
                                                 failed = false;
                                                 break;
                                             }
                                             temp = reader.readLine();
                                         }
                                         if(!failed) {
+                                            logger.info("Adding " + outputFile.getPath() + " to output file");
                                             totalGaussianExpCount++;
                                             writer.write(totalGaussianExpCount + " " + filePathProtocol
                                                     + dataRootPath + File.separator + username + File.separator
@@ -130,6 +136,7 @@ public class SEAGridFileScanner {
         }
         String temp = reader.readLine();
         while(temp != null && !temp.isEmpty()){
+	        System.out.println(temp);
             logger.info("Publishing metadata for " + temp);
             temp = temp.split(" ")[1];
 

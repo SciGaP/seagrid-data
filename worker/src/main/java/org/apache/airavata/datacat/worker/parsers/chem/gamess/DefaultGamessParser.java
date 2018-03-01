@@ -22,6 +22,7 @@ package org.apache.airavata.datacat.worker.parsers.chem.gamess;
 
 import org.apache.airavata.datacat.worker.parsers.IParser;
 import org.apache.airavata.datacat.worker.parsers.ParserException;
+import org.apache.airavata.datacat.worker.util.ParserUtils;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.slf4j.Logger;
@@ -140,8 +141,10 @@ public class DefaultGamessParser implements IParser {
                 temp2 = new JSONObject();
                 if (temp.has("CalcMachine"))
                     temp2.put("CalcMachine", temp.get("CalcMachine"));
-                if (temp.has("FinTime"))
+                if (temp.has("FinTime")) {
                     temp2.put("FinTime", temp.get("FinTime"));
+                    temp2.put("FinTimeStamp", ParserUtils.convertDateToTimestamp(temp.getString("FinTime")));
+                }
                 if (temp.has("CalcBy"))
                     temp2.put("CalcBy", temp.get("CalcBy"));
                 finalObj.put("ExecutionEnvironment", temp2);

@@ -104,7 +104,7 @@
                             <th class="col-md-2">Owner Name</th>
                             <th class="col-md-2">Package</th>
                             <th class="col-md-2">Formula</th>
-                            <th class="col-md-2">Indexed Time</th>
+                            <th class="col-md-2">Finished Time</th>
                             <?php foreach ($results as $result): ?>
                         <tr>
                             <td><a href="./summary.php?id=<?php echo $result['Id']?>" target="_blank">
@@ -115,7 +115,7 @@
                             <td>
                                 <?php
                                     $date = new DateTime();
-                                    $date->setTimestamp($result['IndexedTime']/1000);
+                                    $date->setTimestamp($result['FinishedTime']/1000);
                                     echo $date->format('Y-m-d H:i:s')
                                 ?>
                             </td>
@@ -218,8 +218,8 @@
                         type: 'integer',
                         operators: ['equal', 'less', 'greater']
                     }, {
-                        id: 'IndexedTime',
-                        label: 'Indexed Time',
+                        id: 'FinishedTime',
+                        label: 'Finished Time',
                         type: 'date',
                         operators: ['between'],
                         validation: {
