@@ -1,1 +1,1 @@
-# DataCat
+# SEAGrid Data Catalog
