@@ -125,7 +125,7 @@ public class SEAGridFileScanner {
                             pathToWrite = pathToWrite.endsWith("/") ? pathToWrite.substring(0, pathToWrite.length() -1) : pathToWrite;
                             // if the whole directory was copied
                             for (File inFile : childPath.toFile().listFiles()) {
-                                if (detectFile(inFile)) {
+                                if (detectFile(inFile, false)) {
                                     if (!pathsScanned.contains(pathToWrite)) {
                                         logger.info("Parsing path " + pathToWrite);
                                         publishExperimentToParse(pathToWrite);
@@ -145,7 +145,7 @@ public class SEAGridFileScanner {
                             String[] parts = relativeChild.toString().split(File.separator);
                             if (parts.length == 4) {
 
-                                if (detectFile(childPath.toFile())) {
+                                if (detectFile(childPath.toFile(), false)) {
                                     String pathToWrite = childPath.getParent().toUri().toString();
                                     pathToWrite = pathToWrite.endsWith("/") ? pathToWrite.substring(0, pathToWrite.length() -1) : pathToWrite;
                                     if (!pathsScanned.contains(pathToWrite)) {
@@ -174,40 +174,70 @@ public class SEAGridFileScanner {
         }
     }
 
-    public static boolean detectFile(File outputFile) {
+    public static boolean detectFile(File outputFile, boolean saturated) {
 
-        logger.info("Candidate file " + outputFile.getPath());
-        if(outputFile.getName().endsWith(".out") || outputFile.getName().endsWith(".log")) {
+        if (outputFile.exists()) {
+            logger.info("Candidate file " + outputFile.getPath());
+            if (outputFile.getName().endsWith(".out") || outputFile.getName().endsWith(".log")) {
+                logger.info("File " + outputFile.getPath() + " length " + outputFile.length());
 
-
-            try {
-                BufferedReader reader = new BufferedReader(new FileReader(outputFile));
-                String temp = reader.readLine();
-
-                if(temp!=null && !temp.isEmpty() && temp.toLowerCase().contains("gaussian")) {
-                    logger.info("File contains gaussian " + outputFile.getPath());
-                    boolean failed = true;
-                    temp = reader.readLine();
-                    while (temp != null){
-                        //Omitting failed experiments
-                        if(temp.contains("Normal termination")){
-                            logger.info("File contains Normal termination " + outputFile.getPath());
-                            failed = false;
-                            logger.info("File selected " + outputFile.getPath());
-                            break;
+                if (!saturated) {
+                    // some file creation events come while the file is being copied. So this will wait until
+                    // the file is saturated
+                    long previousLength;
+                    int retries = 0;
+                    do {
+                        previousLength = outputFile.length();
+                        retries++;
+                        try {
+                            if (previousLength == 0) {
+                                logger.info("Waiting 2 seconds as file size is 0");
+                                Thread.sleep(2000);
+                            } else {
+                                Thread.sleep(1000);
+                            }
+                        } catch (InterruptedException e) {
+                            // do nothing
                         }
-                        temp = reader.readLine();
+                    } while (previousLength != outputFile.length() && retries < 100);
+
+                    if (retries > 1) {
+                        logger.info("Retried " + retries + " iterations until the file " + outputFile.getPath() + " get saturated");
                     }
-                    return !failed;
                 }
 
-            } catch (Exception e) {
-                logger.error("Failed while detecting file " + outputFile.getAbsolutePath(), e);
-                return false;
+                try {
+                    BufferedReader reader = new BufferedReader(new FileReader(outputFile));
+                    String temp = reader.readLine();
+
+                    if (temp != null && !temp.isEmpty() && temp.toLowerCase().contains("gaussian")) {
+                        logger.info("File contains gaussian " + outputFile.getPath());
+                        boolean failed = true;
+                        temp = reader.readLine();
+                        while (temp != null) {
+                            //Omitting failed experiments
+                            if (temp.contains("Normal termination")) {
+                                logger.info("File contains Normal termination " + outputFile.getPath());
+                                failed = false;
+                                logger.info("File selected " + outputFile.getPath());
+                                break;
+                            }
+                            temp = reader.readLine();
+                        }
+                        return !failed;
+                    }
+
+                } catch (Exception e) {
+                    logger.error("Failed while detecting file " + outputFile.getAbsolutePath(), e);
+                    return false;
+                }
             }
+            logger.info("File is not a valid one " + outputFile.getPath());
+            return false;
+        } else {
+            logger.info("File does not exist " + outputFile.getPath());
+            return false;
         }
-        logger.info("File is not a valid one " + outputFile.getPath());
-        return false;
     }
 
     public static void main(String[] args) throws Exception {
@@ -247,7 +277,7 @@ public class SEAGridFileScanner {
 
                     if (!pathsScanned.contains(experimentDirAsPath)) {
                         for (File outputFile : Objects.requireNonNull(expDir.listFiles())) {
-                            if (detectFile(outputFile)) {
+                            if (detectFile(outputFile, true)) {
                                 logger.info("Adding " + outputFile.getPath() + " to output file");
                                 totalGaussianExpCount++;
                                 writer.write(totalGaussianExpCount + " " + experimentDirAsPath + "\n");
