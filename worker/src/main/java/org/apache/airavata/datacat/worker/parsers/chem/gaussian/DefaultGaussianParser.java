@@ -62,8 +62,8 @@ public class DefaultGaussianParser implements IParser {
             File outputFile = null;
 
             logger.info("Running the docker based parser to parse directory " + dir);
-            String dockerCommand = "docker run -t --rm=true --env LD_LIBRARY_PATH=/usr/local/lib -v " +
-                    dir +":/datacat/working-dir:Z scnakandala/datacat-chem python" +
+            String dockerCommand = "docker run -t --security-opt label:disable --rm=true --env LD_LIBRARY_PATH=/usr/local/lib -v " +
+                    dir +":/datacat/working-dir scnakandala/datacat-chem python" +
                     " /datacat/gaussian.py /datacat/working-dir/"
                     + (new File(gaussianOutputFile)).getName() +" /datacat/working-dir/" + outputFileName;
                 //FIXME Move the hardcoded script to some kind of configuration
