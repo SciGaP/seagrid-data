@@ -78,7 +78,7 @@
             <version>2.6.0</version>
         </dependency>
 
-        <!--Chemical development kit dependencies-->
+        <!--Chemistry Development Kit dependencies-->
         <dependency>
             <groupId>org.openscience.cdk</groupId>
             <artifactId>cdk-bundle</artifactId>
