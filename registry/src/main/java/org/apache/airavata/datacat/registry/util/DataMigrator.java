@@ -52,20 +52,14 @@ public class DataMigrator {
 
     public void getAll() throws RegistryException, ParseException {
 
-        DBObject query = new BasicDBObject("ExecutionEnvironment.FinTimeStamp", new BasicDBObject("$exists", false));
-        DBCursor dbObjects = collection.find(query);
+        //DBObject query = new BasicDBObject("ExecutionEnvironment.FinTimeStamp", new BasicDBObject("$exists", false));
+        DBCursor dbObjects = collection.find();
         while (dbObjects.hasNext()) {
             DBObject dbObject = dbObjects.next();
-            DBObject executionEnvironment = (DBObject) dbObject.get("ExecutionEnvironment");
-            Object finTime = executionEnvironment.get("FinTime");
-            if (finTime != null) {
-                String time = (String) finTime;
-                DateFormat formatter = new SimpleDateFormat("dd-MMM-yy", Locale.ENGLISH);
-                Date d = formatter.parse(time);
-
-                executionEnvironment.put("FinTimeStamp", d.getTime());
-                dbObject.put("ExecutionEnvironment", executionEnvironment);
-
+            Object username = dbObject.get("Username");
+            if (username != null) {
+                String name = (String) username;
+                dbObject.put("Username", name.toLowerCase());
                 DBObject updateQuery = new BasicDBObject("_id", dbObject.get("_id"));
                 collection.update(updateQuery, dbObject);
                 System.out.println(dbObject.toString());

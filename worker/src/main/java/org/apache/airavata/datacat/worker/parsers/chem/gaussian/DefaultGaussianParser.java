@@ -92,7 +92,7 @@ public class DefaultGaussianParser implements IParser {
                 finalObj.put("Id", inputMetadata.get("Id"));
                 finalObj.put("ExperimentName", inputMetadata.get("ExperimentName"));
                 finalObj.put("ProjectName", inputMetadata.get("ProjectName"));
-                finalObj.put("Username", inputMetadata.get("Username"));
+                finalObj.put("Username", ((String)inputMetadata.get("Username")).toLowerCase());
                 finalObj.put("IndexedTime", System.currentTimeMillis());
 
                 JSONObject temp2 = new JSONObject();

@@ -104,13 +104,13 @@ public class MongoRegistryImpl implements IRegistry {
         List<JSONObject> result = new ArrayList<>();
         //TODO query generation
         DBObject query;
-        if(q == null || q.isEmpty()){
-            query = new BasicDBObject("$or", asList(new BasicDBObject("Username", username),
+        if(q == null || q.isEmpty()) {
+            query = new BasicDBObject("$or", asList(new BasicDBObject("Username", username.toLowerCase()),
                     new BasicDBObject("Shared", true)));
-        }else{
+        } else {
             query = (DBObject) JSON.parse(q);
             query = new BasicDBObject("$and",asList(query, new BasicDBObject("$or",
-                    asList(new BasicDBObject("Username",username)
+                    asList(new BasicDBObject("Username", username.toLowerCase())
                             ,new BasicDBObject("Shared", true)))));
         }
 
