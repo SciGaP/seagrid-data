@@ -24,6 +24,7 @@ import org.apache.airavata.datacat.worker.parsers.IParser;
 import org.apache.airavata.datacat.worker.parsers.ParserException;
 import org.apache.airavata.datacat.worker.parsers.chem.gaussian.old.*;
 import org.apache.airavata.datacat.worker.util.ParserUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.slf4j.Logger;
@@ -161,8 +162,39 @@ public class DefaultGaussianParser implements IParser {
                     temp2.put("Dipole", temp.get("Dipole"));
                 if(temp.has("HF"))
                     temp2.put("HF", temp.get("HF"));
-                if(temp.has("Homos"))
-                    temp2.put("Homos", temp.get("Homos"));
+                if(temp.has("Homos")) {
+                    String homos = (String) temp.getJSONArray("Homos").get(0);
+                    temp2.put("Homos", homos);
+
+                    if (temp.has("MoEnergies")) {
+                        int homosInt = Integer.parseInt(homos);
+                        JSONArray moEnergiesAll = temp.getJSONArray("MoEnergies");
+                        JSONArray moEnergies = moEnergiesAll.getJSONArray(0);
+                        if (moEnergies.length() >= homosInt) {
+                            temp2.put("Homo Eigenvalue", moEnergies.get(homosInt - 1));
+                        }
+
+                        if (homosInt > 9 && moEnergies.length() >= homosInt) {
+                            String homoEigenvalues = "";
+                            for (int i = 1; i <= 9; i++) {
+                                homoEigenvalues = "Homo - " + i + " : " + moEnergies.getString(homosInt - 1 - i) + " ";
+                            }
+                            temp2.put("Homo Eigenvalue", homoEigenvalues);
+                        }
+                        if (homosInt + 9 < moEnergies.length()) {
+                            String homoEigenvalues = "";
+                            for (int i = 1; i <= 9; i++) {
+                                homoEigenvalues = "Lumo + " + i + " : " + moEnergies.getString(homosInt - 1 + i) + " ";
+                            }
+                            temp2.put("Lumo Eigenvalue", homoEigenvalues);
+                        }
+                    }
+                }
+                if(temp.has("ZPE"))
+                    temp2.put("Zero Point Energy", temp.get("ZPE"));
+                if(temp.has("NImag"))
+                    temp2.put("NImag", temp.get("NImag"));
+                
                 try{
                     Double[][] gradientValues = getDistributionValues(gaussianOutputFile);
                     if(gradientValues != null){
