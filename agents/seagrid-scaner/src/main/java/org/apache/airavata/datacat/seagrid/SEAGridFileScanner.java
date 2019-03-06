@@ -42,7 +42,7 @@ public class SEAGridFileScanner {
 
     private final static Logger logger = LoggerFactory.getLogger(SEAGridFileScanner.class);
 
-    private static final String outputFile = "output-files.txt";
+    private static final String DATACAT_CACHE_OUTPUT_FILE = "datacat.cache.output.file";
 
     public static final String DATACAT_RABBITMQ_BROKER_URL = "datacat.rabbitmq.broker.url";
     public static final String DATACAT_RABBITMQ_WORK_QUEUE_NAME = "datacat.rabbitmq.work.queue.name";
@@ -50,7 +50,7 @@ public class SEAGridFileScanner {
 
     private static final String datacatBrokerUrl = SEAGridFileScanerProperties.getInstance().getProperty(DATACAT_RABBITMQ_BROKER_URL, "");
     private static final String datacatWorkQueueName = SEAGridFileScanerProperties.getInstance().getProperty(DATACAT_RABBITMQ_WORK_QUEUE_NAME, "");
-
+    private static final String outputFile = SEAGridFileScanerProperties.getInstance().getProperty(DATACAT_CACHE_OUTPUT_FILE, "");
 
     private static final Map<WatchKey, Path> watcherMap = new HashMap();
     private static final Set<String> pathsScanned = new HashSet<>();
@@ -242,77 +242,82 @@ public class SEAGridFileScanner {
 
     public static void main(String[] args) throws Exception {
 
-        logger.info("Starting scanner");
-        String filePathProtocol = "file://";
-        String dataRootPath = SEAGridFileScanerProperties.getInstance().getProperty(DATA_ROOT_PATH, "");
+        try {
+            logger.info("Starting scanner");
+            String filePathProtocol = "file://";
+            String dataRootPath = SEAGridFileScanerProperties.getInstance().getProperty(DATA_ROOT_PATH, "");
 
-        File dataRoot = new File(dataRootPath);
+            File dataRoot = new File(dataRootPath);
 
-        if (!dataRoot.exists()) {
-            logger.error("Data root path " + dataRootPath + " is not available");
-            System.exit(0);
-        }
+            if (!dataRoot.exists()) {
+                logger.error("Data root path " + dataRootPath + " is not available");
+                System.exit(0);
+            }
 
-        loadCache();
-        BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile, true));
-        int totalGaussianExpCount = lastEntryInFile;
+            logger.info("Loading cache....");
+            loadCache();
+            BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile, true));
+            int totalGaussianExpCount = lastEntryInFile;
 
-        for(File userDir : Objects.requireNonNull(dataRoot.listFiles())){
-            if(userDir.getName().equals("..") || userDir.getName().equals(".") || !userDir.isDirectory())
-                continue;
-            String username = userDir.getName();
-
-            for(File projDir : Objects.requireNonNull(userDir.listFiles())){
-                if(projDir.getName().equals("..") || projDir.getName().equals(".") || !projDir.isDirectory())
+            for (File userDir : Objects.requireNonNull(dataRoot.listFiles())) {
+                if (userDir.getName().equals("..") || userDir.getName().equals(".") || !userDir.isDirectory())
                     continue;
-                String projDirName = projDir.getName();
+                String username = userDir.getName();
 
-                for(File expDir : Objects.requireNonNull(projDir.listFiles())){
-                    if(expDir.getName().equals("..") || expDir.getName().equals(".") || !expDir.isDirectory())
+                for (File projDir : Objects.requireNonNull(userDir.listFiles())) {
+                    if (projDir.getName().equals("..") || projDir.getName().equals(".") || !projDir.isDirectory())
                         continue;
-                    String experimentDirName = expDir.getName();
+                    String projDirName = projDir.getName();
 
-                    String experimentDirAsPath = filePathProtocol + dataRootPath + File.separator + username + File.separator
-                            + projDirName + File.separator + experimentDirName;
+                    for (File expDir : Objects.requireNonNull(projDir.listFiles())) {
+                        if (expDir.getName().equals("..") || expDir.getName().equals(".") || !expDir.isDirectory())
+                            continue;
+                        String experimentDirName = expDir.getName();
 
-                    if (!pathsScanned.contains(experimentDirAsPath)) {
-                        for (File outputFile : Objects.requireNonNull(expDir.listFiles())) {
-                            if (detectFile(outputFile, true)) {
-                                logger.info("Adding " + outputFile.getPath() + " to output file");
-                                totalGaussianExpCount++;
-                                writer.write(totalGaussianExpCount + " " + experimentDirAsPath + "\n");
-                                logger.info(totalGaussianExpCount + " " + experimentDirAsPath);
-                                writer.flush();
+                        String experimentDirAsPath = filePathProtocol + dataRootPath + File.separator + username + File.separator
+                                + projDirName + File.separator + experimentDirName;
+
+                        if (!pathsScanned.contains(experimentDirAsPath)) {
+                            for (File outputFile : Objects.requireNonNull(expDir.listFiles())) {
+                                if (detectFile(outputFile, true)) {
+                                    logger.info("Adding " + outputFile.getPath() + " to output file");
+                                    totalGaussianExpCount++;
+                                    writer.write(totalGaussianExpCount + " " + experimentDirAsPath + "\n");
+                                    logger.info(totalGaussianExpCount + " " + experimentDirAsPath);
+                                    writer.flush();
+                                }
                             }
+                        } else {
+                            logger.info("Path " + experimentDirAsPath + " already scanned");
                         }
-                    } else {
-                        logger.info("Path " + experimentDirAsPath + " already scanned");
                     }
                 }
             }
+            writer.close();
+
+            logger.info("Publishing Records");
+            BufferedReader reader = new BufferedReader(new FileReader(outputFile));
+
+            while (skipLinesCount > 0) {
+                reader.readLine();
+                skipLinesCount--;
+            }
+
+            String temp = reader.readLine();
+            while (temp != null && !temp.isEmpty()) {
+                System.out.println(temp);
+                logger.info("Publishing metadata for " + temp);
+                String filePath = temp.split(" ")[1];
+                lastEntryInFile = Integer.parseInt(temp.split(" ")[0]);
+                publishExperimentToParse(filePath);
+                temp = reader.readLine();
+            }
+            reader.close();
+
+            monitorChanges(Paths.get(dataRootPath));
+        } catch (Exception e) {
+            logger.error("Error in file scanner. Exiting ", e);
         }
-        writer.close();
-
-        logger.info("Publishing Records");
-        BufferedReader reader = new BufferedReader(new FileReader(outputFile));
-
-        while(skipLinesCount > 0){
-            reader.readLine();
-            skipLinesCount--;
-        }
-
-        String temp = reader.readLine();
-        while(temp != null && !temp.isEmpty()){
-	        System.out.println(temp);
-            logger.info("Publishing metadata for " + temp);
-            String filePath = temp.split(" ")[1];
-            lastEntryInFile = Integer.parseInt(temp.split(" ")[0]);
-            publishExperimentToParse(filePath);
-            temp = reader.readLine();
-        }
-        reader.close();
-
-        monitorChanges(Paths.get(dataRootPath));
     }
 
     private static void loadCache() throws IOException {
