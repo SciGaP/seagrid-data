@@ -25,12 +25,15 @@
         }
     }elseif(isset($_GET['code']) && !empty($_GET['code'])){
             $oauthManager = new OAuthManager();
-            $profile = $oauthManager->getUserProfile($_GET['code']);
-            if(isset($profile->preferred_username)){
-                session_start();
-                $_SESSION['username'] = $profile->preferred_username;
-                $home_url = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/index.php';
-                header('Location: ' . $home_url);
+            $response = $oauthManager->getAccessToken(IS_OAUTH_CLIENT_ID, IS_OAUTH_CLIENT_SECRET, $_GET['code'], IS_REDIRECT_URI);
+            if(isset($response->access_token)){
+              $profile = $oauthManager->getUserProfile($response->access_token);
+              if(isset($profile->preferred_username)){
+                  session_start();
+                  $_SESSION['username'] = $profile->preferred_username;
+                  $home_url = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/index.php';
+                  header('Location: ' . $home_url);
+              }
             }
             $loginFailed = true;
     }
@@ -92,6 +95,9 @@
                     </label>
                 </div>
                 <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+                <a href="https://iam.scigap.org/auth/realms/seagrid/protocol/openid-connect/auth?response_type=code&amp;client_id=pga&amp;redirect_uri=https%3A%2F%2Fdata.seagrid.org%2Flogin.php&amp;scope=openid&amp;kc_idp_hint=cilogon" class="btn btn-primary btn-block btn-external-login">
+                    Sign in with CILogon
+                </a>
             </form>
 
         </div><!-- /.container -->

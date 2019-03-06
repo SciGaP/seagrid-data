@@ -43,16 +43,18 @@ public class GaussianInputParser implements IParser{
      */
     @Override
     public JSONObject parse(JSONObject finalObj, String dir, Map<String, Object> inputMetadata) throws Exception {
-        if(!dir.endsWith(File.separator)){
+        if(!dir.endsWith(File.separator)) {
             dir += File.separator;
         }
+
         String gaussianInputFile = null;
-        for(File file : (new File(dir).listFiles())){
-            if(file.getName().endsWith(".com") || file.getName().endsWith(".in")){
+        for(File file : (new File(dir).listFiles())) {
+            if(file.getName().endsWith(".com") || file.getName().endsWith(".in")) {
                 gaussianInputFile = file.getAbsolutePath();
             }
         }
-        if(gaussianInputFile == null){
+
+        if(gaussianInputFile == null) {
             logger.warn("Could not find the gaussian input file");
             return finalObj;
         }
@@ -66,23 +68,26 @@ public class GaussianInputParser implements IParser{
             //    * #p opt
             BufferedReader reader = new BufferedReader(new FileReader(gaussianInputFile));
             String line = reader.readLine();
-            while(line != null){
-                if(line.startsWith("%")){
+            while (line != null) {
+                if(line.startsWith("%")) {
                     link0Commands += (";" + line.trim());
-                }else if(line.startsWith("#")){
+
+                } else if(line.startsWith("#")) {
                     routeCommands += (";" + line.trim());
+
                 }
                 line = reader.readLine();
             }
-            if(finalObj.has("InputFileConfiguration")){
+
+            if (finalObj.has("InputFileConfiguration")) {
                 ((JSONObject)finalObj.get("InputFileConfiguration")).put("Link0Commands", link0Commands.substring(1))
                         .put("RouteCommands", routeCommands.substring(1));
-            }else{
+            } else {
                 finalObj.put("InputFileConfiguration",new JSONObject().put("Link0Commands", link0Commands.substring(1))
                         .put("RouteCommands", routeCommands.substring(1)));
             }
-        }catch (Exception ex){
-            logger.error(ex.getMessage(), ex);
+        } catch (Exception ex) {
+            logger.warn("Failed while parsing the input file " + gaussianInputFile, ex);
             return finalObj;
         }
         return finalObj;

@@ -17,6 +17,7 @@
 
     $q = "";
     $pageNo = 1;
+    $pageSize = 50;
     if(isset($_POST['query'])){
         $q = $_POST['query'];
         //converting time to unix timestamp
@@ -25,18 +26,28 @@
     if(!isset($_POST['search']) && isset($_POST['pageNo'])){
         $pageNo = $_POST['pageNo'];
     }
+    if(!isset($_POST['search']) && isset($_POST['pageSize'])){
+        $pageSize = $_POST['pageSize'];
+    }
     if(!isset($_POST['search']) && isset($_POST['next'])){
         $pageNo = $pageNo + 1;
     }
     if(!isset($_POST['search']) && isset($_POST['previous'])){
         $pageNo = $pageNo - 1;
     }
-    $offset = ($pageNo -1) * 50;
+    $offset = ($pageNo -1) * $pageSize;
     $username = $_SESSION['username'];
     $results = json_decode(file_get_contents('http://' . SERVER_HOST . ':8000/query-api/select?username='.$username.'&q='. urlencode($q)
-        .'&limit=50&offset=' . $offset), true);
+        .'&limit=' . $pageSize . '&offset=' . $offset), true);
     if(!isset($results) || empty($results)){
         $results = array();
+    }
+    $id = $_GET['id'];
+        if(isset($id)){
+        $record = json_decode(file_get_contents('http://' . SERVER_HOST . ':8000/query-api/get?username=' .  $_SESSION['username'] . '&id=' . $id), true);
+    } else {
+     ////   //echo 'Id not set !!!';
+        echo '';
     }
 ?>
 
@@ -90,45 +101,71 @@
                 <div class="btn-group pull-right">
                     <button id="btn-reset" class="btn btn-warning reset">Reset</button>
                     <button id="btn-search" class="btn btn-primary parse-json">Search</button>
+                    <div class="btn-group">
+                        <button id="pageSizeButton" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                            Page Size <?php echo $pageSize;?>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a class="dropdown-item" href="#" onclick="setPageSize(10)">10</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="setPageSize(50)">50</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="setPageSize(100)">100</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="setPageSize(200)">200</a></li>
+                        </ul>
+                    </div>
                 </div>
                 <form id="searchForm" action="./search.php" method="post">
                     <div class="form-group search-text-block">
                         <input id="query" name="query" type="hidden" value='<?php if (isset($_POST['query'])) echo $_POST['query'] ?>'>
                         <input type="hidden" name="pageNo" id="pageNo" value=<?php echo $pageNo; ?>>
+                        <input type="hidden" name="pageSize" id="pageSize" value=<?php echo $pageSize; ?>>
                     </div>
                     <br>
                     <hr>
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" id="data-table">
                         <tr>
                             <th class="col-md-2">Experiment Name</th>
                             <th class="col-md-2">Owner Name</th>
                             <th class="col-md-2">Package</th>
                             <th class="col-md-2">Formula</th>
+                            <!-- th class="col-md-2">Indexed Time</th -->
                             <th class="col-md-2">Finished Time</th>
+                            <th class="col-md-2">Basis Set</th>
+                            <th class="col-md-2">Number of Basis Functions</th>
+                            <th class="col-md-2">Energy</th>
                             <?php foreach ($results as $result): ?>
                         <tr>
                             <td><a href="./summary.php?id=<?php echo $result['Id']?>" target="_blank">
-                                    <?php echo $result['ExperimentName']?></a></td>
+                                    <?php echo substr($result['ExperimentName'], 0, -10)?></a></td>
                             <td><?php echo $result['Username']?></td>
                             <td><?php echo $result['Calculation']['Package']?></td>
                             <td><?php echo $result['Molecule']['Formula']?></td>
                             <td>
                                 <?php
-                                    $date = new DateTime();
-                                    $date->setTimestamp($result['FinishedTime']/1000);
-                                    echo $date->format('Y-m-d H:i:s')
+                                    //$date = new DateTime();
+                                     echo $result['ExecutionEnvironment']['FinTime'];
+                                     //echo $record['ExecutionEnvironment']['FinTime'];
+                                    //$date->setTimestamp($record['ExecutionEnvironment']['FinTime']/1000);
+                                    //$date->setTimestamp($result['ExecutionEnvironment.FinTime']/1000);
+                                    //$date->setTimestamp($result['IndexedTime']/1000);
+                                    //echo $date->format('d-M-Y')
+                                    //echo $date->format('Y-m-d')
+                                    //echo $date->format('Y-m-d H:i:s')
                                 ?>
                             </td>
+                            <td><?php echo $result['Calculation']['Basis']?></td>
+                            <td><?php echo $result['Calculation']['NBasis']?></td>
+                            <td><?php echo $result['CalculatedProperties']['Energy']?></td>
                         </tr>
                         <?php endforeach;?>
                         </tr>
                     </table>
+                    <button id="export" data-export="export">Export to CSV</button>
                     <div class="pull-right btn-toolbar" style="padding-bottom: 5px">
                         <?php
                             if (isset($pageNo) && $pageNo != 1) {
                                 echo '<input class="btn btn-primary btn-xs" type="submit" style="cursor: pointer" name="previous" value="previous"/>';
                             }
-                            if (sizeof($results) > 0) {
+                            if (sizeof($results) > 0 && sizeof($results) == $pageSize) {
                                 echo '<input class="btn btn-primary btn-xs" type="submit" style="cursor: pointer" name="next" value="next"/>';
                             }
                         ?>
@@ -218,8 +255,13 @@
                         type: 'integer',
                         operators: ['equal', 'less', 'greater']
                     }, {
-                        id: 'FinishedTime',
+                        id: 'ExecutionEnvironment.FinTime',
                         label: 'Finished Time',
+                        type: 'string',
+                        operators: ['contains']
+                    }, {
+                        id: 'IndexedTime',
+                        label: 'Indexed Time',
                         type: 'date',
                         operators: ['between'],
                         validation: {
@@ -255,7 +297,67 @@
                     var result = $('#query').val();
                     $('#builder').queryBuilder('setRulesFromMongo', $.parseJSON(result));
                 }
+
+                $("#export").click(function(){
+                    $("#data-table").tableToCSV();
+                });
             });
+
+            function setPageSize(size) {
+                var result = $('#builder').queryBuilder('getMongo');
+                if(JSON.stringify(result, null, 2) != "{}"){
+                    $('#query').val(JSON.stringify(result, null, 2));
+                    $('#pageNo').val(1);
+                    $('#pageSize').val(size);
+                    $('form#searchForm').submit();
+                }
+            }
+
+            jQuery.fn.tableToCSV = function() {
+
+                var clean_text = function(text){
+                    text = text.replace(/"/g, '""');
+                    return '"'+text.trim()+'"';
+                };
+
+                $(this).each(function(){
+                    var table = $(this);
+                    var caption = $(this).find('caption').text();
+                    var title = [];
+                    var rows = [];
+
+                    $(this).find('tr').each(function(){
+                        var data = [];
+                        $(this).find('th').each(function(){
+                            var text = clean_text($(this).text());
+                            title.push(text);
+                        });
+                        $(this).find('td').each(function(){
+                            var text = clean_text($(this).text());
+                            data.push(text);
+                        });
+                        data = data.join(",");
+                        rows.push(data);
+                    });
+                    title = title.join(",");
+                    rows = rows.join("\n");
+
+                    var csv = title + rows;
+                    var uri = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+                    var download_link = document.createElement('a');
+                    download_link.href = uri;
+                    var ts = new Date().getTime();
+                    if(caption==""){
+                        download_link.download = ts+".csv";
+                    } else {
+                        download_link.download = caption+"-"+ts+".csv";
+                    }
+                    document.body.appendChild(download_link);
+                    download_link.click();
+                    document.body.removeChild(download_link);
+                });
+
+            };
         </script>
     </body>
 </html>

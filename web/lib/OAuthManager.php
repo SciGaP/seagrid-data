@@ -37,7 +37,7 @@ class OAuthManager
         ));
 
         // Assemble POST parameters for the request.
-        $post_fields = "code=" . urlencode($auth_code) . "&grant_type=authorization_code&redirect_uri=" . $redirect_url;
+        $post_fields = "code=" . urlencode($auth_code) . "&grant_type=authorization_code&redirect_uri=" . urlencode($redirect_url);
 
         // Obtain and return the access token from the response.
         curl_setopt($r, CURLOPT_POST, true);
