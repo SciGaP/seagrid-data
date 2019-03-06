@@ -163,7 +163,7 @@ public class DefaultGaussianParser implements IParser {
                 if(temp.has("HF"))
                     temp2.put("HF", temp.get("HF"));
                 if(temp.has("Homos")) {
-                    String homos = (String) temp.getJSONArray("Homos").get(0);
+                    String homos = temp.getJSONArray("Homos").get(0) + "";
                     temp2.put("Homos", homos);
 
                     if (temp.has("MoEnergies")) {
