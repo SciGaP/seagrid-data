@@ -177,14 +177,14 @@ public class DefaultGaussianParser implements IParser {
                         if (homosInt > 9 && moEnergies.length() >= homosInt) {
                             String homoEigenvalues = "";
                             for (int i = 1; i <= 9; i++) {
-                                homoEigenvalues = "Homo - " + i + " : " + moEnergies.getString(homosInt - 1 - i) + " ";
+                                homoEigenvalues = "Homo - " + i + " : " + moEnergies.get(homosInt - 1 - i) + " ";
                             }
                             temp2.put("Homo Eigenvalue", homoEigenvalues);
                         }
                         if (homosInt + 9 < moEnergies.length()) {
                             String homoEigenvalues = "";
                             for (int i = 1; i <= 9; i++) {
-                                homoEigenvalues = "Lumo + " + i + " : " + moEnergies.getString(homosInt - 1 + i) + " ";
+                                homoEigenvalues = "Lumo + " + i + " : " + moEnergies.get(homosInt - 1 + i) + " ";
                             }
                             temp2.put("Lumo Eigenvalue", homoEigenvalues);
                         }
