@@ -42,6 +42,13 @@
     if(!isset($results) || empty($results)){
         $results = array();
     }
+    $id = $_GET['id'];
+        if(isset($id)){
+        $record = json_decode(file_get_contents('http://' . SERVER_HOST . ':8000/query-api/get?username=' .  $_SESSION['username'] . '&id=' . $id), true);
+    } else {
+     ////   //echo 'Id not set !!!';
+        echo '';
+    }
 ?>
 
 <html>
@@ -114,12 +121,13 @@
                     </div>
                     <br>
                     <hr>
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" id="data-table">
                         <tr>
                             <th class="col-md-2">Experiment Name</th>
                             <th class="col-md-2">Owner Name</th>
                             <th class="col-md-2">Package</th>
                             <th class="col-md-2">Formula</th>
+                            <!-- th class="col-md-2">Indexed Time</th -->
                             <th class="col-md-2">Finished Time</th>
                             <th class="col-md-2">Basis Set</th>
                             <th class="col-md-2">Number of Basis Functions</th>
@@ -133,9 +141,15 @@
                             <td><?php echo $result['Molecule']['Formula']?></td>
                             <td>
                                 <?php
-                                    $date = new DateTime();
-                                    $date->setTimestamp($result['FinishedTime']/1000);
-                                    echo $date->format('Y-m-d H:i:s')
+                                    //$date = new DateTime();
+                                     echo $result['ExecutionEnvironment']['FinTime'];
+                                     //echo $record['ExecutionEnvironment']['FinTime'];
+                                    //$date->setTimestamp($record['ExecutionEnvironment']['FinTime']/1000);
+                                    //$date->setTimestamp($result['ExecutionEnvironment.FinTime']/1000);
+                                    //$date->setTimestamp($result['IndexedTime']/1000);
+                                    //echo $date->format('d-M-Y')
+                                    //echo $date->format('Y-m-d')
+                                    //echo $date->format('Y-m-d H:i:s')
                                 ?>
                             </td>
                             <td><?php echo $result['Calculation']['Basis']?></td>
@@ -145,8 +159,8 @@
                         <?php endforeach;?>
                         </tr>
                     </table>
+                    <button id="export" data-export="export">Export to CSV</button>
                     <div class="pull-right btn-toolbar" style="padding-bottom: 5px">
-                        <button id="export" data-export="export">Export</button>
                         <?php
                             if (isset($pageNo) && $pageNo != 1) {
                                 echo '<input class="btn btn-primary btn-xs" type="submit" style="cursor: pointer" name="previous" value="previous"/>';
@@ -241,8 +255,13 @@
                         type: 'integer',
                         operators: ['equal', 'less', 'greater']
                     }, {
-                        id: 'FinishedTime',
+                        id: 'ExecutionEnvironment.FinTime',
                         label: 'Finished Time',
+                        type: 'string',
+                        operators: ['contains']
+                    }, {
+                        id: 'IndexedTime',
+                        label: 'Indexed Time',
                         type: 'date',
                         operators: ['between'],
                         validation: {
@@ -278,6 +297,10 @@
                     var result = $('#query').val();
                     $('#builder').queryBuilder('setRulesFromMongo', $.parseJSON(result));
                 }
+
+                $("#export").click(function(){
+                    $("#data-table").tableToCSV();
+                });
             });
 
             function setPageSize(size) {
@@ -335,8 +358,6 @@
                 });
 
             };
-
-
         </script>
     </body>
 </html>
