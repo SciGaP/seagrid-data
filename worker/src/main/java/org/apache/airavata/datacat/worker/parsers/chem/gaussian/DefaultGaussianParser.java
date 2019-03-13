@@ -198,6 +198,12 @@ public class DefaultGaussianParser implements IParser {
                     temp2.put("Zero Point Energy", temp.get("ZPE"));
                 if(temp.has("NImag"))
                     temp2.put("NImag", temp.get("NImag"));
+                if(temp.has("Thermal"))
+                    temp2.put("Thermal", temp.get("Thermal"));
+                if(temp.has("Enthalpy"))
+                    temp2.put("Enthalpy", temp.get("Enthalpy"));
+                if(temp.has("Gibbs"))
+                    temp2.put("Gibbs", temp.get("Gibbs"));
                 
                 try{
                     Double[][] gradientValues = getDistributionValues(gaussianOutputFile);

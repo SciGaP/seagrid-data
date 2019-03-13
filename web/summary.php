@@ -285,6 +285,27 @@
                             </tr>
                         <?php endif; ?>
 
+                        <?php if(isset($record['CalculatedProperties']['Thermal'])):?>
+                            <tr>
+                                <td>Thermal</td>
+                                <td><?php echo $record['CalculatedProperties']['Thermal']; ?></td>
+                            </tr>
+                        <?php endif; ?>
+
+                        <?php if(isset($record['CalculatedProperties']['Enthalpy'])):?>
+                            <tr>
+                                <td>Enthalpy</td>
+                                <td><?php echo $record['CalculatedProperties']['Enthalpy']; ?></td>
+                            </tr>
+                        <?php endif; ?>
+
+                        <?php if(isset($record['CalculatedProperties']['Gibbs'])):?>
+                            <tr>
+                                <td>Gibbs</td>
+                                <td><?php echo $record['CalculatedProperties']['Gibbs']; ?></td>
+                            </tr>
+                        <?php endif; ?>
+
                         <tr><td><h4>Execution Environment</h4></td></tr>
                         <?php if(isset($record['ExecutionEnvironment']['CalcBy'])):?>
                             <tr>
