@@ -239,7 +239,49 @@
                         <?php if(isset($record['CalculatedProperties']['Homos'])):?>
                             <tr>
                                 <td>Homos</td>
-                                <td><?php echo json_encode($record['CalculatedProperties']['Homos']); ?></td>
+                                <td><?php echo $record['CalculatedProperties']['Homos']; ?></td>
+                            </tr>
+                        <?php endif; ?>
+
+                        <?php if(isset($record['CalculatedProperties']['Homo Eigenvalue'])):?>
+                            <tr>
+                                <td>Homo Eigenvalue</td>
+                                <td><?php echo $record['CalculatedProperties']['Homo Eigenvalue']; ?></td>
+                            </tr>
+                        <?php endif; ?>
+
+                        <?php if(isset($record['CalculatedProperties']['Homo Eigenvalues'])):?>
+                            <tr>
+                                <td>Homo Eigenvalues</td>
+                                <td><?php echo $record['CalculatedProperties']['Homo Eigenvalues']; ?></td>
+                            </tr>
+                        <?php endif; ?>
+
+                        <?php if(isset($record['CalculatedProperties']['Lumo Eigenvalue'])):?>
+                            <tr>
+                                <td>Lumo Eigenvalue</td>
+                                <td><?php echo $record['CalculatedProperties']['Lumo Eigenvalue']; ?></td>
+                            </tr>
+                        <?php endif; ?>
+
+                        <?php if(isset($record['CalculatedProperties']['Lumo Eigenvalues'])):?>
+                            <tr>
+                                <td>Lumo Eigenvalues</td>
+                                <td><?php echo $record['CalculatedProperties']['Lumo Eigenvalues']; ?></td>
+                            </tr>
+                        <?php endif; ?>
+
+                        <?php if(isset($record['CalculatedProperties']['Zero Point Energy'])):?>
+                            <tr>
+                                <td>Zero Point Energy</td>
+                                <td><?php echo $record['CalculatedProperties']['Zero Point Energy']; ?></td>
+                            </tr>
+                        <?php endif; ?>
+
+                        <?php if(isset($record['CalculatedProperties']['NImag'])):?>
+                            <tr>
+                                <td>NImag</td>
+                                <td><?php echo $record['CalculatedProperties']['NImag']; ?></td>
                             </tr>
                         <?php endif; ?>
 
