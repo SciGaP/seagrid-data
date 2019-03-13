@@ -174,6 +174,10 @@ public class DefaultGaussianParser implements IParser {
                             temp2.put("Homo Eigenvalue", moEnergies.get(homosInt - 1));
                         }
 
+                        if (moEnergies.length() > homosInt) {
+                            temp2.put("Lumo Eigenvalue", moEnergies.get(homosInt));
+                        }
+
                         if (homosInt > 9 && moEnergies.length() >= homosInt) {
                             StringBuilder homoEigenvalues = new StringBuilder();
                             for (int i = 1; i <= 9; i++) {
@@ -181,10 +185,10 @@ public class DefaultGaussianParser implements IParser {
                             }
                             temp2.put("Homo Eigenvalues", homoEigenvalues.toString());
                         }
-                        if (homosInt + 9 < moEnergies.length()) {
+                        if (homosInt + 9 <= moEnergies.length()) {
                             StringBuilder homoEigenvalues = new StringBuilder();
                             for (int i = 1; i <= 9; i++) {
-                                homoEigenvalues.append("Lumo + ").append(i).append(" : ").append(moEnergies.get(homosInt - 1 + i)).append(", ");
+                                homoEigenvalues.append("Lumo + ").append(i).append(" : ").append(moEnergies.get(homosInt + i)).append(", ");
                             }
                             temp2.put("Lumo Eigenvalues", homoEigenvalues.toString());
                         }

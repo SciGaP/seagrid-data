@@ -257,6 +257,13 @@
                             </tr>
                         <?php endif; ?>
 
+                        <?php if(isset($record['CalculatedProperties']['Lumo Eigenvalue'])):?>
+                            <tr>
+                                <td>Lumo Eigenvalue</td>
+                                <td><?php echo $record['CalculatedProperties']['Lumo Eigenvalue']; ?></td>
+                            </tr>
+                        <?php endif; ?>
+
                         <?php if(isset($record['CalculatedProperties']['Lumo Eigenvalues'])):?>
                             <tr>
                                 <td>Lumo Eigenvalues</td>
