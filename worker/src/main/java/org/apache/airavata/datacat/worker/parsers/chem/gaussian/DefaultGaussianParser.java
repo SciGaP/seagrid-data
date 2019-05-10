@@ -167,7 +167,7 @@ public class DefaultGaussianParser implements IParser {
                     temp2.put("Homos", homos);
 
                     if (temp.has("MoEnergies")) {
-                        int homosInt = Integer.parseInt(homos);
+                        int homosInt = Integer.parseInt(homos) + 1;
                         JSONArray moEnergiesAll = temp.getJSONArray("MoEnergies");
                         JSONArray moEnergies = moEnergiesAll.getJSONArray(0);
                         if (moEnergies.length() >= homosInt) {
